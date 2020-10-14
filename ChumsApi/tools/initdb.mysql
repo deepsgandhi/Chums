@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS `households`;
 DROP TABLE IF EXISTS `notes`;
 DROP TABLE IF EXISTS `people`;
 DROP TABLE IF EXISTS `questions`;
+DROP TABLE IF EXISTS `reports`;
 DROP TABLE IF EXISTS `services`;
 DROP TABLE IF EXISTS `serviceTimes`;
 DROP TABLE IF EXISTS `sessions`;
@@ -149,6 +150,18 @@ CREATE TABLE `questions` (
   KEY `fk_questions_forms_idx` (`formId`),
   CONSTRAINT `fk_questions_forms` FOREIGN KEY (`formId`) REFERENCES `forms` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `keyName` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `query` text,
+  `parameters` varchar(512) DEFAULT NULL,
+  `reportType` varchar(45) DEFAULT NULL,
+  `columns` text,
+  `groupLevels` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `services` (
