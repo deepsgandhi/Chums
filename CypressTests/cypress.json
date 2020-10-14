@@ -1,6 +1,6 @@
 {
   "chromeWebSecurity": false,
-  "baseUrl": "https://app.staging.chums.org",
+  "baseUrl": "http://app.staging.chums.org",
   "env": {
     "email": "test@chums.org",
     "password": "password"

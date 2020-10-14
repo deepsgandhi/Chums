@@ -7,6 +7,7 @@ import { PersonHelper } from "../helpers";
 export class PersonRepository {
 
     public async save(person: Person) {
+        console.log(JSON.stringify(person));
         person.name.display = PersonHelper.getDisplayName(person);
         if (person.id > 0) return this.update(person); else return this.create(person);
     }

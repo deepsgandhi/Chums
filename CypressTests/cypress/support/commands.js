@@ -1,3 +1,5 @@
+import 'cypress-wait-until';
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -29,8 +31,7 @@ Cypress.Commands.add("login", () => {
     cy.get('#email').type(Cypress.env('email'));
     cy.get('#password').type(Cypress.env('password'));
     cy.get('#signInButton').click();
-    cy.wait(1500);
-    cy.get('body').should('contain', 'Search');
+    cy.get('#searchText', { timeout: 10000 }).should('exist');
 });
 
 Cypress.Commands.add("loadTab", (tabId, verifyId) => {
@@ -38,8 +39,7 @@ Cypress.Commands.add("loadTab", (tabId, verifyId) => {
     cy.get('#' + tabId).should('exist').click();
     cy.get('#userMenuLink').should('exist').click();
     cy.get('#' + tabId).should('not.be.visible');
-    cy.wait(1000);
-    cy.get('#' + verifyId).should('exist');
+    cy.get('#' + verifyId, { timeout: 5000 }).should('exist');
 });
 
 Cypress.Commands.add("loadPerson", (name) => {
