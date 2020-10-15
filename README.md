@@ -1,7 +1,9 @@
-# Chums
-CHUrch Management Software
+# CHUMS
+**CHU**rch **M**anagement **S**oftware
 
 Visit <a href="https://streaminglive.church/">https://chums.org/</a> to learn more.
+
+##### Want to get involved?  Join us on [Slack](https://join.slack.com/t/livechurchsolutions/shared_invite/zt-i88etpo5-ZZhYsQwQLVclW12DKtVflg).
 
 ### Depends on
 * [AccessManagementApi](https://github.com/LiveChurchSolutions/AccessManagement) - User authentication
