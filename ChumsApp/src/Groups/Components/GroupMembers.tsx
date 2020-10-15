@@ -14,7 +14,7 @@ export const GroupMembers: React.FC<Props> = (props) => {
 
     const [groupMembers, setGroupMembers] = React.useState<GroupMemberInterface[]>([]);
 
-    const loadData = React.useCallback(() => { ApiHelper.apiGet('/groupmembers?groupId=' + props.group.id).then(data => setGroupMembers(data)); }, [props.group]);
+    const loadData = React.useCallback(() => { ApiHelper.apiGet('/groupmembers?groupId=' + props.group.id).then(data => { setGroupMembers(data) }); }, [props.group]);
     const handleRemove = (e: React.MouseEvent) => {
         e.preventDefault();
         var anchor = e.currentTarget as HTMLAnchorElement;

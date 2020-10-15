@@ -11,12 +11,12 @@ export const NavItems: React.FC<Props> = (props) => {
   const location = useLocation();
   const getSelected = (): string => {
     var url = location.pathname;
-    var result = "people";
-    if (url.indexOf("/groups") > -1) result = "groups";
-    if (url.indexOf("/attendance") > -1) result = "attendance";
-    if (url.indexOf("/donations") > -1) result = "donations";
-    if (url.indexOf("/forms") > -1) result = "forms";
-    if (url.indexOf("/settings") > -1) result = "settings";
+    var result = "People";
+    if (url.indexOf("/groups") > -1) result = "Groups";
+    if (url.indexOf("/attendance") > -1) result = "Attendance";
+    if (url.indexOf("/donations") > -1) result = "Donations";
+    if (url.indexOf("/forms") > -1) result = "Forms";
+    if (url.indexOf("/settings") > -1) result = "Settings";
 
     return result;
   };
@@ -28,13 +28,7 @@ export const NavItems: React.FC<Props> = (props) => {
 
   const getTab = (key: string, url: string, icon: string, label: string) => {
     return (
-      <li
-        key={key}
-        className="nav-item"
-        data-toggle={props.prefix === "main" ? null : "collapse"}
-        data-target={props.prefix === "main" ? null : "#userMenu"}
-        id={(props.prefix || "") + key + "Tab"}
-      >
+      <li key={key} className="nav-item" data-toggle={props.prefix === "main" ? null : "collapse"} data-target={props.prefix === "main" ? null : "#userMenu"} id={(props.prefix || "") + key + "Tab"}>
         <Link className={getClass(key)} to={url}>
           <i className={icon}></i> {label}
         </Link>
@@ -44,31 +38,17 @@ export const NavItems: React.FC<Props> = (props) => {
 
   const getTabs = () => {
     var tabs = [];
-    tabs.push(getTab("people", "/people", "fas fa-user", "People"));
-    if (UserHelper.checkAccess("Groups", "View"))
-      tabs.push(getTab("groups", "/groups", "fas fa-list-ul", "Groups"));
-    if (UserHelper.checkAccess("Attendance", "View Summary"))
-      tabs.push(
-        getTab("attendance", "/attendance", "far fa-calendar-alt", "Attendance")
-      );
-    if (UserHelper.checkAccess("Donations", "View Summary"))
-      tabs.push(
-        getTab(
-          "donations",
-          "/donations",
-          "fas fa-hand-holding-usd",
-          "Donations"
-        )
-      );
-    if (UserHelper.checkAccess("Forms", "View"))
-      tabs.push(getTab("forms", "/forms", "fas fa-align-left", "Forms"));
-    if (UserHelper.checkAccess("Roles", "View"))
-      tabs.push(getTab("settings", "/settings", "fas fa-cog", "Settings"));
-    tabs.push(getTab("reports", "/reports", null, "Reports"));
-    if (UserHelper.checkAccess("Site", "Admin"))
-      tabs.push(
-        getTab("admin-reports", "/admin/reports", null, "Admin reports")
-      );
+    tabs.push(getTab("People", "/people", "fas fa-user", "People"));
+    if (UserHelper.checkAccess("Groups", "View")) tabs.push(getTab("Groups", "/groups", "fas fa-list-ul", "Groups"));
+    if (UserHelper.checkAccess("Attendance", "View Summary")) tabs.push(getTab("Attendance", "/attendance", "far fa-calendar-alt", "Attendance"));
+    if (UserHelper.checkAccess("Donations", "View Summary")) tabs.push(getTab("Donations", "/donations", "fas fa-hand-holding-usd", "Donations"));
+    if (UserHelper.checkAccess("Forms", "View")) tabs.push(getTab("Forms", "/forms", "fas fa-align-left", "Forms"));
+    if (UserHelper.checkAccess("Roles", "View")) tabs.push(getTab("Settings", "/settings", "fas fa-cog", "Settings"));
+
+    if (UserHelper.checkAccess("Site", "Admin")) {
+      tabs.push(getTab("Reports", "/reports", null, "Reports"));
+      tabs.push(getTab("AdminReports", "/admin/reports", null, "Admin reports"));
+    }
     return tabs;
   };
 

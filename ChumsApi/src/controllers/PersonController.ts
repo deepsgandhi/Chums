@@ -153,7 +153,7 @@ export class PersonController extends CustomBaseController {
                         this.repositories.person.save(person).then(async (p) => {
                             // const r = this.repositories.person.convertToModel(au.churchId, p);
                             p.churchId = au.churchId;
-                            if (p.photo.startsWith("data:image/png;base64,")) await this.savePhoto(au.churchId, p);
+                            if (p.photo !== undefined && p.photo.startsWith("data:image/png;base64,")) await this.savePhoto(au.churchId, p);
                             return p;
                         })
                     );

@@ -157,7 +157,7 @@ export const PersonEdit: React.FC<Props> = (props) => {
                                 <FormGroup>
                                     <FormLabel>Marital Status</FormLabel>
                                     <FormControl as="select" name="maritalStatus" value={person?.maritalStatus || ''} onChange={handleChange} onKeyDown={handleKeyDown}>
-                                        <option value="Unknown">Visitor</option>
+                                        <option value="Unknown">Unknown</option>
                                         <option value="Single">Single</option>
                                         <option value="Married">Married</option>
                                         <option value="Divorced">Divorced</option>
