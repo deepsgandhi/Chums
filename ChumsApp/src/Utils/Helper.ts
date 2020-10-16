@@ -45,8 +45,13 @@ export class Helper {
     }
 
     static formatHtml5Date(date: Date): string {
-        if (date === undefined || date === null) return '';
-        else return new Date(date).toISOString().split('T')[0];
+        var result = '';
+        if (date !== undefined && date !== null) {
+            try {
+                result = new Date(date).toISOString().split('T')[0];
+            } catch { }
+        }
+        return result;
     }
 
     static getDisplayDuration(d: Date): string {

@@ -43,7 +43,7 @@ export const ReportView = (props: Props) => {
 
     return (
         <>
-            <DisplayBox id="chartBox" headerIcon="far fa-chart-bar" headerText={props.report.title} editContent={getEditContent()} >
+            <DisplayBox id={"chartBox-" + props.report?.keyName} headerIcon="far fa-chart-bar" headerText={props.report.title} editContent={getEditContent()} >
                 {getChart()}
             </DisplayBox >
         </>

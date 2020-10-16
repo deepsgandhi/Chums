@@ -1,7 +1,7 @@
 context('Attendance', () => {
     Cypress.Cookies.defaults({ whitelist: ['.AspNetCore.Session', '.AspNetCore.Cookies'] })
     it('Log into app', () => { cy.login() });
-    it('Load attendance tab', () => { cy.loadTab('attendanceTab', 'groupsBox'); });
+    it('Load attendance tab', () => { cy.loadTab('mainAttendanceTab', 'groupsBox'); });
     editCampus();
     editService();
     editServiceTime();
@@ -45,7 +45,10 @@ function editServiceTime() {
         cy.get('#serviceTimeBox input[name="serviceTimeName"]').should('exist').clear().type('10:31am');
         cy.get('#serviceTimeBox .footer .btn-success').click();
         cy.wait(500);
+
         cy.get('#groupsBox a:contains("10:31am"):first').should('exist').click();
+        cy.get('#serviceTimeBox').should('exist');
+        cy.wait(300);
         cy.get('#serviceTimeBox input[name="serviceTimeName"]').should('exist').clear().type('10:30am');
         cy.get('#serviceTimeBox .footer .btn-success').click();
         cy.wait(500);
@@ -53,26 +56,24 @@ function editServiceTime() {
 }
 
 function attendanceChart() {
-    it('Chart is blank', () => { cy.get('#attendanceBox').should('contain', 'No records found.'); });
+    it('Chart is populated', () => { cy.get('#chartBox-attendanceTrend rect').should('exist'); });
     it('Switch to people tab', () => {
-        cy.get("#attendanceTabs .nav-link:contains('People')").should('exist').should('not.have.class', 'active').click().should('have.class', 'active');
+        cy.get("#attendanceTabs .nav-link:contains('Group Attendance')").should('exist').should('not.have.class', 'active').click().should('have.class', 'active');
         cy.get('#attendanceBox').should('not.be.visible');
-        cy.get('#individualAttendanceBox').should('be.visible');
+        cy.get('#chartBox-groupAttendance').should('be.visible');
     });
-    it('No people shown', () => { cy.get('#individualAttendanceBox').should('contain', 'Total Attendance: 0'); });
+
+    it('No people shown', () => { cy.get('#chartBox-groupAttendance').should('not.contain', 'Worship Service'); });
     it('Filter attendance', () => {
-        cy.get('#attendanceFilterBox input[name="week"]').should('exist').clear().type('2020-06-28');
-        cy.get('#attendanceFilterBox .footer .btn-success').click();
+        cy.get('#filterBox-groupAttendance input[name="week"]').should('exist').clear().type('2020-06-28');
+        cy.get('#filterBox-groupAttendance .footer .btn-success').click();
     });
-    it('People shown', () => { cy.get('#individualAttendanceBox').should('not.contain', 'Total Attendance: 0'); });
+    it('People shown', () => { cy.get('#chartBox-groupAttendance').should('contain', 'Worship Service'); });
+
+
     it('Switch to attendance tab', () => {
-        cy.get("#attendanceTabs .nav-link:contains('Attendance')").should('exist').should('not.have.class', 'active').click().should('have.class', 'active');
-        cy.get('#attendanceBox').should('be.visible');
+        cy.get("#attendanceTabs .nav-link:contains('Attendance Trend')").should('exist').should('not.have.class', 'active').click().should('have.class', 'active');
+        cy.get('#chartBox-attendanceTrend').should('be.visible');
     });
-    it('Attendance rows shown', () => { cy.get('#attendanceBox').should('contain', 'Test Church'); });
-    it('Attendance chart shown', () => { cy.get('#attendanceBox svg').should('exist'); });
-    it('Change chart grouping', () => {
-        cy.get('#attendanceBox select').should('exist').select('Service Time');
-        cy.get('#attendanceBox').should('contain', '10:30am');
-    });
+    it('Attendance chart shown', () => { cy.get('#chartBox-attendanceTrend').should('exist'); });
 }
