@@ -18,7 +18,11 @@ export const Login: React.FC = (props: any) => {
   const [errors, setErrors] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  const { from } = useLocation().state as any;
+  let { from } = (useLocation().state as any) || {
+    from: {
+      pathname: "/",
+    },
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<any>) => {
     if (e.key === "Enter") {
@@ -48,11 +52,16 @@ export const Login: React.FC = (props: any) => {
 
   const init = () => {
     let search = new URLSearchParams(props.location.search);
-    console.log(document.cookie);
+
     var jwt = search.get("jwt") || getCookieValue("jwt");
+    let authGuid = search.get("auth");
+    if (authGuid !== "undefined" && authGuid !== null) {
+      login({ authGuid: authGuid });
+    }
     if (jwt !== "undefined" && jwt !== "") {
       login({ jwt: jwt });
     }
+    console.log(document.cookie);
   };
 
   const login = (data: {}) => {
