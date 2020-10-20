@@ -65,5 +65,5 @@ export const Tabs: React.FC<Props> = (props) => {
 
 
 
-    return (<><ul className="nav nav-tabs">{getTabs()}</ul>{getCurrentTab()}</>);
+    return (<><ul className="nav nav-tabs" id="groupTabs">{getTabs()}</ul>{getCurrentTab()}</>);
 }

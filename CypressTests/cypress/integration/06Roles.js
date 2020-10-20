@@ -2,12 +2,29 @@ context('Roles', () => {
     Cypress.Cookies.defaults({ whitelist: ['.AspNetCore.Session', '.AspNetCore.Cookies'] })
     cy.on('window:confirm', (str) => { return true; });
     it('Log into app', () => { cy.login() });
-    it('Load settings tab', () => { cy.loadTab('settingsTab', 'settingsBoxes'); });
+    prepWork();
+
+    it('Load settings tab', () => { cy.loadTab('mainSettingsTab', 'settingsBoxes'); });
     createRole();
     addRemoveMember();
     editPermissions();
     deleteRole();
 });
+
+function prepWork() {
+    it('Load person', () => {
+        cy.loadTab('mainPeopleTab', 'peopleBox');
+        cy.loadPerson('Joseph Rodriguez');
+    });
+    it('Set Email Address', () => {
+        cy.get('#personDetailsBox .header .fa-pencil-alt').click();
+        cy.get('#personDetailsBox .footer .btn-success').should('exist');
+        cy.get('#personDetailsBox input[name="email"]').clear().type('jrodriguez@chums.org');
+        cy.get('#personDetailsBox .footer .btn-success').click();
+        cy.get('#personDetailsBox').should('contain', 'jrodriguez@chums.org');
+    });
+}
+
 
 function createRole() {
     it('Select roles', () => {
@@ -51,7 +68,7 @@ function editPermissions() {
 
 function deleteRole() {
     it('Delete role', () => {
-        cy.loadTab('settingsTab', 'settingsBoxes');
+        cy.loadTab('mainSettingsTab', 'settingsBoxes');
         cy.get('#settingsBoxes .card-body:contains("Permissions")').should('be.visible').click();
         cy.get('#rolesBox tr:contains("Test Role"):first .fa-pencil-alt').click();
         cy.wait(500);

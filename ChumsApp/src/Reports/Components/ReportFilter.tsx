@@ -211,7 +211,7 @@ export const ReportFilter = (props: Props) => {
     }, [pendingRun]);
 
     if (report?.values?.length > 1) return (
-        <InputBox headerIcon="far fa-chart-bar" headerText="Filter Report" saveFunction={handleUpdate} saveText="Update" >
+        <InputBox headerIcon="far fa-chart-bar" headerText="Filter Report" saveFunction={handleUpdate} saveText="Update" id={"filterBox-" + props.report.keyName}  >
             {getParameters()}
         </InputBox>
     );

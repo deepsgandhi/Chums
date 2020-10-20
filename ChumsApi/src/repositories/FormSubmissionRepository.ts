@@ -24,7 +24,10 @@ export class FormSubmissionRepository {
     }
 
     public async delete(churchId: number, id: number) {
-        DB.query("DELETE FROM formSubmissions WHERE id=? AND churchId=?;", [id, churchId]);
+        const sql = "DELETE FROM formSubmissions WHERE id=? AND churchId=?;";
+        // const params = [id, churchId];  //I can't figure ot why, but "id" is a string here.
+        const params = [parseInt(id.toString(), 0), churchId];
+        DB.query(sql, params);
     }
 
     public async load(churchId: number, id: number) {

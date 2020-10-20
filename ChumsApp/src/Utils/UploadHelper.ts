@@ -100,6 +100,7 @@ export class UploadHelper {
 
     static readZippedCsv(files: AdmZip.IZipEntry[], name: string) {
         var f = this.getZippedFile(files, name);
+        if (f === null) return [];
         var txt = f.getData().toString();
         var cleanedText = txt.trim(); // .substr(1, txt.length - 2); //sof and eof chars
         return UploadHelper.readCsvString(cleanedText)

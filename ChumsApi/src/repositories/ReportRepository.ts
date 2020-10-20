@@ -53,8 +53,6 @@ export class ReportRepository {
         values.forEach(v => {
             for (let i = 0; i < params.length; i++) if (params[i] === v.key) params[i] = v.value;
         })
-        console.log(query);
-        console.log(params);
         return DB.query(query, params);
     }
 

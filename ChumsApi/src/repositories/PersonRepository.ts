@@ -7,6 +7,7 @@ import { PersonHelper } from "../helpers";
 export class PersonRepository {
 
     public async save(person: Person) {
+        console.log(JSON.stringify(person));
         person.name.display = PersonHelper.getDisplayName(person);
         if (person.id > 0) return this.update(person); else return this.create(person);
     }
@@ -113,7 +114,7 @@ export class PersonRepository {
 
     public convertToModel(churchId: number, data: any) {
         const result: Person = {
-            name: { display: data.displayName, first: data.firstName, last: data.lastName },
+            name: { display: data.displayName, first: data.firstName, last: data.lastName, middle: data.middleName, nick: data.nickName, prefix: data.prefix, suffix: data.suffix },
             contactInfo: { address1: data.address1, address2: data.address2, city: data.city, state: data.state, zip: data.zip, homePhone: data.homePhone, workPhone: data.workPhone, email: data.email },
             photo: data.photo, anniversary: data.anniversary, birthDate: data.birthDate, gender: data.gender, householdId: data.householdId, householdRole: data.householdRole, maritalStatus: data.maritalStatus,
             membershipStatus: data.membershipStatus, photoUpdated: data.photoUpdated, id: data.id, userId: data.userId, importKey: data.importKey

@@ -1,7 +1,7 @@
 context('People', () => {
     it('Log into app', () => { cy.login() });
     searchForPerson();
-    testEdit();
+    editEmail();
     editPhoto();
     editHousehold();
 });
@@ -17,13 +17,21 @@ function searchForPerson() {
     });
 }
 
-function testEdit() {
+function editEmail() {
     it('Edit Person', () => {
         cy.get('#personDetailsBox .header .fa-pencil-alt').click();
         cy.get('#personDetailsBox .footer .btn-success').should('exist');
         cy.get('#personDetailsBox input[name="email"]').clear().type('jsmith@chums.org');
         cy.get('#personDetailsBox .footer .btn-success').click();
         cy.get('#personDetailsBox').should('contain', 'jsmith@chums.org');
+
+        //set it back
+        cy.get('#personDetailsBox .header .fa-pencil-alt').click();
+        cy.get('#personDetailsBox .footer .btn-success').should('exist');
+        cy.get('#personDetailsBox input[name="email"]').clear();
+        cy.get('#personDetailsBox .footer .btn-success').click();
+        cy.get('#personDetailsBox').should('not.contain', 'jsmith@chums.org');
+
     });
 }
 
@@ -31,7 +39,7 @@ function editHousehold() {
     it('Edit Household', () => {
         cy.get('#householdBox .fa-pencil-alt').click();
         cy.get('#householdBox .footer .btn-success').should('exist');
-        cy.get('#householdBox input[name="householdName"]').type('Smith Test');
+        cy.get('#householdBox input[name="householdName"]').clear().type('Smith Test');
         cy.get('#householdBox .text-success').click();
         cy.get('#personAddText').should('exist').clear().type('Davis');
         cy.get('#personAddButton').click();
@@ -39,6 +47,17 @@ function editHousehold() {
         cy.get('#householdBox .footer .btn-success').click();
         cy.get('#householdMemberAddTable .text-success').should('not.exist');
         cy.get('#householdBox').should('contain', 'Davis');
+
+        //set it back
+        cy.get('#householdBox .fa-pencil-alt').click();
+        cy.get('#householdBox .footer .btn-success').should('exist');
+        cy.get('#householdBox input[name="householdName"]').clear().type('Smith');
+
+        cy.get('#householdBox tr:contains("Richard Davis") .text-danger').click();
+        cy.get('#householdBox .footer .btn-success').click();
+        cy.get('#householdMemberAddTable .text-success').should('not.exist');
+        cy.get('#householdBox').should('not.contain', 'Davis');
+
     });
 }
 

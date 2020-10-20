@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
-import { Answer } from "../models";
+import { Answer, FormSubmission } from "../models";
 
 @injectable()
 export class AnswerRepository {
@@ -25,6 +25,10 @@ export class AnswerRepository {
 
     public async delete(churchId: number, id: number) {
         DB.query("DELETE FROM answers WHERE id=? AND churchId=?;", [id, churchId]);
+    }
+
+    public async deleteForSubmission(churchId: number, formSubmissionId: number) {
+        DB.query("DELETE FROM answers WHERE churchId=? AND formSubmissionId=?;", [churchId, formSubmissionId]);
     }
 
     public async load(churchId: number, id: number) {
