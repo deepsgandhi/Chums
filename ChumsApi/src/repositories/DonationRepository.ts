@@ -7,6 +7,7 @@ import { PersonHelper } from "../helpers"
 export class DonationRepository {
 
     public async save(donation: Donation) {
+        if (donation.personId === 0) donation.personId = null;
         if (donation.id > 0) return this.update(donation); else return this.create(donation);
     }
 
@@ -18,10 +19,11 @@ export class DonationRepository {
     }
 
     public async update(donation: Donation) {
-        return DB.query(
-            "UPDATE donations SET batchId=?, personId=?, donationDate=?, amount=?, method=?, methodDetails=?, notes=? WHERE id=? and churchId=?",
-            [donation.batchId, donation.personId, donation.donationDate, donation.amount, donation.method, donation.methodDetails, donation.notes, donation.id, donation.churchId]
-        ).then(() => { return donation });
+        const sql = "UPDATE donations SET batchId=?, personId=?, donationDate=?, amount=?, method=?, methodDetails=?, notes=? WHERE id=? and churchId=?";
+        const params = [donation.batchId, donation.personId, donation.donationDate, donation.amount, donation.method, donation.methodDetails, donation.notes, donation.id, donation.churchId]
+        console.log(sql);
+        console.log(JSON.stringify(params));
+        return DB.query(sql, params).then(() => { return donation });
     }
 
     public async delete(churchId: number, id: number) {

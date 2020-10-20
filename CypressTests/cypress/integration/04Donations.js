@@ -1,7 +1,6 @@
 context('Donations', () => {
-    Cypress.Cookies.defaults({ whitelist: ['.AspNetCore.Session', '.AspNetCore.Cookies'] })
     it('Log into app', () => { cy.login() });
-    it('Load attendance tab', () => { cy.loadTab('donationsTab', 'donationChartBox'); });
+    it('Load donations tab', () => { cy.loadTab('mainDonationsTab', 'chartBox-donationSummary'); });
     donationChart();
     editFund();
     editBatchName();
@@ -10,13 +9,12 @@ context('Donations', () => {
 });
 
 function donationChart() {
-    it('Donation chart shown', () => { cy.get('#donationChartBox svg').should('exist'); });
+    it('Donation chart shown', () => { cy.get('#chartBox-donationSummary').should('contain', 'General Fund'); });
     it('Filter chart', () => {
-        cy.wait(1000);
-        cy.get('#donationFilterBox input[name="startDate"]').should('exist').clear().type('2020-06-28');
-        cy.get('#donationFilterBox .footer .btn-success').click();
+        cy.get('#filterBox-donationSummary input[name="endDate"]').should('exist').clear().type('2020-01-02');
+        cy.get('#filterBox-donationSummary .footer .btn-success').click();
     });
-    it('Donation chart not shown', () => { cy.get('#donationChartBox svg').should('exist'); });
+    it('Donation chart not shown', () => { cy.get('#chartBox-donationSummary').should('not.contain', 'General Fund'); });
 }
 
 function editFund() {
@@ -50,7 +48,7 @@ function editBatchName() {
 
 function loadBatchPage() {
     it('Load batch page', () => {
-        cy.get('#batchesBox tr:contains("Jun 27, 2020"):first a:first').should('exist').click();
+        cy.get('#batchesBox tr:contains("Jun 28, 2020"):first a:first').should('exist').click();
         cy.get('#donationsBox').should('exist');
     });
 }

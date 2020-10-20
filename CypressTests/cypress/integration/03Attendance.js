@@ -1,5 +1,4 @@
 context('Attendance', () => {
-    Cypress.Cookies.defaults({ whitelist: ['.AspNetCore.Session', '.AspNetCore.Cookies'] })
     it('Log into app', () => { cy.login() });
     it('Load attendance tab', () => { cy.loadTab('mainAttendanceTab', 'groupsBox'); });
     editCampus();
