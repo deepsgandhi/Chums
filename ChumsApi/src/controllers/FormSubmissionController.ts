@@ -57,7 +57,11 @@ export class FormSubmissionController extends CustomBaseController {
     public async delete(@requestParam("id") id: number, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {
             if (!au.checkAccess("Forms", "Edit")) return this.json({}, 401);
-            else await this.repositories.formSubmission.delete(au.churchId, id);
+            else {
+                await this.repositories.answer.deleteForSubmission(au.churchId, id);
+                await new Promise(resolve => setTimeout(resolve, 500)); // I think it takes a split second for the FK restraints to see the answers were deleted sometimes and the delete below fails.
+                await this.repositories.formSubmission.delete(au.churchId, id);
+            }
         });
     }
 

@@ -54,8 +54,6 @@ export class DonationController extends CustomBaseController {
             if (!au.checkAccess("Donations", "Edit")) return this.json({}, 401);
             else {
                 const promises: Promise<Donation>[] = [];
-                console.log("SAVING DONATIONS");
-                console.log(JSON.stringify(req.body));
                 req.body.forEach(donation => { donation.churchId = au.churchId; promises.push(this.repositories.donation.save(donation)); });
                 const result = await Promise.all(promises);
                 return this.repositories.donation.convertAllToModel(au.churchId, result);

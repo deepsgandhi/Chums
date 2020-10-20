@@ -21,8 +21,6 @@ export class DonationRepository {
     public async update(donation: Donation) {
         const sql = "UPDATE donations SET batchId=?, personId=?, donationDate=?, amount=?, method=?, methodDetails=?, notes=? WHERE id=? and churchId=?";
         const params = [donation.batchId, donation.personId, donation.donationDate, donation.amount, donation.method, donation.methodDetails, donation.notes, donation.id, donation.churchId]
-        console.log(sql);
-        console.log(JSON.stringify(params));
         return DB.query(sql, params).then(() => { return donation });
     }
 

@@ -18,7 +18,11 @@ export class QuestionController extends CustomBaseController {
     public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {
             if (!au.checkAccess("Forms", "View")) return this.json({}, 401);
-            else return this.repositories.question.convertAllToModel(au.churchId, await this.repositories.question.loadAll(au.churchId));
+            else {
+                const formId: number = parseInt(req.query.formId.toString(), 0);
+                const data = await this.repositories.question.loadForForm(au.churchId, formId);
+                return this.repositories.question.convertAllToModel(au.churchId, data);
+            }
         });
     }
 
