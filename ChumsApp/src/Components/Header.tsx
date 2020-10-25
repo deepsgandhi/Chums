@@ -22,9 +22,7 @@ export const Header: React.FC = () => {
     });
   };
 
-  React.useEffect(() => {
-    toggleMenuItems();
-  });
+  React.useEffect(() => { toggleMenuItems(); });
 
   return (
     <>
@@ -37,40 +35,15 @@ export const Header: React.FC = () => {
               </a>
             </div>
 
-            <Col
-              className="d-none d-md-block"
-              style={{
-                borderLeft: "2px solid #EEE",
-                borderRight: "2px solid #EEE",
-                maxWidth: "703px",
-                margin: "0 15px",
-              }}
-            >
-              <ul
-                id="nav-main"
-                className="nav nav-fill d-flex overflow-hidden"
-                style={{
-                  height: "55px",
-                }}
-              >
+            <Col className="d-none d-md-block" style={{ borderLeft: "2px solid #EEE", borderRight: "2px solid #EEE", maxWidth: "703px", margin: "0 15px" }} >
+              <ul id="nav-main" className="nav nav-fill d-flex overflow-hidden" style={{ height: "55px" }} >
                 <NavItems prefix="main" />
               </ul>
             </Col>
 
             <div className="d-flex align-items-center" id="navRight">
-              <a
-                href="about:blank"
-                id="userMenuLink"
-                data-toggle="collapse"
-                data-target="#userMenu"
-                aria-controls="navbarToggleMenu"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <img
-                  src={PersonHelper.getPhotoUrl(UserHelper.person)}
-                  alt="user"
-                />
+              <a href="about:blank" id="userMenuLink" data-toggle="collapse" data-target="#userMenu" aria-controls="navbarToggleMenu" aria-expanded="false" aria-label="Toggle navigation" >
+                <img src={PersonHelper.getPhotoUrl(UserHelper.person)} alt="user" />
                 {userName} <i className="fas fa-caret-down"></i>
               </a>
             </div>
@@ -81,7 +54,7 @@ export const Header: React.FC = () => {
         <div>
           <ul id="nav-menu" className="nav d-flex flex-column">
             <NavItems />
-            <Link to="/logout">Logout</Link>
+            <Link to="/logout"><i className="fas fa-lock"></i> Logout</Link>
           </ul>
         </div>
       </div>

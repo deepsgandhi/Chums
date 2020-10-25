@@ -44,11 +44,11 @@ export const NavItems: React.FC<Props> = (props) => {
     if (UserHelper.checkAccess("Donations", "View Summary")) tabs.push(getTab("Donations", "/donations", "fas fa-hand-holding-usd", "Donations"));
     if (UserHelper.checkAccess("Forms", "View")) tabs.push(getTab("Forms", "/forms", "fas fa-align-left", "Forms"));
     if (UserHelper.checkAccess("Roles", "View")) tabs.push(getTab("Settings", "/settings", "fas fa-cog", "Settings"));
-
     if (UserHelper.checkAccess("Site", "Admin")) {
-      tabs.push(getTab("Reports", "/reports", null, "Reports"));
-      tabs.push(getTab("AdminReports", "/admin/reports", null, "Admin reports"));
+      tabs.push(getTab("Reports", "/reports", "far fa-chart-bar", "Reports"));
+      tabs.push(getTab("AdminReports", "/admin/reports", "fas fa-filter", "Admin reports"));
     }
+    tabs.push(getTab("Profile", "/profile", "fas fa-user", "Profile"));
     return tabs;
   };
 
