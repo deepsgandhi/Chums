@@ -8,6 +8,7 @@ export class UserHelper {
     static user: UserInterface;
     static currentPermissions: RolePermissionInterface[];
     static person: PersonInterface;
+    static churchChanged: boolean = false;
 
     static selectChurch = (churchId: number, context: UserContextInterface) => {
         var church = null;
@@ -26,7 +27,8 @@ export class UserHelper {
             ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/users/switchApp', data).then((resp: LoginResponseInterface) => {
                 ApiHelper.jwt = resp.token;
 
-
+                if (context.churchName !== "") UserHelper.churchChanged = true;
+                context.setChurchName(UserHelper.currentChurch.name);
                 ApiHelper.apiGet('/people/userid/' + UserHelper.user.id).then((person: PersonInterface) => {
                     UserHelper.person = person;
                     context.setUserName(UserHelper.currentChurch.id.toString());

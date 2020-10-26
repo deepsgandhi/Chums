@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { Header } from "./Components";
+import { Header, UserHelper } from "./Components";
 import { Admin } from "./Admin/Admin";
 import { PeoplePage } from "./People/PeoplePage";
 import { PersonPage } from "./People/PersonPage";
@@ -14,15 +14,25 @@ import { FormsPage } from "./Forms/FormsPage";
 import { Settings } from "./Settings/Settings";
 import { Reports } from "./Reports/Reports";
 import { ProfilePage } from './Profile/ProfilePage';
-
 import { FormPage } from "./Forms/FormPage";
+import UserContext from "./UserContext";
+
 
 interface Props {
   location: any;
 }
 
 export const Authenticated: React.FC<Props> = (props) => {
-  return (
+  //to force rerender on login
+  var user = React.useContext(UserContext)?.userName;
+  var church = React.useContext(UserContext)?.churchName;
+
+
+  if (UserHelper.churchChanged) {
+    UserHelper.churchChanged = false;
+    return <Redirect to="/people" />
+  }
+  else return (
     <>
       <link rel="stylesheet" href="/css/cp.css" />
       <Header></Header>
