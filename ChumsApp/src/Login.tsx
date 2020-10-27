@@ -1,18 +1,13 @@
 import React from "react";
 import "./Login.css";
-import {
-  ErrorMessages,
-  ApiHelper,
-  UserHelper,
-  EnvironmentHelper,
-  LoginResponseInterface,
-} from "./Components";
+import { ErrorMessages, ApiHelper, UserHelper, EnvironmentHelper, LoginResponseInterface } from "./Components";
 import { Authenticated } from "./Authenticated";
 import UserContext from "./UserContext";
-import { Button, FormControl } from "react-bootstrap";
+import { Button, FormControl, Alert } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 
 export const Login: React.FC = (props: any) => {
+  const [welcomeBackName, setWelcomeBackName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errors, setErrors] = React.useState([]);
@@ -55,24 +50,30 @@ export const Login: React.FC = (props: any) => {
 
     var jwt = search.get("jwt") || getCookieValue("jwt");
     let authGuid = search.get("auth");
+
     if (authGuid !== "undefined" && authGuid !== null) {
       login({ authGuid: authGuid });
     }
+
     if (jwt !== "undefined" && jwt !== "") {
+      setEmail(getCookieValue("email"));
+      setWelcomeBackName(getCookieValue("name"));
       login({ jwt: jwt });
     }
+
     console.log(document.cookie);
   };
 
   const login = (data: {}) => {
     setLoading(true);
-    ApiHelper.apiPostAnonymous(
-      EnvironmentHelper.AccessManagementApiUrl + "/users/login",
-      data
-    )
+    ApiHelper.apiPostAnonymous(EnvironmentHelper.AccessManagementApiUrl + "/users/login", data)
       .then((resp: LoginResponseInterface) => {
         if (Object.keys(resp).length !== 0) {
+
           document.cookie = "jwt=" + resp.token;
+          document.cookie = "name=" + resp.user.displayName;
+          document.cookie = "email=" + resp.user.email;
+
           ApiHelper.jwt = resp.token;
           ApiHelper.amJwt = resp.token;
           UserHelper.user = resp.user;
@@ -86,6 +87,7 @@ export const Login: React.FC = (props: any) => {
           });
           selectChurch();
         } else {
+          setWelcomeBackName("");
           setErrors(["Invalid login. Please check your email or password."]);
           setLoading(false);
         }
@@ -101,6 +103,13 @@ export const Login: React.FC = (props: any) => {
     console.log(ApiHelper.jwt);
   };
 
+  const getWelcomeBack = () => {
+    if (welcomeBackName === "") return null;
+    else {
+      return <Alert variant="info">Welcome back, <b>{welcomeBackName}</b>!  Please wait while we load your data.</Alert>
+    }
+  }
+
   const context = React.useContext(UserContext);
   React.useEffect(init, []);
 
@@ -114,39 +123,12 @@ export const Login: React.FC = (props: any) => {
           style={{ marginBottom: 50 }}
         />
         <ErrorMessages errors={errors} />
+        {getWelcomeBack()}
         <div id="loginBox">
           <h2>Please sign in</h2>
-          <FormControl
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => {
-              e.preventDefault();
-              setEmail(e.currentTarget.value);
-            }}
-            placeholder="Email address"
-            onKeyDown={handleKeyDown}
-          />
-          <FormControl
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => {
-              e.preventDefault();
-              setPassword(e.currentTarget.value);
-            }}
-            onKeyDown={handleKeyDown}
-          />
-          <Button
-            id="signInButton"
-            size="lg"
-            variant="primary"
-            block
-            onClick={!loading ? handleSubmit : null}
-            disabled={loading}
-          >
+          <FormControl id="email" name="email" value={email} onChange={(e) => { e.preventDefault(); setEmail(e.currentTarget.value); }} placeholder="Email address" onKeyDown={handleKeyDown} />
+          <FormControl id="password" name="password" type="password" placeholder="Password" value={password} onChange={(e) => { e.preventDefault(); setPassword(e.currentTarget.value); }} onKeyDown={handleKeyDown} />
+          <Button id="signInButton" size="lg" variant="primary" block onClick={!loading ? handleSubmit : null} disabled={loading} >
             {loading ? "Please wait..." : "Sign in"}
           </Button>
           <br />

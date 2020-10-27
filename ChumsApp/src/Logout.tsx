@@ -7,6 +7,8 @@ export const Logout = () => {
     const context = React.useContext(UserContext)
 
     document.cookie = "jwt=";
+    document.cookie = "email=";
+    document.cookie = "name=";
     console.log(document.cookie);
     ApiHelper.jwt = '';
     ApiHelper.amJwt = '';
