@@ -8,7 +8,7 @@ interface Props {
     editFunction: (e: React.MouseEvent) => void,
     addFormId: number,
     photoUrl: string
-    setAddFormFunction: (formId: number) => void
+    formAddedFunction: (formId: number) => void
 }
 
 export const PersonView: React.FC<Props> = (props) => {
@@ -75,7 +75,7 @@ export const PersonView: React.FC<Props> = (props) => {
                     </Col>
                 </Row>
             </div>
-            <AssociatedForms contentType="person" contentId={props.person?.id} formSubmissions={props.person?.formSubmissions} addFormId={props.addFormId} setAddFormFunction={props.setAddFormFunction} />
+            <AssociatedForms contentType="person" contentId={props.person?.id} formSubmissions={props.person?.formSubmissions} addFormId={props.addFormId} formAddedFunction={props.formAddedFunction} />
         </div>
     )
 }

@@ -1,5 +1,4 @@
 export * from '../../Components'
-export { AddForm } from './AddForm'
 export { Groups } from './Groups'
 export { Household } from './Household'
 export { HouseholdEdit } from './HouseholdEdit'

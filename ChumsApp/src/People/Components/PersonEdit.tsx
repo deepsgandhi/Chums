@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
-import { PersonHelper, Helper, StateOptions, InputBox, ApiHelper, PersonInterface, AddForm, UserHelper } from './'
+import { PersonHelper, Helper, StateOptions, InputBox, ApiHelper, PersonInterface} from './'
 import { Redirect } from 'react-router-dom';
 import { Row, Col, FormControl, FormGroup, FormLabel } from 'react-bootstrap';
 
 interface Props {
     id?: string,
     updatedFunction: (person: PersonInterface) => void,
-    addFormFunction: (formId: number) => void
     togglePhotoEditor: (show: boolean) => void,
     person: PersonInterface,
     photoUrl: string,
@@ -77,7 +76,6 @@ export const PersonEdit: React.FC<Props> = (props) => {
         } else return;
     }
 
-    const getAddForm = () => { return (UserHelper.checkAccess('Forms', 'Edit')) ? (<AddForm person={person} addFormFunction={props.addFormFunction} />) : null; }
 
     const personChanged = useCallback(() => { setPerson(props.person) }, [props.person]);
     const photoUrlChanged = useCallback(() => {
@@ -233,7 +231,6 @@ export const PersonEdit: React.FC<Props> = (props) => {
                         </FormGroup>
                     </Col>
                 </Row>
-                {getAddForm()}
             </InputBox>
         )
     }
