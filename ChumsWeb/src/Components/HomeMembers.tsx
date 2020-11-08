@@ -12,7 +12,7 @@ export const HomeMembers: React.FC = () => {
                         <ul>
                             <li>Easily track all of the pertinent information about your members and guests including contact information, birth dates, relationships and anniversary dates.</li>
                             <li>Create unlimited custom fields to track information unique to your church such as when membership 101 class was attended.</li>
-                            <li>You may create an unlimited amount of groups for classes, at-hom small groups, or various ministries.</li>
+                            <li>You may create an unlimited amount of groups for classes, at-home small groups, or various ministries.</li>
                             <li>You can also track attendance on each of these groups, if you choose and see reports showing how your groups are growing over time.</li>
                         </ul>
                     </Col>

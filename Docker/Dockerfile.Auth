@@ -1,0 +1,29 @@
+FROM node:14.15.0
+
+ENV NODE_PATH=/app/node_modules
+
+RUN apt-get update -qq && apt-get install -y build-essential
+
+RUN mkdir /tmp/project
+
+
+WORKDIR /tmp/project
+
+
+RUN git clone https://github.com/LiveChurchSolutions/AccessManagement.git .
+RUN mv /tmp/project/AccessManagementApi /app
+RUN mv /app/src/pool.ts /app/src/Pool.ts
+
+COPY ./envs/.env.Auth /app/.env
+
+WORKDIR /app
+
+
+RUN npm install eslint-plugin-import  eslint-import-resolver-typescript  
+RUN npm install -g typescript 
+
+EXPOSE 9999
+
+
+
+CMD ["npm run dev"] 
