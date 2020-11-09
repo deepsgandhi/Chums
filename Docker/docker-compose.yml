@@ -1,7 +1,6 @@
-version: '3'
+version: "3"
 
 services:
-
   frontend:
     container_name: frontend
     build:
@@ -26,7 +25,6 @@ services:
     networks:
       - net
 
-
   mysql:
     container_name: "mysql"
     restart: unless-stopped
@@ -41,20 +39,6 @@ services:
       - data:/var/lib/mysql
     ports:
       - "3306:3306"
-    networks:
-      - net
-
-  phpmyadmin:
-    container_name: "phpmyadmin"
-    restart: unless-stopped
-    image: phpmyadmin/phpmyadmin
-    depends_on:
-      - mysql
-    environment:
-      - PMA_HOST=mysql
-      - PMA_PORT=3306
-    ports:
-      - "8080:80"
     networks:
       - net
 
@@ -90,10 +74,9 @@ services:
     environment:
       - API_ENV=prod
     ports:
-      - "8082:8082"
+      - "8080:8080"
     networks:
       - net
-
 
 networks:
   net:

@@ -19,6 +19,8 @@ WORKDIR /app
 RUN npm install eslint-plugin-import  eslint-import-resolver-typescript  
 RUN npm install -g typescript 
 
+CMD ["npm run initdb"]
+
 EXPOSE 9999
 
 

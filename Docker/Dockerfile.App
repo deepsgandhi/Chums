@@ -24,6 +24,7 @@ WORKDIR /app
 RUN npm install --loglevel verbose
 RUN npm install react-scripts@3.0.1 -g --silent
 
+CMD ["npm run initdb"]
 
 RUN npm run build
 
@@ -31,5 +32,6 @@ FROM nginx:1.16-alpine
 COPY ./nginx/conf/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=react-build /app/build /usr/share/nginx/html
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
