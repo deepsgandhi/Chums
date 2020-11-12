@@ -1,5 +1,4 @@
 import React from "react";
-import { NoteInterface } from "../Utils";
 import { ApiHelper, Note, DisplayBox, InputBox, UserHelper } from "./";
 
 interface Props {
