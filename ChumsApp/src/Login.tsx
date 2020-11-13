@@ -99,8 +99,10 @@ export const Login: React.FC = (props: any) => {
   };
 
   const selectChurch = () => {
-    UserHelper.selectChurch(UserHelper.churches[0].id, context);
-    console.log(ApiHelper.jwt);
+    let search = new URLSearchParams(props.location.search);
+    var churchId:number = parseInt(search.get("churchId"), 0);
+    if (isNaN(churchId) || churchId===0) churchId = UserHelper.churches[0].id;
+    UserHelper.selectChurch(churchId, context);
   };
 
   const getWelcomeBack = () => {
