@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import { ApiHelper, RegisterInterface, RoleInterface, LoginResponseInterface, RolePermissionInterface, RoleMemberInterface, ErrorMessages, EnvironmentHelper, ChurchInterface, CampusInterface, UserInterface, PersonInterface, HouseholdInterface, GroupInterface, GroupServiceTimeInterface, ServiceInterface, ServiceTimeInterface, FundInterface } from './';
 import { Row, Col, Container, Button } from 'react-bootstrap'
 
@@ -35,7 +35,6 @@ export const HomeRegister: React.FC = () => {
             setProcessing(true);
             btn.innerHTML = "Registering. Please wait...";
             const loginResp = await createAccess();
-            const churchId = loginResp.churches[0].id;
             const userId = loginResp.user.id;
 
 

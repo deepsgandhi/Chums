@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { ApiHelper, ReportInterface } from './';
 import { InputBox, ReportValueInterface, Helper, ServiceInterface, ServiceTimeInterface, GroupInterface, ReportHelper } from './';
 import { FormControl, FormGroup, FormLabel } from 'react-bootstrap';
@@ -18,7 +18,7 @@ export const ReportFilter = (props: Props) => {
     const [groups, setGroups] = React.useState<GroupInterface[]>(null);
     const [funds, setFunds] = React.useState<FundInterface[]>(null);
 
-    const handleUpdate = () => { props.updateFunction(report.values); }
+    const handleUpdate = useCallback(() => { props.updateFunction(report?.values); }, [props, report?.values])
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleUpdate(); } }
 
 
@@ -208,7 +208,7 @@ export const ReportFilter = (props: Props) => {
             handleUpdate();
             setPendingRun(false);
         }
-    }, [pendingRun]);
+    }, [handleUpdate, pendingRun]);
 
     if (report?.values?.length > 1) return (
         <InputBox headerIcon="far fa-chart-bar" headerText="Filter Report" saveFunction={handleUpdate} saveText="Update" id={"filterBox-" + props.report.keyName}  >

@@ -23,7 +23,7 @@ export const PeoplePage = () => {
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmit(null); } }
 
     React.useEffect(loadData, []);
-
+        
     return (
         <>
             <h1><i className="fas fa-user"></i> People</h1>

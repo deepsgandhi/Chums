@@ -30,7 +30,7 @@ export const ProfilePage = () => {
 
     const validate = () => {
         var errors = [];
-        if (password != passwordVerify) errors.push('Passwords do not match.');
+        if (password !== passwordVerify) errors.push('Passwords do not match.');
         if (password.length < 8) errors.push('Please enter a password that is at least 8 characters long.');
         setErrors(errors);
         return errors.length === 0;
