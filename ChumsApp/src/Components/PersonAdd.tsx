@@ -29,10 +29,8 @@ export const PersonAdd: React.FC<Props> = (props) => {
         // console.log('Show modal here!!', props.person)
         const {name: {
             first
-        }, contactInfo: {
-            address1, address2, city, state, zip
-        }} = props.person
-        setText(`Would you like to update ${person.name.first}'s address to match ${first}'s (${address1} ${address2} ${city} ${state} ${zip})?`)
+        }, contactInfo} = props.person
+        setText(`Would you like to update ${person.name.first}'s address to match ${first}'s (${PersonHelper.addressToString(contactInfo)})?`)
         setShowUpdateAddressModal(true)                
     }
 

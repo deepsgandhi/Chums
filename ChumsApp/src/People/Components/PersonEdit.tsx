@@ -56,18 +56,11 @@ export const PersonEdit: React.FC<Props> = (props) => {
             ApiHelper.apiDelete('/people/' + person.id.toString()).then(() => setRedirect('/people'));
     }
 
-    const checkAddressChange = (cProps: ContactInfoInterface, cState: ContactInfoInterface): boolean => {
-        if (cProps.address1 !== cState.address1 || cProps.address2 !== cState.address2 || cProps.city !== cState.city || cProps.state !== cState.state || cProps.zip !== cState.zip) {
-            return true;
-        }
-        return false
-    }
-
     const handleSave = () => {
         const {contactInfo: contactFromProps} = props.person
         const {contactInfo: contactFromState} = person
-        if (checkAddressChange(contactFromProps, contactFromState)) {            
-            setText(`You updated the address to ${contactFromState.address1} ${contactFromState.address2} ${contactFromState.city} ${contactFromState.state} ${contactFromState.zip} for ${person.name.display}.  Would you like to apply that to the entire ${person.name.last} family?`)
+        if (PersonHelper.compareAddress(contactFromProps, contactFromState)) {            
+            setText(`You updated the address to ${PersonHelper.addressToString(contactFromState)} for ${person.name.display}.  Would you like to apply that to the entire ${person.name.last} family?`)
             setShowUpdateAddressModal(true)
             return;
         }

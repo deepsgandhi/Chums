@@ -1,4 +1,4 @@
-import { PersonInterface } from './ApiHelper';
+import { PersonInterface, ContactInfoInterface } from './ApiHelper';
 import { EnvironmentHelper } from '../Components';
 
 export class PersonHelper {
@@ -21,5 +21,18 @@ export class PersonHelper {
         else return firstName + ' ' + lastName;
     }
 
+    public static compareAddress(address1: ContactInfoInterface, address2: ContactInfoInterface): boolean {
+        const displayAddress1: string = this.addressToString(address1);
+        const displayAddress2: string = this.addressToString(address2);
+        
+        if (displayAddress1 !== displayAddress2) {
+            return true
+        }
+        return false
+    } 
+
+    public static addressToString(address: ContactInfoInterface): string {
+        return `${address.address1} ${address.address2} ${address.city}, ${address.state} ${address.zip}`
+    }
 
 }
