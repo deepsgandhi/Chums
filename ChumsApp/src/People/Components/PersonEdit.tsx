@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { PersonHelper, Helper, StateOptions, InputBox, ApiHelper, PersonInterface} from './'
+import { PersonHelper, Helper, StateOptions, InputBox, ApiHelper, PersonInterface, ContactInfoInterface, UpdateHouseHold} from './'
 import { Redirect } from 'react-router-dom';
 import { Row, Col, FormControl, FormGroup, FormLabel } from 'react-bootstrap';
 
@@ -14,7 +14,8 @@ interface Props {
 export const PersonEdit: React.FC<Props> = (props) => {
     const [person, setPerson] = React.useState<PersonInterface>({} as PersonInterface);
     const [redirect, setRedirect] = React.useState('');
-
+    const [showUpdateAddressModal, setShowUpdateAddressModal] = React.useState<boolean>(false)
+    const [text, setText] = React.useState('');
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -55,8 +56,27 @@ export const PersonEdit: React.FC<Props> = (props) => {
             ApiHelper.apiDelete('/people/' + person.id.toString()).then(() => setRedirect('/people'));
     }
 
+    const checkAddressChange = (cProps: ContactInfoInterface, cState: ContactInfoInterface): boolean => {
+        if (cProps.address1 !== cState.address1 || cProps.address2 !== cState.address2 || cProps.city !== cState.city || cProps.state !== cState.state || cProps.zip !== cState.zip) {
+            return true;
+        }
+        return false
+    }
+
     const handleSave = () => {
-        ApiHelper.apiPost('/people/', [person])
+        const {contactInfo: contactFromProps} = props.person
+        const {contactInfo: contactFromState} = person
+        if (checkAddressChange(contactFromProps, contactFromState)) {            
+            setText(`You updated the address to ${contactFromState.address1} ${contactFromState.address2} ${contactFromState.city} ${contactFromState.state} ${contactFromState.zip} for ${person.name.display}.  Would you like to apply that to the entire ${person.name.last} family?`)
+            setShowUpdateAddressModal(true)
+            return;
+        }
+       
+        updatePerson(person)
+    }
+
+    const updatePerson = (person: PersonInterface) => {
+         ApiHelper.apiPost('/people/', [person])
             .then(data => {
                 var p = { ...person };
                 p.id = data[0];
@@ -65,7 +85,6 @@ export const PersonEdit: React.FC<Props> = (props) => {
                 props.updatedFunction(p);
             });
     }
-
 
     const getPhoto = () => {
         if (props.person) {
@@ -77,7 +96,18 @@ export const PersonEdit: React.FC<Props> = (props) => {
     }
 
 
-    const personChanged = useCallback(() => { setPerson(props.person) }, [props.person]);
+    const personChanged = useCallback(() => {
+        const personDeepCopy: PersonInterface = {
+            ...props.person,
+            contactInfo: {
+                ...props.person.contactInfo
+            },
+            name: {
+                ...props.person.name
+            }    
+        } 
+        setPerson(personDeepCopy) 
+    }, [props.person]);
     const photoUrlChanged = useCallback(() => {
         if (props.photoUrl !== null) {
             var p: PersonInterface = { ...person };
@@ -86,12 +116,25 @@ export const PersonEdit: React.FC<Props> = (props) => {
         }
     }, [props.photoUrl, person]);
 
+    const handleYes = () => {
+        setShowUpdateAddressModal(false)
+        // TODO: update API, support changing address of other members of same family
+        console.log("Yes! update other member's address")
+    }
+
+    const handleNo = () => {
+        setShowUpdateAddressModal(false)
+        updatePerson(person)        
+    }
+
     React.useEffect(personChanged, [props.person]);
     React.useEffect(photoUrlChanged, [props.photoUrl]);
-
-    if (redirect !== '') return <Redirect to={redirect} />
+   
+    if (redirect !== '') return <Redirect to={redirect} />    
     else {
         return (
+            <>
+            <UpdateHouseHold show={showUpdateAddressModal} text={text} onHide={() => setShowUpdateAddressModal(false)} handleNo={handleNo} handleYes={handleYes} />
             <InputBox id={props.id} headerIcon="fas fa-user" headerText="Personal Details" cancelFunction={handleCancel} deleteFunction={handleDelete} saveFunction={handleSave} >
                 <Row>
                     <Col xs={3}>{getPhoto()}</Col>
@@ -232,6 +275,7 @@ export const PersonEdit: React.FC<Props> = (props) => {
                     </Col>
                 </Row>
             </InputBox>
+            </>
         )
     }
 
