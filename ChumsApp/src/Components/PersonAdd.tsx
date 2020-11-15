@@ -20,7 +20,6 @@ export const PersonAdd: React.FC<Props> = (props) => {
     }
     const handleAdd = (e: React.MouseEvent) => {
         e.preventDefault();
-
         var anchor = e.currentTarget as HTMLAnchorElement;
         var idx = anchor.getAttribute('data-index');
         var sr: PersonInterface[] = [...searchResults];       
@@ -28,15 +27,18 @@ export const PersonAdd: React.FC<Props> = (props) => {
         setSelectedPersonIndex(parseInt(idx))
         const {name: {
             first
-        }, contactInfo} = props.person
+        }, contactInfo} = props.person;
+        if (!PersonHelper.checkAddressAvailabilty(props.person)) { 
+            addPerson(parseInt(idx))
+            return
+        }
         setText(`Would you like to update ${person.name.first}'s address to match ${first}'s (${PersonHelper.addressToString(contactInfo)})?`)
         setShowUpdateAddressModal(true)                
     }
 
-    const addPerson = () => {
+    const addPerson = (idx? : number) => {
         const updatedSearch: PersonInterface[] = [...searchResults]       
-        const person: PersonInterface = updatedSearch.splice(selectedPersonIndex, 1)[0];
-      
+        const person: PersonInterface = updatedSearch.splice(idx || selectedPersonIndex, 1)[0];
         setSearchResults(updatedSearch);
         props.addFunction(person);
     }

@@ -16,6 +16,8 @@ export const PersonEdit: React.FC<Props> = (props) => {
     const [redirect, setRedirect] = React.useState('');
     const [showUpdateAddressModal, setShowUpdateAddressModal] = React.useState<boolean>(false)
     const [text, setText] = React.useState('');
+    const [members, setMembers] = React.useState<PersonInterface[]>(null)
+
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -59,12 +61,11 @@ export const PersonEdit: React.FC<Props> = (props) => {
     const handleSave = () => {
         const {contactInfo: contactFromProps} = props.person
         const {contactInfo: contactFromState} = person
-        if (PersonHelper.compareAddress(contactFromProps, contactFromState)) {            
+        if (members.length > 1 && PersonHelper.compareAddress(contactFromProps, contactFromState)) {            
             setText(`You updated the address to ${PersonHelper.addressToString(contactFromState)} for ${person.name.display}.  Would you like to apply that to the entire ${person.name.last} family?`)
             setShowUpdateAddressModal(true)
             return;
         }
-       
         updatePerson(person)
     }
 
@@ -109,23 +110,8 @@ export const PersonEdit: React.FC<Props> = (props) => {
         }
     }, [props.photoUrl, person]);
 
-    const loadMembers = (): Promise<PersonInterface[]> =>  {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (person.householdId != null) { 
-                    const data = await ApiHelper.apiGet('/people/household/' + person.householdId);
-                    resolve(data)
-                  }      
-            } catch (err) {
-                console.log(`Error occured in fetching household members`);
-                reject(null)
-            }
-        })
-    }
-
     const handleYes = async () => {
         setShowUpdateAddressModal(false)
-        const members = await loadMembers()
         await Promise.all(
             members.map(async member => {
                 member.contactInfo = PersonHelper.changeOnlyAddress(member.contactInfo, person.contactInfo)
@@ -145,8 +131,21 @@ export const PersonEdit: React.FC<Props> = (props) => {
         updatePerson(person)        
     }
 
+    const fetchMembers = () => {       
+        try {
+            if (props.person.householdId != null) { 
+               ApiHelper.apiGet('/people/household/' + props.person.householdId).then(data => {
+                   setMembers(data);
+               });
+              }      
+        } catch (err) {
+            console.log(`Error occured in fetching household members`);           
+        }
+    }
+
     React.useEffect(personChanged, [props.person]);
     React.useEffect(photoUrlChanged, [props.photoUrl]);
+    React.useEffect(fetchMembers, [props.person])
    
     if (redirect !== '') return <Redirect to={redirect} />    
     else {

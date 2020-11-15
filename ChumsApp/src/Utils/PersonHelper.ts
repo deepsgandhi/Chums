@@ -32,7 +32,7 @@ export class PersonHelper {
     } 
 
     public static addressToString(address: ContactInfoInterface): string {
-        return `${address.address1} ${address.address2} ${address.city}, ${address.state} ${address.zip}`
+        return `${address.address1 || ''} ${address.address2 || ''} ${address.city || ''}${(address.city && address.state) ? ',' : ''} ${address.state || ''} ${address.zip || ''}`
     }
 
     public static changeOnlyAddress(contactInfo1: ContactInfoInterface, contactInfo2: ContactInfoInterface): ContactInfoInterface {
@@ -46,5 +46,13 @@ export class PersonHelper {
         }
 
         return updatedAddress
+    }
+
+    public static checkAddressAvailabilty(person: PersonInterface): boolean {
+        const addressString: string = this.addressToString(person.contactInfo).trim();
+        if (addressString !== '') {
+            return true;
+        }
+        return false;
     }
 }
