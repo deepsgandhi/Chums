@@ -26,7 +26,6 @@ export const PersonAdd: React.FC<Props> = (props) => {
         var sr: PersonInterface[] = [...searchResults];       
         var person: PersonInterface = sr.splice(parseInt(idx), 1)[0];
         setSelectedPersonIndex(parseInt(idx))
-        // console.log('Show modal here!!', props.person)
         const {name: {
             first
         }, contactInfo} = props.person
@@ -44,14 +43,19 @@ export const PersonAdd: React.FC<Props> = (props) => {
 
     const handleNo = () => {
         setShowUpdateAddressModal(false);
-        addPerson()
+        addPerson();
     }
 
-    const handleYes = () => {
-        setShowUpdateAddressModal(false)
-        // TODO: create an API/ Check if already present, to support this feature
-        console.log('Yes! update my address')
-        addPerson()
+    const handleYes = async () => {
+        setShowUpdateAddressModal(false);
+        const person: PersonInterface = [...searchResults].splice(selectedPersonIndex, 1)[0];
+        person.contactInfo = PersonHelper.changeOnlyAddress(person.contactInfo, props.person.contactInfo)
+        try {
+            await ApiHelper.apiPost('/people', [person]);
+         } catch (err) {
+        console.log(`error in updating ${person.name.display}'s address`);
+        }
+        addPerson();
     }
 
     var rows = [];

@@ -35,4 +35,16 @@ export class PersonHelper {
         return `${address.address1} ${address.address2} ${address.city}, ${address.state} ${address.zip}`
     }
 
+    public static changeOnlyAddress(contactInfo1: ContactInfoInterface, contactInfo2: ContactInfoInterface): ContactInfoInterface {
+        const updatedAddress: ContactInfoInterface = {
+            ...contactInfo1,
+            address1: contactInfo2.address1,
+            address2: contactInfo2.address2,
+            city: contactInfo2.city,
+            state: contactInfo2.state,
+            zip: contactInfo2.zip
+        }
+
+        return updatedAddress
+    }
 }
