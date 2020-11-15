@@ -109,10 +109,35 @@ export const PersonEdit: React.FC<Props> = (props) => {
         }
     }, [props.photoUrl, person]);
 
-    const handleYes = () => {
+    const loadMembers = (): Promise<PersonInterface[]> =>  {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (person.householdId != null) { 
+                    const data = await ApiHelper.apiGet('/people/household/' + person.householdId);
+                    resolve(data)
+                  }      
+            } catch (err) {
+                console.log(`Error occured in fetching household members`);
+                reject(null)
+            }
+        })
+    }
+
+    const handleYes = async () => {
         setShowUpdateAddressModal(false)
-        // TODO: update API, support changing address of other members of same family
-        console.log("Yes! update other member's address")
+        const members = await loadMembers()
+        await Promise.all(
+            members.map(async member => {
+                member.contactInfo = PersonHelper.changeOnlyAddress(member.contactInfo, person.contactInfo)
+                try {
+                    await ApiHelper.apiPost('/people', [member]);
+                 } catch (err) {
+                    console.log(`error in updating ${person.name.display}'s address`);
+                }
+            })
+           
+        )       
+        props.updatedFunction(person)   
     }
 
     const handleNo = () => {
