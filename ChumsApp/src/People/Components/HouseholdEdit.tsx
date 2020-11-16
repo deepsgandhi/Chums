@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { InputBox, PersonAdd, PersonHelper, ApiHelper, HouseholdInterface, PersonInterface } from './';
 import { Table } from 'react-bootstrap';
 
-interface Props { updatedFunction: () => void, household: HouseholdInterface, members: PersonInterface[] }
+interface Props { updatedFunction: () => void, household: HouseholdInterface, members: PersonInterface[], person: PersonInterface }
 
 export const HouseholdEdit: React.FC<Props> = (props) => {
     const [household, setHousehold] = React.useState<HouseholdInterface>({} as HouseholdInterface);
@@ -73,7 +73,7 @@ export const HouseholdEdit: React.FC<Props> = (props) => {
         }
     }
 
-    var personAdd = (showAdd) ? <PersonAdd addFunction={handlePersonAdd} /> : null;
+    var personAdd = (showAdd) ? <PersonAdd addFunction={handlePersonAdd} person={props.person} /> : null;
     return (
         <InputBox id="householdBox" headerIcon="fas fa-users" headerText={household.name + " Household"} saveFunction={handleSave} cancelFunction={handleCancel} >
             <div className="form-group">

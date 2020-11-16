@@ -1,4 +1,4 @@
-import { PersonInterface } from './ApiHelper';
+import { PersonInterface, ContactInfoInterface } from './ApiHelper';
 import { EnvironmentHelper } from '../Components';
 
 export class PersonHelper {
@@ -21,5 +21,38 @@ export class PersonHelper {
         else return firstName + ' ' + lastName;
     }
 
+    public static compareAddress(address1: ContactInfoInterface, address2: ContactInfoInterface): boolean {
+        const displayAddress1: string = this.addressToString(address1);
+        const displayAddress2: string = this.addressToString(address2);
+        
+        if (displayAddress1 !== displayAddress2) {
+            return true
+        }
+        return false
+    } 
 
+    public static addressToString(address: ContactInfoInterface): string {
+        return `${address.address1 || ''} ${address.address2 || ''} ${address.city || ''}${(address.city && address.state) ? ',' : ''} ${address.state || ''} ${address.zip || ''}`
+    }
+
+    public static changeOnlyAddress(contactInfo1: ContactInfoInterface, contactInfo2: ContactInfoInterface): ContactInfoInterface {
+        const updatedAddress: ContactInfoInterface = {
+            ...contactInfo1,
+            address1: contactInfo2.address1,
+            address2: contactInfo2.address2,
+            city: contactInfo2.city,
+            state: contactInfo2.state,
+            zip: contactInfo2.zip
+        }
+
+        return updatedAddress
+    }
+
+    public static checkAddressAvailabilty(person: PersonInterface): boolean {
+        const addressString: string = this.addressToString(person.contactInfo).trim();
+        if (addressString !== '') {
+            return true;
+        }
+        return false;
+    }
 }

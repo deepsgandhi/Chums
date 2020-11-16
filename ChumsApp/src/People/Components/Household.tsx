@@ -41,6 +41,6 @@ export const Household: React.FC<Props> = (props) => {
             </DisplayBox>
         );
     }
-    else return <HouseholdEdit household={household} members={members} updatedFunction={handleUpdate} />
+    else return <HouseholdEdit household={household} members={members} updatedFunction={handleUpdate} person={props.person} />
 }
 

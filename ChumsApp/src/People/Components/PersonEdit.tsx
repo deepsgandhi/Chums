@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { PersonHelper, Helper, StateOptions, InputBox, ApiHelper, PersonInterface} from './'
+import { PersonHelper, Helper, StateOptions, InputBox, ApiHelper, PersonInterface, ContactInfoInterface, UpdateHouseHold} from './'
 import { Redirect } from 'react-router-dom';
 import { Row, Col, FormControl, FormGroup, FormLabel } from 'react-bootstrap';
 
@@ -14,6 +14,9 @@ interface Props {
 export const PersonEdit: React.FC<Props> = (props) => {
     const [person, setPerson] = React.useState<PersonInterface>({} as PersonInterface);
     const [redirect, setRedirect] = React.useState('');
+    const [showUpdateAddressModal, setShowUpdateAddressModal] = React.useState<boolean>(false)
+    const [text, setText] = React.useState('');
+    const [members, setMembers] = React.useState<PersonInterface[]>(null)
 
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
 
@@ -56,7 +59,18 @@ export const PersonEdit: React.FC<Props> = (props) => {
     }
 
     const handleSave = () => {
-        ApiHelper.apiPost('/people/', [person])
+        const {contactInfo: contactFromProps} = props.person
+        const {contactInfo: contactFromState} = person
+        if (members.length > 1 && PersonHelper.compareAddress(contactFromProps, contactFromState)) {            
+            setText(`You updated the address to ${PersonHelper.addressToString(contactFromState)} for ${person.name.display}.  Would you like to apply that to the entire ${person.name.last} family?`)
+            setShowUpdateAddressModal(true)
+            return;
+        }
+        updatePerson(person)
+    }
+
+    const updatePerson = (person: PersonInterface) => {
+         ApiHelper.apiPost('/people/', [person])
             .then(data => {
                 var p = { ...person };
                 p.id = data[0];
@@ -65,7 +79,6 @@ export const PersonEdit: React.FC<Props> = (props) => {
                 props.updatedFunction(p);
             });
     }
-
 
     const getPhoto = () => {
         if (props.person) {
@@ -77,7 +90,18 @@ export const PersonEdit: React.FC<Props> = (props) => {
     }
 
 
-    const personChanged = useCallback(() => { setPerson(props.person) }, [props.person]);
+    const personChanged = useCallback(() => {
+        const personDeepCopy: PersonInterface = {
+            ...props.person,
+            contactInfo: {
+                ...props.person.contactInfo
+            },
+            name: {
+                ...props.person.name
+            }    
+        } 
+        setPerson(personDeepCopy) 
+    }, [props.person]);
     const photoUrlChanged = useCallback(() => {
         if (props.photoUrl !== null) {
             var p: PersonInterface = { ...person };
@@ -86,12 +110,48 @@ export const PersonEdit: React.FC<Props> = (props) => {
         }
     }, [props.photoUrl, person]);
 
+    const handleYes = async () => {
+        setShowUpdateAddressModal(false)
+        await Promise.all(
+            members.map(async member => {
+                member.contactInfo = PersonHelper.changeOnlyAddress(member.contactInfo, person.contactInfo)
+                try {
+                    await ApiHelper.apiPost('/people', [member]);
+                 } catch (err) {
+                    console.log(`error in updating ${person.name.display}'s address`);
+                }
+            })
+           
+        )       
+        props.updatedFunction(person)   
+    }
+
+    const handleNo = () => {
+        setShowUpdateAddressModal(false)
+        updatePerson(person)        
+    }
+
+    const fetchMembers = () => {       
+        try {
+            if (props.person.householdId != null) { 
+               ApiHelper.apiGet('/people/household/' + props.person.householdId).then(data => {
+                   setMembers(data);
+               });
+              }      
+        } catch (err) {
+            console.log(`Error occured in fetching household members`);           
+        }
+    }
+
     React.useEffect(personChanged, [props.person]);
     React.useEffect(photoUrlChanged, [props.photoUrl]);
-
-    if (redirect !== '') return <Redirect to={redirect} />
+    React.useEffect(fetchMembers, [props.person])
+   
+    if (redirect !== '') return <Redirect to={redirect} />    
     else {
         return (
+            <>
+            <UpdateHouseHold show={showUpdateAddressModal} text={text} onHide={() => setShowUpdateAddressModal(false)} handleNo={handleNo} handleYes={handleYes} />
             <InputBox id={props.id} headerIcon="fas fa-user" headerText="Personal Details" cancelFunction={handleCancel} deleteFunction={handleDelete} saveFunction={handleSave} >
                 <Row>
                     <Col xs={3}>{getPhoto()}</Col>
@@ -232,6 +292,7 @@ export const PersonEdit: React.FC<Props> = (props) => {
                     </Col>
                 </Row>
             </InputBox>
+            </>
         )
     }
 
