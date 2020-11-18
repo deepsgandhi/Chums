@@ -64,7 +64,8 @@ export const Login: React.FC = (props: any) => {
     console.log(document.cookie);
   };
 
-  const login = (data: {}) => {
+  const login = (data: any) => {
+    data.appName="CHUMS";
     setLoading(true);
     ApiHelper.apiPostAnonymous(EnvironmentHelper.AccessManagementApiUrl + "/users/login", data)
       .then((resp: LoginResponseInterface) => {
