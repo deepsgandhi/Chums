@@ -65,6 +65,11 @@ public class HouseholdActivity extends AppCompatActivity {
             public void onClick(View view) {  checkin();  }
         });
 
+        final Button addGuestButton = (Button) findViewById(R.id.addGuestButton);
+        addGuestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {  addGuest();  }
+        });
     }
 
     private void checkin()
@@ -82,6 +87,12 @@ public class HouseholdActivity extends AppCompatActivity {
             }
         });
         thread.start();
+    }
+
+    private void addGuest()
+    {
+        Intent browser = new Intent(HouseholdActivity.this, GuestActivity.class);
+        startActivity(browser);
     }
 
 

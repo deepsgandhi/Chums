@@ -7,9 +7,9 @@ import org.chums.checkin.models.Visits;
 public class CachedData {
     public static boolean IsProd = false;
     public static String ApiKey;
-    public static String AccessManagementApiRoot = "https://api.livecs.org";
-    public static String ApiRoot = "https://api.chums.org";
-    public static String ContentBaseUrl = "https://app.chums.org";
+    public static String AccessManagementApiRoot = "https://api.staging.livecs.org";
+    public static String ApiRoot = "https://api.staging.chums.org";
+    public static String ContentBaseUrl = "https://app.staging.chums.org";
     public static int SelectedHouseholdId;
     public static int ServiceId;
     public static int ServiceTimeId;

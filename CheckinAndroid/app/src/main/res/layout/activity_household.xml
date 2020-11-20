@@ -12,6 +12,21 @@
 
     <fragment  app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"  android:id="@+id/header"  class="org.chums.checkin.fragments.HeaderFragment" android:layout_width="match_parent" android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/addGuestButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
+
+        android:text="Add Guest"
+        android:textColor="@color/buttonText"
+        android:background="@color/buttonBackground"
+        android:layout_alignParentRight="true"
+        />
+
     <ExpandableListView
         android:id="@+id/memberList"
         android:layout_width="fill_parent"
@@ -24,7 +39,7 @@
         android:layout_marginRight="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintTop_toBottomOf="@id/addGuestButton"
         android:divider="@color/divider"
         android:childDivider="@color/divider"
         android:dividerHeight="1dp"

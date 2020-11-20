@@ -29,6 +29,38 @@ public class People extends ArrayList<Person> {
         return result;
     }
 
+    public static People searchName(String term)
+    {
+        People result = null;
+        String url = CachedData.ApiRoot + "/people/search?term=" + term;
+        try {
+            String jsonResponse = Json.get(url);
+            result = inflate(jsonResponse);
+        } catch (Exception ex) {
+            ErrorLogs.error(ex);
+        }
+        return result;
+    }
+
+    public People save()
+    {
+        People result = null;
+        try {
+            String url = CachedData.ApiRoot + "/people";
+            String jsonBody = this.toJson();
+            String jsonResponse = Json.post(url, jsonBody);
+            result = inflate(jsonResponse);
+        } catch (Exception ex) {
+            ErrorLogs.error(ex);
+        }
+        return result;
+    }
+
+    public String toJson()
+    {
+        return new Gson().toJson(this);
+    }
+
     public Person getById(int id)
     {
         Person result = null;

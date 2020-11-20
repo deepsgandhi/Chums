@@ -22,6 +22,8 @@
     <color name="divider">#cccccc</color>
     <color name="hint">#999999</color>
     <color name="buttonBackground">#24b9ff</color>
+    <color name="warnBackground">#FFAA24</color>
     <color name="dangerBackground">#b92424</color>
+    <color name="successBackground">#24b924</color>
     <color name="buttonText">#ffffff</color>
 </resources>
