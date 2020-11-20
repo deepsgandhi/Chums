@@ -1,6 +1,12 @@
 import React from "react";
 import "./Login.css";
-import { ErrorMessages, ApiHelper, UserHelper, EnvironmentHelper, LoginResponseInterface } from "./Components";
+import {
+  ErrorMessages,
+  ApiHelper,
+  UserHelper,
+  EnvironmentHelper,
+  LoginResponseInterface,
+} from "./Components";
 import { Authenticated } from "./Authenticated";
 import UserContext from "./UserContext";
 import { Button, FormControl, Alert } from "react-bootstrap";
@@ -57,20 +63,22 @@ export const Login: React.FC = (props: any) => {
 
     if (jwt !== "undefined" && jwt !== "") {
       setEmail(getCookieValue("email"));
-      setWelcomeBackName(getCookieValue("name"));
       login({ jwt: jwt });
+      setWelcomeBackName(getCookieValue("name"));
     }
 
     console.log(document.cookie);
   };
 
   const login = (data: any) => {
-    data.appName="CHUMS";
+    data.appName = "CHUMS";
     setLoading(true);
-    ApiHelper.apiPostAnonymous(EnvironmentHelper.AccessManagementApiUrl + "/users/login", data)
+    ApiHelper.apiPostAnonymous(
+      EnvironmentHelper.AccessManagementApiUrl + "/users/login",
+      data
+    )
       .then((resp: LoginResponseInterface) => {
         if (Object.keys(resp).length !== 0) {
-
           document.cookie = "jwt=" + resp.token;
           document.cookie = "name=" + resp.user.displayName;
           document.cookie = "email=" + resp.user.email;
@@ -101,17 +109,22 @@ export const Login: React.FC = (props: any) => {
 
   const selectChurch = () => {
     let search = new URLSearchParams(props.location.search);
-    var churchId:number = parseInt(search.get("churchId"), 0);
-    if (isNaN(churchId) || churchId===0) churchId = UserHelper.churches[0].id;
+    var churchId: number = parseInt(search.get("churchId"), 0);
+    if (isNaN(churchId) || churchId === 0) churchId = UserHelper.churches[0].id;
     UserHelper.selectChurch(churchId, context);
   };
 
   const getWelcomeBack = () => {
     if (welcomeBackName === "") return null;
     else {
-      return <Alert variant="info">Welcome back, <b>{welcomeBackName}</b>!  Please wait while we load your data.</Alert>
+      return (
+        <Alert variant="info">
+          Welcome back, <b>{welcomeBackName}</b>! Please wait while we load your
+          data.
+        </Alert>
+      );
     }
-  }
+  };
 
   const context = React.useContext(UserContext);
   React.useEffect(init, []);
@@ -127,18 +140,48 @@ export const Login: React.FC = (props: any) => {
         />
         <ErrorMessages errors={errors} />
         {getWelcomeBack()}
-        <div id="loginBox">
-          <h2>Please sign in</h2>
-          <FormControl id="email" name="email" value={email} onChange={(e) => { e.preventDefault(); setEmail(e.currentTarget.value); }} placeholder="Email address" onKeyDown={handleKeyDown} />
-          <FormControl id="password" name="password" type="password" placeholder="Password" value={password} onChange={(e) => { e.preventDefault(); setPassword(e.currentTarget.value); }} onKeyDown={handleKeyDown} />
-          <Button id="signInButton" size="lg" variant="primary" block onClick={!loading ? handleSubmit : null} disabled={loading} >
-            {loading ? "Please wait..." : "Sign in"}
-          </Button>
-          <br />
-          <div className="text-right">
-            <a href="/forgot">Forgot Password</a>&nbsp;
+        {!welcomeBackName && (
+          <div id="loginBox">
+            <h2>Please sign in</h2>
+            <FormControl
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => {
+                e.preventDefault();
+                setEmail(e.currentTarget.value);
+              }}
+              placeholder="Email address"
+              onKeyDown={handleKeyDown}
+            />
+            <FormControl
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => {
+                e.preventDefault();
+                setPassword(e.currentTarget.value);
+              }}
+              onKeyDown={handleKeyDown}
+            />
+            <Button
+              id="signInButton"
+              size="lg"
+              variant="primary"
+              block
+              onClick={!loading ? handleSubmit : null}
+              disabled={loading}
+            >
+              {loading ? "Please wait..." : "Sign in"}
+            </Button>
+            <br />
+            <div className="text-right">
+              <a href="/forgot">Forgot Password</a>&nbsp;
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   } else {
