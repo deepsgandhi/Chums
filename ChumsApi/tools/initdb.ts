@@ -20,7 +20,7 @@ const init = async () => {
 const runFile = async (query: any, fileName: string) => {
   try {
     var sql = await fs.readFile(fileName, { encoding: "UTF-8" });
-    const statements = sql.split(/;\s*$/m);
+    const statements = sql.split(/;(?=END)\s*$|;(?!\nEND)\s*$/gm);
     for (const statement of statements) {
       if (statement.length > 3) {
         console.log("*************");

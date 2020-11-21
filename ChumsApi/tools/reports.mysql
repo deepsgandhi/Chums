@@ -3,11 +3,6 @@ DROP procedure IF EXISTS `report_groupAttendance`;
 DROP procedure IF EXISTS `report_donationTrend`;
 DROP procedure IF EXISTS `report_attendanceTrend`;
 
-DELIMITER $$
-USE `chums`$$
-
-
-
 CREATE PROCEDURE `report_groupAttendance` (
 	IN p_churchId int,
     IN p_serviceId int,
@@ -18,7 +13,7 @@ BEGIN
 	FROM visits v
 	INNER JOIN visitSessions vs on vs.churchId=v.churchId AND vs.visitId=v.id
 	INNER JOIN sessions s on s.id=vs.sessionId
-	INNER JOIN groups g on g.id=s.groupId
+	INNER JOIN `groups` g on g.id=s.groupId
 	INNER JOIN serviceTimes st on st.id=s.serviceTimeId
 	INNER JOIN services ser on ser.id=st.serviceId
 	INNER JOIN people p on p.id=v.personId
@@ -26,7 +21,7 @@ BEGIN
 	AND (p_serviceId=0 OR ser.id=p_serviceId) 
 	AND s.sessionDate BETWEEN p_week AND DATE_ADD(p_week, INTERVAL 7 DAY)
 	ORDER by ser.name, st.name, g.name, p.lastName, p.firstName;
-END$$
+END;
 
 
 
@@ -44,7 +39,7 @@ BEGIN
     AND d.donationDate BETWEEN p_startDate AND p_endDate
     GROUP BY year(d.donationDate), week(d.donationDate, 0), f.name
     ORDER BY year(d.donationDate), week(d.donationDate, 0), f.name;
-END$$
+END;
 
 
 
@@ -62,7 +57,7 @@ BEGIN
 	FROM visits v
 	LEFT JOIN visitSessions vs on vs.churchId=p_churchId AND vs.visitId=v.id
     LEFT JOIN sessions s on s.churchId=p_churchId AND s.id = vs.sessionId
-	LEFT JOIN groups g on g.churchId=p_churchId AND g.id = s.groupId
+	LEFT JOIN `groups` g on g.churchId=p_churchId AND g.id = s.groupId
     LEFT JOIN groupServiceTimes gst on gst.churchId=p_churchId AND gst.groupId = g.id
     LEFT JOIN serviceTimes st on st.churchId=p_churchId AND st.id = gst.serviceTimeId
     LEFT JOIN services ser on ser.churchId=p_churchId AND ser.id = st.serviceId
@@ -74,11 +69,8 @@ BEGIN
     AND (p_campusId=0 OR ser.campusId=p_campusId)
 	GROUP BY year(v.visitDate), week(v.visitDate, 0)
 	ORDER BY year(v.visitDate), week(v.visitDate, 0);
-END$$
+END;
 
-
-
-DELIMITER ;
 
 INSERT INTO reports (keyName, title, query, parameters, reportType, columns) VALUES (
 	'groupAttendance', 
