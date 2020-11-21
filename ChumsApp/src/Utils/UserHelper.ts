@@ -1,6 +1,7 @@
 import { UserInterface, ChurchInterface, SwitchAppRequestInterface, ApiHelper, EnvironmentHelper, LoginResponseInterface, PersonInterface } from './'
 import { UserContextInterface } from '../UserContext';
 import { RolePermissionInterface } from './ApiHelper';
+import ReactGA from 'react-ga';
 
 export class UserHelper {
     static currentChurch: ChurchInterface;
@@ -22,6 +23,9 @@ export class UserHelper {
                     console.log(UserHelper.currentPermissions);
                 }
             })
+
+
+            if (EnvironmentHelper.GoogleAnalyticsTag!=="") ReactGA.event({ action:"Switch Church", category:"Login", dimension1:UserHelper.currentChurch.name });
 
             const data: SwitchAppRequestInterface = { appName: "CHUMS", churchId: UserHelper.currentChurch.id };
             ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/users/switchApp', data).then((resp: LoginResponseInterface) => {

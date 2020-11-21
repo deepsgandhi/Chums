@@ -3,6 +3,7 @@ package org.chums.checkin.helpers;
 import org.chums.checkin.models.People;
 import org.chums.checkin.models.ServiceTimes;
 import org.chums.checkin.models.Visits;
+import org.chums.checkin.models.accessManagement.Church;
 
 public class CachedData {
     public static boolean IsProd = false;
@@ -15,6 +16,7 @@ public class CachedData {
     public static int ServiceTimeId;
     public static ServiceTimes ServiceTimes;
     public static People HouseholdMembers;
+    public static Church Church;
 
     public static Visits LoadedVisits;
     public static Visits PendingVisits;

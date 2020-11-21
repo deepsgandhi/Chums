@@ -2,6 +2,7 @@ package org.chums.checkin.models.accessManagement;
 
 import com.google.gson.Gson;
 
+import org.chums.checkin.helpers.AnalyticsHelper;
 import org.chums.checkin.helpers.CachedData;
 import org.chums.checkin.helpers.Json;
 import org.chums.checkin.models.ErrorLogs;
@@ -36,6 +37,8 @@ public class SwitchAppRequest {
     public static LoginResponse switchApp(LoginResponse resp)
     {
         SwitchAppRequest req = new SwitchAppRequest();
+        CachedData.Church = resp.getChurches().get(0);
+        AnalyticsHelper.setChurch();
         req.churchId = resp.getChurches().get(0).getId();
         req.appName = "CHUMS";
 

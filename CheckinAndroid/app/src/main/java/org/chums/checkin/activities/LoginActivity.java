@@ -1,22 +1,25 @@
 package org.chums.checkin.activities;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+
 import org.chums.checkin.R;
+import org.chums.checkin.helpers.AnalyticsHelper;
 import org.chums.checkin.helpers.CachedData;
 import org.chums.checkin.models.accessManagement.LoginRequest;
 import org.chums.checkin.models.accessManagement.LoginResponse;
-import org.chums.checkin.models.accessManagement.User;
 
-public class LoginActivity extends AppCompatActivity {
+
+public class LoginActivity extends Activity {
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -44,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initEnvironment();
         setContentView(R.layout.activity_login);
+        AnalyticsHelper.initFirebase(this);
     }
 
     @Override
@@ -94,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goFullScreen()
     {
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "393293953974",
+    "firebase_url": "https://chums-checkin.firebaseio.com",
+    "project_id": "chums-checkin",
+    "storage_bucket": "chums-checkin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393293953974:android:3a4ba9444f1099d9b31f17",
+        "android_client_info": {
+          "package_name": "org.chums.checkin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393293953974-rc2a91v5h2v7jope4jun0odt82tmfctv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzAXtKG0cyz3H_HP4JcdW2RoNqsIbWvhY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393293953974-rc2a91v5h2v7jope4jun0odt82tmfctv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

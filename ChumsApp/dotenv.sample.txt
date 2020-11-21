@@ -1,4 +1,7 @@
-#Update values and rename to .env
+#Update values and rename to .env.  For local development you may keep these values.
 REACT_APP_ACCESSMANAGEMENT_API_URL=https://api.staging.livecs.org
 REACT_APP_CHUMS_API_URL=https://api.staging.chums.org
 REACT_APP_CONTENT_ROOT=https://app.staging.chums.org
+
+#Optional - UA-123456789-1
+REACT_APP_GOOGLE_ANALYTICS=
