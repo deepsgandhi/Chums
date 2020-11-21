@@ -55,12 +55,22 @@ public class GuestActivity extends Activity {
             }
         };
     }
+    public View.OnClickListener handleCancel()
+    {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        };
+    }
 
     public void onResume() {
         super.onResume();
         Button addButton = (Button) findViewById(R.id.addButton);
+        Button cancelButton = (Button) findViewById(R.id.cancelButton);
         addButton.setOnClickListener(handleClick());
-
+        cancelButton.setOnClickListener(handleCancel());
     }
 
 
