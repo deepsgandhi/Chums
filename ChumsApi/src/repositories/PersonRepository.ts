@@ -97,7 +97,7 @@ export class PersonRepository {
             + " INNER JOIN visits v on v.id = vs.visitId"
             + " INNER JOIN sessions s on s.id = vs.sessionId"
             + " INNER JOIN people p on p.id = v.personId"
-            + " INNER JOIN groups g on g.id = s.groupId"
+            + " INNER JOIN `groups` g on g.id = s.groupId"
             + " LEFT OUTER JOIN serviceTimes st on st.id = s.serviceTimeId"
             + " LEFT OUTER JOIN services ser on ser.id = st.serviceId"
             + " WHERE p.churchId = ? AND v.visitDate BETWEEN ? AND ?";

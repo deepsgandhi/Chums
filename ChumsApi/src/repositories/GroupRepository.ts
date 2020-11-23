@@ -12,38 +12,38 @@ export class GroupRepository {
 
     public async create(group: Group) {
         return DB.query(
-            "INSERT INTO groups (churchId, categoryName, name, trackAttendance, parentPickup, removed) VALUES (?, ?, ?, ?, ?, 0);",
+            "INSERT INTO `groups` (churchId, categoryName, name, trackAttendance, parentPickup, removed) VALUES (?, ?, ?, ?, ?, 0);",
             [group.churchId, group.categoryName, group.name, group.trackAttendance, group.parentPickup]
         ).then((row: any) => { group.id = row.insertId; return group; });
     }
 
     public async update(group: Group) {
         return DB.query(
-            "UPDATE groups SET churchId=?, categoryName=?, name=?, trackAttendance=?, parentPickup=? WHERE id=? and churchId=?",
+            "UPDATE `groups` SET churchId=?, categoryName=?, name=?, trackAttendance=?, parentPickup=? WHERE id=? and churchId=?",
             [group.churchId, group.categoryName, group.name, group.trackAttendance, group.parentPickup, group.id, group.churchId]
         ).then(() => { return group });
     }
 
     public async delete(churchId: number, id: number) {
-        DB.query("UPDATE groups SET removed=1 WHERE id=? AND churchId=?;", [id, churchId]);
+        DB.query("UPDATE `groups` SET removed=1 WHERE id=? AND churchId=?;", [id, churchId]);
     }
 
     public async load(churchId: number, id: number) {
-        return DB.queryOne("SELECT * FROM groups WHERE id=? AND churchId=? AND removed=0;", [id, churchId]);
+        return DB.queryOne("SELECT * FROM `groups` WHERE id=? AND churchId=? AND removed=0;", [id, churchId]);
     }
 
     public async loadAll(churchId: number) {
-        return DB.query("SELECT *, (SELECT COUNT(*) FROM groupMembers gm WHERE gm.groupId=g.id) AS memberCount FROM groups g WHERE churchId=? AND removed=0 ORDER by name;", [churchId]);
+        return DB.query("SELECT *, (SELECT COUNT(*) FROM groupMembers gm WHERE gm.groupId=g.id) AS memberCount FROM `groups` g WHERE churchId=? AND removed=0 ORDER by name;", [churchId]);
     }
 
     public async loadByIds(churchId: number, ids: number[]) {
-        const sql = "SELECT * FROM groups WHERE churchId=? AND removed=0 AND id IN (" + ids.join(",") + ") ORDER by name";
+        const sql = "SELECT * FROM `groups` WHERE churchId=? AND removed=0 AND id IN (" + ids.join(",") + ") ORDER by name";
         return DB.query(sql, [churchId]);
     }
 
     public async search(churchId: number, campusId: number, serviceId: number, serviceTimeId: number) {
         const sql = "SELECT g.id, g.categoryName, g.name"
-            + " FROM groups g"
+            + " FROM `groups` g"
             + " LEFT OUTER JOIN groupServiceTimes gst on gst.groupId=g.id"
             + " LEFT OUTER JOIN serviceTimes st on st.id=gst.serviceTimeId"
             + " LEFT OUTER JOIN services s on s.id=st.serviceId"

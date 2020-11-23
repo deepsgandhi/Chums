@@ -48,7 +48,7 @@ export class GroupMemberRepository {
     public async loadForPerson(churchId: number, personId: number) {
         const sql = "SELECT gm.*, g.name as groupName"
             + " FROM groupMembers gm"
-            + " INNER JOIN groups g on g.Id=gm.groupId"
+            + " INNER JOIN `groups` g on g.Id=gm.groupId"
             + " WHERE gm.churchId=? AND gm.personId=?"
             + " ORDER BY g.name;"
         return DB.query(sql, [churchId, personId]);
