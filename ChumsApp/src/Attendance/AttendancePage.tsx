@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef}from 'react';
 import { ApiHelper, DisplayBox, AttendanceInterface, CampusInterface, CampusEdit, ServiceEdit, ServiceInterface, ServiceTimeEdit, ServiceTimeInterface, Tabs } from './Components';
 
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ export const AttendancePage = () => {
     const [selectedCampus, setSelectedCampus] = React.useState<CampusInterface>(null);
     const [selectedService, setSelectedService] = React.useState<ServiceInterface>(null);
     const [selectedServiceTime, setSelectedServiceTime] = React.useState<ServiceTimeInterface>(null);
+    const isSubscribed = useRef(true)
     //const [filter, setFilter] = React.useState<AttendanceFilterInterface>(AttendanceHelper.createFilter());
 
 
@@ -18,10 +19,11 @@ export const AttendancePage = () => {
     const selectServiceTime = (service: ServiceTimeInterface) => { removeEditors(); setSelectedServiceTime(service); }
     const removeEditors = () => { setSelectedCampus(null); setSelectedService(null); setSelectedServiceTime(null); }
 
-    const loadData = () => { ApiHelper.apiGet('/attendancerecords/groups').then(data => setAttendance(data)); }
+    const loadData = () => {
+        ApiHelper.apiGet('/attendancerecords/groups').then(data => {if(isSubscribed.current){setAttendance(data)}});} 
 
 
-    React.useEffect(loadData, []);
+    React.useEffect(()=>{loadData(); return ()=>{isSubscribed.current=false}},[]);
 
     const getRows = () => {
         var rows = [];

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { ApiHelper, FundInterface, FundEdit, DisplayBox, UserHelper } from './';
 import { Link } from 'react-router-dom';
 import { Table } from 'react-bootstrap';
@@ -6,8 +6,9 @@ import { Table } from 'react-bootstrap';
 export const Funds: React.FC = () => {
     const [funds, setFunds] = React.useState<FundInterface[]>([]);
     const [editFund, setEditFund] = React.useState<FundInterface>(null);
+    const isSubscribed= useRef(true);
 
-    const loadData = () => ApiHelper.apiGet('/funds').then(data => setFunds(data));
+    const loadData = () => ApiHelper.apiGet('/funds').then(data => {if(isSubscribed.current){setFunds(data)}});
     const handleFundUpdated = () => { loadData(); setEditFund(null); }
     const getEditSection = () => {
         if (UserHelper.checkAccess('Donations', 'Edit')) return (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setEditFund({ id: 0, name: '' }) }}><i className="fas fa-plus"></i></a>);
@@ -29,15 +30,17 @@ export const Funds: React.FC = () => {
             var f = funds[i];
             const editLink = (canEdit) ? (<a href="about:blank" onClick={handleEdit} data-index={i}><i className="fas fa-pencil-alt"></i></a>) : null;
             const viewLink = (canViewIndividual) ? (<Link to={"/donations/funds/" + f.id}>{f.name}</Link>) : (<>{f.name}</>);
-            result.push(<tr>
-                <td>{viewLink}</td>
-                <td className="text-right">{editLink}</td>
-            </tr >)
+            result.push(<tbody key={result.length-1}>
+                <tr>
+                    <td > {viewLink}</td>
+                    <td className="text-right"> {editLink}</td>
+                </tr >
+            </tbody>)
         }
         return result;
     }
 
-    React.useEffect(() => { loadData(); }, []);
+    React.useEffect(() => { loadData(); return ()=>{ isSubscribed.current = false}}, []);
 
     if (editFund === null) return (
         <DisplayBox id="fundsBox" headerIcon="fas fa-hand-holding-usd" headerText="Funds" editContent={getEditSection()} >

@@ -17,13 +17,13 @@ export const FundPage = ({ match }: RouteComponentProps<TParams>) => {
     const getEditContent = () => { return (<ExportLink data={fundDonations} spaceAfter={true} filename="funddonations.csv" />) }
 
     const loadData = () => {
-        ApiHelper.apiGet('/funds/' + match.params.id).then(data => setFund(data));
+        ApiHelper.apiGet('/funds/' + match.params.id).then(data => {console.log(data, '........'); setFund(data)});
         loadDonations();
     }
 
     const loadDonations = () => {
         ApiHelper.apiGet('/funddonations?fundId=' + match.params.id + '&startDate=' + Helper.formatHtml5Date(startDate) + '&endDate=' + Helper.formatHtml5Date(endDate))
-            .then(data => { setFundDonations(data) });
+            .then(data => {console.log(data,'donations....'); setFundDonations(data)});
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +41,7 @@ export const FundPage = ({ match }: RouteComponentProps<TParams>) => {
         var result = [];
         for (let i = 0; i < fundDonations.length; i++) {
             var fd = fundDonations[i];
+            console.log(fundDonations[i], '................');
             var personCol = (fd.donation?.personId === 0) ? (<td>Anonymous</td>)
                 : (<td><Link to={"/people/" + fd.donation?.personId}>{fd.donation.person?.name.display || 'Anonymous'}</Link></td>);
             result.push(<tr>

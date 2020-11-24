@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useCallback} from 'react';
 import { ApiHelper, DonationSummaryInterface, Helper } from './';
 import { DisplayBox } from './';
 import { Chart } from 'react-google-charts';
@@ -8,8 +8,9 @@ import { Chart } from 'react-google-charts';
 interface Props { startDate: Date, endDate: Date }
 export const DonationChart: React.FC<Props> = (props) => {
     const [records, setRecords] = React.useState<DonationSummaryInterface[]>([]);
+    const isSubscribed= useRef(true)
 
-    const loadData = () => { ApiHelper.apiGet('/donations/summary?startDate=' + Helper.formatHtml5Date(props.startDate) + '&endDate=' + Helper.formatHtml5Date(props.endDate)).then(data => setRecords(data)); }
+    const loadData = useCallback(() => { ApiHelper.apiGet('/donations/summary?startDate=' + Helper.formatHtml5Date(props.startDate) + '&endDate=' + Helper.formatHtml5Date(props.endDate)).then(data => {if(isSubscribed.current){setRecords(data)}}); }, [props])
 
     const getWeekRecords = (weekNum: number) => {
         var result: DonationSummaryInterface[] = [];
@@ -49,7 +50,7 @@ export const DonationChart: React.FC<Props> = (props) => {
         return rows;
     }
 
-    React.useEffect(loadData, [props.startDate, props.endDate]);
+    React.useEffect(()=>{loadData(); return ()=>{isSubscribed.current=false}}, [props.startDate, props.endDate, loadData]);
 
     return (
         <DisplayBox id="donationChartBox" headerIcon="fas fa-hand-holding-usd" headerText="Donation History" >

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { ApiHelper, DisplayBox, FormInterface, FormEdit, UserHelper } from './Components'
 import { Link } from 'react-router-dom'
 import { Row, Col, Table } from 'react-bootstrap';
@@ -6,8 +6,9 @@ import { Row, Col, Table } from 'react-bootstrap';
 export const FormsPage = () => {
     const [forms, setForms] = React.useState<FormInterface[]>([]);
     const [selectedFormId, setSelectedFormId] = React.useState(-1);
+    const isSubscribed= useRef(true)
 
-    const loadData = () => { ApiHelper.apiGet('/forms').then(data => setForms(data)); }
+    const loadData = () => { ApiHelper.apiGet('/forms').then(data => {if(isSubscribed.current){setForms(data)}}); }
 
     const getRows = () => {
         var result = [];
@@ -34,7 +35,7 @@ export const FormsPage = () => {
         else return (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setSelectedFormId(0); }} ><i className="fas fa-plus"></i></a>);
     }
 
-    React.useEffect(loadData, []);
+    React.useEffect(()=>{loadData(); return ()=>{isSubscribed.current=false}}, []);
 
     if (!UserHelper.checkAccess('Forms', 'View')) return (<></>);
     else return (

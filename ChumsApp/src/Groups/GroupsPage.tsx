@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { ApiHelper, DisplayBox, GroupInterface, GroupAdd, UserHelper, ExportLink } from './Components';
 import { Link } from 'react-router-dom';
 import { Row, Col, Table } from 'react-bootstrap';
@@ -6,16 +6,25 @@ import { Row, Col, Table } from 'react-bootstrap';
 export const GroupsPage = () => {
     const [groups, setGroups] = React.useState<GroupInterface[]>([]);
     const [showAdd, setShowAdd] = React.useState(false);
+    const isSubscribed= useRef(true)
 
+    
     const getEditContent = () => {
         if (!UserHelper.checkAccess('Groups', 'Edit')) return null;
         else return (<><ExportLink data={groups} spaceAfter={true} filename="groups.csv" /> <a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setShowAdd(true); }} ><i className="fas fa-plus"></i></a></>);
     }
-
+   
     const handleAddUpdated = () => { setShowAdd(false); loadData(); }
-    const loadData = () => { ApiHelper.apiGet('/groups').then(data => { setGroups(data); }); }
+    const loadData = () => {
+        
+        ApiHelper.apiGet('/groups').then(data => { 
+            if(isSubscribed.current){
+            setGroups(data)} }); }
 
-    React.useEffect(loadData, []);
+    React.useEffect(()=>{
+      
+        loadData(); return ()=>{isSubscribed.current=false}}, 
+       );
 
     const getRows = () => {
         var rows = [];

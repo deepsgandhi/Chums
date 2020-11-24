@@ -8,7 +8,7 @@ interface Props { startDate: Date, endDate: Date, updateFunction: (startDate: Da
 export const DonationFilter: React.FC<Props> = (props) => {
     const [startDate, setStartDate] = React.useState<Date>(new Date());
     const [endDate, setEndDate] = React.useState<Date>(new Date());
-    const handleFilter = () => { props.updateFunction(startDate, endDate) }
+    const handleFilter = () => { props.updateFunction(startDate, endDate); };
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleFilter(); } }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         var date = new Date(e.currentTarget.value);

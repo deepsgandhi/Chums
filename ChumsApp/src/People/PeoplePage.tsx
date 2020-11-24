@@ -1,17 +1,19 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { PeopleSearchResults, ApiHelper, DisplayBox, ExportLink } from './Components';
 import { Row, Col, InputGroup, FormControl, Button } from 'react-bootstrap';
 
 export const PeoplePage = () => {
     const [searchText, setSearchText] = React.useState('');
     const [searchResults, setSearchResults] = React.useState(null);
+    const isSubscribed= useRef(true)
 
     const handleSubmit = (e: React.MouseEvent) => {
         if (e !== null) e.preventDefault();
         ApiHelper.apiGet('/people/search?term=' + escape(searchText)).then(data => setSearchResults(data));
     }
 
-    const loadData = () => { ApiHelper.apiGet('/people/recent').then(data => setSearchResults(data)); }
+    const loadData = () => {
+         ApiHelper.apiGet('/people/recent').then(data => {if(isSubscribed.current){setSearchResults(data)}}); }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.currentTarget.value);
 
@@ -22,7 +24,9 @@ export const PeoplePage = () => {
 
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmit(null); } }
 
-    React.useEffect(loadData, []);
+    React.useEffect(()=>{
+loadData();
+    return ()=>{isSubscribed.current=false}});
         
     return (
         <>

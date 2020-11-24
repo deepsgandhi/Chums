@@ -9,7 +9,7 @@ interface Props { report?: ReportInterface, updateFunction: (values: ReportValue
 export const ReportFilter = (props: Props) => {
 
     //var _report: ReportInterface; //I'm not sure this is a good way to handle this.  "report" isn't updated immediately after change and I need to trigger handleUpdate immdiately sometimes.
-
+                                                     
     var [pendingRun, setPendingRun] = React.useState(false);
     const [report, setReport] = React.useState<ReportInterface>(null);
     const [campuses, setCampuses] = React.useState<CampusInterface[]>(null);
@@ -18,7 +18,7 @@ export const ReportFilter = (props: Props) => {
     const [groups, setGroups] = React.useState<GroupInterface[]>(null);
     const [funds, setFunds] = React.useState<FundInterface[]>(null);
 
-    const handleUpdate = useCallback(() => { props.updateFunction(report?.values); }, [props, report?.values])
+    const handleUpdate = useCallback(() => { props.updateFunction(report?.values); }, [props, report])
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleUpdate(); } }
 
 
@@ -76,19 +76,25 @@ export const ReportFilter = (props: Props) => {
 
     const getCampusOptions = () => {
         var result: JSX.Element[] = [];
-        if (campuses !== null) campuses.forEach(c => { result.push(<option value={c.id}>{c.name}</option>) });
+        if (campuses !== null) campuses.forEach(c => {
+            const index= campuses.indexOf(c)
+            result.push(<option key={index} value={c.id}>{c.name}</option>) });
         return result;
     }
 
     const getServiceOptions = () => {
         var result: JSX.Element[] = [];
-        if (services !== null) services.forEach(s => { result.push(<option value={s.id}>{s.name}</option>) });
+        if (services !== null) services.forEach(s => {
+            const index = services.indexOf(s)
+            result.push(<option key={index} value={s.id}>{s.name}</option>) });
         return result;
     }
 
     const getServiceTimeOptions = () => {
         var result: JSX.Element[] = [];
-        if (serviceTimes !== null) serviceTimes.forEach(st => { result.push(<option value={st.id}>{st.longName}</option>) });
+        if (serviceTimes !== null) serviceTimes.forEach(st => { 
+            const index= serviceTimes.indexOf(st)
+            result.push(<option key={index} value={st.id}>{st.longName}</option>) });
         return result;
     }
 
@@ -98,8 +104,9 @@ export const ReportFilter = (props: Props) => {
 
         var result: JSX.Element[] = [];
         categories.forEach(c => {
-            if (c === "Any") result.push(<option value={""}>{c}</option>)
-            else result.push(<option value={c}>{c}</option>)
+            const index= categories.indexOf(c)
+            if (c === "Any") result.push(<option key={index} value={""}>{c}</option>)
+            else result.push(<option key={index} value={c}>{c}</option>)
         });
 
         return result;
@@ -108,7 +115,9 @@ export const ReportFilter = (props: Props) => {
 
     const getGroupOptions = () => {
         var result: JSX.Element[] = [];
-        if (groups !== null) groups.forEach(g => { result.push(<option value={g.id}>{g.name}</option>) });
+        if (groups !== null) groups.forEach(g => { 
+            const index=groups.indexOf(g)
+            result.push(<option key={index} value={g.id}>{g.name}</option>) });
         return result;
     }
 
@@ -155,7 +164,7 @@ export const ReportFilter = (props: Props) => {
         report.values.forEach(v => {
             if (v.key !== "churchId" && existing.indexOf(v.key) === -1) {
                 result.push(
-                    <FormGroup>
+                    <FormGroup key={v.key}>
                         <FormLabel>{ReportHelper.getPrettyName(v.key)}</FormLabel>
                         {getControl(v)}
                     </FormGroup>
@@ -217,3 +226,4 @@ export const ReportFilter = (props: Props) => {
     );
     else return null;
 }
+    

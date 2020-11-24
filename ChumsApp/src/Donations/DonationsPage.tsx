@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef,useCallback} from 'react';
 import { ApiHelper, DisplayBox, BatchEdit, DonationBatchInterface, Helper, Funds, UserHelper, ExportLink, ReportInterface, ReportHelper, ReportValueInterface } from './Components';
 import { Link } from 'react-router-dom';
 import { Row, Col, Table } from 'react-bootstrap';
@@ -8,14 +8,15 @@ export const DonationsPage = () => {
     const [editBatchId, setEditBatchId] = React.useState(-1);
     const [batches, setBatches] = React.useState<DonationBatchInterface[]>([]);
     const [report, setReport] = React.useState({} as ReportInterface);
+    const isSubscribed = useRef(true)
 
-    const loadReport = () => {
-        ApiHelper.apiGet('/reports/keyName/donationSummary').then(data => {
+    const loadReport = useCallback(() => {
+        ApiHelper.apiGet('/reports/keyName/donationSummary').then(data => {          
             var r: ReportInterface = data;
             ReportHelper.setDefaultValues(r);
             setReport(r);
         });
-    }
+    }, [])
 
     const runReport = (r: ReportInterface) => {
         const postData = [{ id: r.id, values: r.values }]
@@ -37,10 +38,11 @@ export const DonationsPage = () => {
         setEditBatchId(id);
     }
     const batchUpdated = () => { setEditBatchId(-1); loadData(); }
-    const loadData = () => {
-        ApiHelper.apiGet('/donationbatches').then(data => setBatches(data));
+    const loadData = useCallback(() => {
+        ApiHelper.apiGet('/donationbatches').then(data => { if(isSubscribed.current){setBatches(data); console.log(data) }});
         loadReport();
-    }
+      
+    }, [loadReport])
     const getEditContent = () => {
         return (UserHelper.checkAccess('Donations', 'Edit')) ? (<><ExportLink data={batches} spaceAfter={true} filename="donationbatches.csv" /><a href="about:blank" onClick={showAddBatch} ><i className="fas fa-plus"></i></a></>) : null;
     }
@@ -49,9 +51,9 @@ export const DonationsPage = () => {
     const getSidebarModules = () => {
         var result = [];
         //result.push(<DonationFilter startDate={startDate} endDate={endDate} updateFunction={handleFilterUpdate} />);
-        result.push(<ReportFilter report={report} updateFunction={handleFilterUpdate} />);
-        if (editBatchId > -1) result.push(<BatchEdit batchId={editBatchId} updatedFunction={batchUpdated} />)
-        result.push(<Funds />);
+        result.push(<ReportFilter key={result.length-1} report={report} updateFunction={handleFilterUpdate} />);
+        if (editBatchId > -1) result.push(<BatchEdit key={result.length-1} batchId={editBatchId} updatedFunction={batchUpdated} />)
+        result.push(<Funds key={result.length-1}/>);
         return result;
     }
 
@@ -63,7 +65,7 @@ export const DonationsPage = () => {
             var b = batches[i];
             const editLink = (canEdit) ? (<a href="about:blank" data-id={b.id} onClick={showEditBatch}><i className="fas fa-pencil-alt" /></a>) : null;
             const batchLink = (canViewBatcht) ? (<Link to={"/donations/" + b.id}>{b.id}</Link>) : <>{b.id}</>;
-            result.push(<tr>
+            result.push(<tr key={i}>
                 <td>{batchLink}</td>
                 <td>{b.name}</td>
                 <td>{Helper.prettyDate(b.batchDate)}</td>
@@ -75,7 +77,7 @@ export const DonationsPage = () => {
         return result;
     }
 
-    React.useEffect(loadData, []);
+    React.useEffect(()=>{loadData(); return ()=>{ isSubscribed.current = false}},[ batches, editBatchId, loadData]);
     //React.useEffect(() => { setStartDate(set(new Date(), { month: 0, date: 1, hours: 0, minutes: 0, seconds: 0 })); }, []);
 
     if (!UserHelper.checkAccess('Donations', 'View Summary')) return (<></>);

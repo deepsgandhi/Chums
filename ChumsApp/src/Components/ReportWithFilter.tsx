@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useRef} from 'react';
 import { ReportInterface, ReportValueInterface, ReportHelper, ApiHelper } from './';
 import { ReportView, ReportFilter } from "../Reports/Components"
 import { Row, Col } from 'react-bootstrap';
@@ -7,17 +7,21 @@ interface Props { keyName: string }
 
 export const ReportWithFilter: React.FC<Props> = (props) => {
     const [report, setReport] = React.useState({} as ReportInterface);
+    const isSubscribed = useRef(true);
 
 
-    const loadReport = () => {
+    const loadReport = useCallback(() => {
         if (props.keyName !== undefined && props.keyName !== null && props.keyName !== "") {
             ApiHelper.apiGet('/reports/keyName/' + props.keyName).then(data => {
-                var r: ReportInterface = data;
-                ReportHelper.setDefaultValues(r);
-                setReport(r);
+                if (isSubscribed.current)
+                {
+                    var r: ReportInterface = data;
+                    ReportHelper.setDefaultValues(r);
+                    setReport(r);
+                }
             });
         }
-    }
+    }, [props])
 
     const runReport = (r: ReportInterface) => {
         const postData = [{ id: r.id, values: r.values }]
@@ -30,7 +34,11 @@ export const ReportWithFilter: React.FC<Props> = (props) => {
         runReport(r);
     }
 
-    React.useEffect(loadReport, [props.keyName]);
+    React.useEffect(()=>{
+        isSubscribed.current=true;
+        loadReport();
+        return () => { isSubscribed.current=false }
+    }, [props.keyName, loadReport]);
 
     return (<>
         <Row>

@@ -38,8 +38,8 @@ export const ExportPage = () => {
     }
 
     const getProgress = (name: string) => {
-        if (status[name] === undefined) return (<li className="pending">{name}</li>);
-        else return (<li className={status[name]}>{name}</li>);
+        if (status[name] === undefined) return (<li className="pending" key={name}>{name}</li>);
+        else return (<li className={status[name]} key={name}>{name}</li>);
     }
 
     const handleDelete = (e: React.MouseEvent) => {

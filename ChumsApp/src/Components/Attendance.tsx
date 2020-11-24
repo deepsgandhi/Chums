@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useRef} from 'react';
 import { DisplayBox, AttendanceRecordInterface, Helper, AttendanceHelper, AttendanceFilterInterface } from './';
 import { Chart } from 'react-google-charts';
 import { Row, Col, FormGroup, FormControl, FormLabel, Table } from 'react-bootstrap';
@@ -9,9 +9,13 @@ export const Attendance: React.FC<Props> = (props) => {
 
     const [filter, setFilter] = React.useState<AttendanceFilterInterface>(props.filter);
     const [records, setRecords] = React.useState<AttendanceRecordInterface[]>([]);
+    const isSubscribed = useRef(true);
 
-
-    const loadData = () => { AttendanceHelper.loadData(filter).then((data: AttendanceRecordInterface[]) => setRecords(data)) }
+    const loadData = useCallback(() => {
+        AttendanceHelper.loadData(filter).then((data: AttendanceRecordInterface[]) => { 
+            if(isSubscribed.current) setRecords(data)
+        });
+    },[filter, isSubscribed]);
 
     const getWeekRecords = (weekNum: number) => {
         var result: AttendanceRecordInterface[] = [];
@@ -79,7 +83,7 @@ export const Attendance: React.FC<Props> = (props) => {
     }
 
 
-    React.useEffect(loadData, [filter]);
+    React.useEffect(()=>{ isSubscribed.current=true; loadData(); return ()=>{isSubscribed.current = false;}}, [filter, loadData]);
     React.useEffect(() => { setFilter(props.filter) }, [props.filter]);
 
     if (records.length === 0) return (<DisplayBox id="attendanceBox" headerIcon="far fa-calendar-alt" headerText="Attendance History" ><p>No records found.</p></DisplayBox>);

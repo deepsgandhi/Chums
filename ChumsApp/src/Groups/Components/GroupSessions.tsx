@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { ApiHelper, GroupInterface, DisplayBox, SessionInterface, VisitSessionInterface, PersonInterface, PersonHelper, VisitInterface, UserHelper, ExportLink } from './';
 import { Table, Button, InputGroup, FormControl } from 'react-bootstrap';
 
@@ -14,6 +14,9 @@ export const GroupSessions: React.FC<Props> = (props) => {
     const [visitSessions, setVisitSessions] = React.useState<VisitSessionInterface[]>([]);
     const [sessions, setSessions] = React.useState<SessionInterface[]>([]);
     const [session, setSession] = React.useState<SessionInterface>(null);
+    const isSubscribed = useRef(true);
+    const [proceed, setProceed] = React.useState(false);
+    const [isMounted, setIsMounted] = React.useState(false)
 
     const loadAttendance = React.useCallback(() => { ApiHelper.apiGet('/visitsessions?sessionId=' + session.id).then(data => setVisitSessions(data)); }, [session]);
     const loadSessions = React.useCallback(() => {
@@ -25,6 +28,7 @@ export const GroupSessions: React.FC<Props> = (props) => {
 
     const handleRemove = (e: React.MouseEvent) => {
         e.preventDefault();
+        setIsMounted(true)
         var anchor = e.currentTarget as HTMLAnchorElement;
         var personId = parseInt(anchor.getAttribute('data-personid'));
         ApiHelper.apiDelete('/visitsessions?sessionId=' + session.id + '&personId=' + personId).then(loadAttendance);
@@ -50,6 +54,7 @@ export const GroupSessions: React.FC<Props> = (props) => {
 
 
     const selectSession = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setIsMounted(true)
         for (let i = 0; i < sessions.length; i++) if (sessions[i].id === parseInt(e.currentTarget.value)) setSession(sessions[i]);
     }
 
@@ -69,12 +74,12 @@ export const GroupSessions: React.FC<Props> = (props) => {
         );
     }
 
-    const handleSessionSelected = () => {
+    const handleSessionSelected =React.useCallback (() => {
         if (session !== null) {
             loadAttendance();
             props.sidebarVisibilityFunction('addPerson', true);
         }
-    }
+    },[props, loadAttendance, session])
 
     const handlePersonAdd = React.useCallback(() => {
         var v = { checkinTime: new Date(), personId: props.addedPerson.id, visitSessions: [{ sessionId: session.id }] } as VisitInterface;
@@ -83,9 +88,25 @@ export const GroupSessions: React.FC<Props> = (props) => {
     }, [props, loadAttendance, session]);
 
 
-    React.useEffect(() => { if (props.group.id !== undefined) loadSessions(); props.addedCallback(); }, [props.group, props.addedSession, loadSessions, props]);
-    React.useEffect(() => { if (props.addedPerson?.id !== undefined) handlePersonAdd() }, [props.addedPerson, handlePersonAdd]);
-    React.useEffect(handleSessionSelected, [session]);
+    React.useEffect(() => { 
+        if (isSubscribed.current) {
+            if (props.group.id !== undefined) { loadSessions()}; props.addedCallback();
+        }
+        return () => { isSubscribed.current=false;}
+    }, [props.group, props.addedSession, loadSessions, props]);
+    React.useEffect(() => {
+        setProceed(true)
+        if(proceed===true){
+        if (props.addedPerson?.id !== undefined) {handlePersonAdd()}}
+    return ()=>{setProceed(false) 
+    }}, [props.addedPerson, handlePersonAdd, proceed]);
+    React.useEffect(()=>{
+        if(isMounted=== true){
+        handleSessionSelected()}
+        return()=>{
+            setIsMounted(false)
+        }
+    }, [session, isMounted, handleSessionSelected]);
 
     var content = <></>;
     if (sessions.length === 0) content = <div className="alert alert-warning" role="alert"><b>There are no sessions.</b>  Please add a new session to continue.</div>

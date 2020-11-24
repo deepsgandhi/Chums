@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { Link } from 'react-router-dom';
 import { ApiHelper, GroupInterface, DisplayBox, GroupMemberInterface, PersonHelper, PersonInterface } from './';
 import { Table } from 'react-bootstrap';
@@ -7,8 +7,9 @@ interface Props { group: GroupInterface, addFunction: (person: PersonInterface) 
 
 export const MembersAdd: React.FC<Props> = (props) => {
     const [groupMembers, setGroupMembers] = React.useState<GroupMemberInterface[]>([]);
+    const isSubscribed = useRef(true)
 
-    const loadData = React.useCallback(() => { ApiHelper.apiGet('/groupmembers?groupId=' + props.group.id).then(data => setGroupMembers(data)); }, [props.group]);
+    const loadData = React.useCallback(() => { ApiHelper.apiGet('/groupmembers?groupId=' + props.group.id).then(data => {if(isSubscribed.current){setGroupMembers(data)}}); }, [props.group, isSubscribed]);
     const addMember = (e: React.MouseEvent) => {
 
         e.preventDefault();
@@ -36,7 +37,7 @@ export const MembersAdd: React.FC<Props> = (props) => {
         return rows;
     }
 
-    React.useEffect(() => { if (props.group !== null) loadData() }, [props.group, loadData]);
+    React.useEffect(() => { if (props.group !== null) loadData(); return ()=>{isSubscribed.current=false} }, [props.group, loadData]);
 
     return (
         <DisplayBox headerIcon="fas fa-user" headerText="Available Group Members" >

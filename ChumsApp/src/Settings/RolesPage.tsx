@@ -18,7 +18,7 @@ export const RolesPage = () => {
         const canEdit = UserHelper.checkAccess('Roles', 'Edit');
         for (let i = 0; i < roles.length; i++) {
             const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setSelectedRoleId(roles[i].id); }}><i className="fas fa-pencil-alt"></i></a>) : null;
-            result.push(<tr>
+            result.push(<tr key={i}>
                 <td><i className="fas fa-lock" /> <Link to={"/settings/roles/" + roles[i].id}>{roles[i].name}</Link></td>
                 <td>{editLink}</td>
             </tr>);

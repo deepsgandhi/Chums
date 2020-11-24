@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useRef } from 'react';
 import { ServiceInterface, InputBox, ErrorMessages, ApiHelper, CampusInterface } from './';
 
 interface Props {
@@ -10,7 +10,7 @@ export const ServiceEdit: React.FC<Props> = (props) => {
     const [service, setService] = React.useState({} as ServiceInterface);
     const [campuses, setCampuses] = React.useState([] as CampusInterface[]);
     const [errors, setErrors] = React.useState([]);
-
+    const isSubscribed = useRef(true)
     const handleSave = () => {
         if (validate()) {
             var s = { ...service };
@@ -22,7 +22,7 @@ export const ServiceEdit: React.FC<Props> = (props) => {
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
     const loadData = React.useCallback(() => {
         ApiHelper.apiGet('/campuses').then(data => {
-            setCampuses(data);
+            if(isSubscribed.current){setCampuses(data);
             if (data.length > 0) {
                 if (service?.campusId === undefined || service?.campusId === null || service?.campusId === 0) {
                     var s = { ...props.service };
@@ -30,7 +30,7 @@ export const ServiceEdit: React.FC<Props> = (props) => {
                     console.log(s.campusId);
                     setService(s);
                 }
-            }
+            }}
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.service]); 
@@ -58,7 +58,8 @@ export const ServiceEdit: React.FC<Props> = (props) => {
         return options;
     }
 
-    React.useEffect(() => { setService(props.service); loadData(); }, [props.service, loadData]);
+    React.useEffect(() => { setService(props.service); loadData();
+return ()=>{isSubscribed.current = false} }, [props.service, loadData, ]);
 
 
     if (service === null || service.id === undefined) return null;

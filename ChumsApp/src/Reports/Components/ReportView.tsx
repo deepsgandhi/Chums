@@ -19,9 +19,10 @@ export const ReportView = (props: Props) => {
 
     const getEditContent = () => {
         const result: JSX.Element[] = [];
+       
         if (props.report?.results !== undefined) {
-            result.push(<a href="about:blank" onClick={handlePrint} title="print"><i className="fas fa-print"></i></a>);
-            result.push(<ExportLink data={props.report.results} filename={props.report.title.replace(" ", "_") + ".csv"} />);
+            result.push(<a key={result.length-1} href="about:blank" onClick={handlePrint} title="print"><i className="fas fa-print"></i></a>);
+            result.push(<ExportLink key={result.length-1} data={props.report.results} filename={props.report.title.replace(" ", "_") + ".csv"} />);
         }
         return result;
     }

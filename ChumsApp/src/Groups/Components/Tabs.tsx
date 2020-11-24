@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { AttendanceHelper, Helper, UserHelper, GroupInterface, GroupMembers, GroupSessions, SessionInterface, Attendance, PersonInterface } from './';
 
 interface Props {
@@ -17,7 +17,7 @@ export const Tabs: React.FC<Props> = (props) => {
         return <li className="nav-item" key={keyName}><a href="about:blank" onClick={e => { e.preventDefault(); setSelectedTab(keyName) }} className={className}><i className={icon}></i> {text}</a></li>
     }
 
-    const setVisibilityState = () => {
+    const setVisibilityState = useCallback(() => {
         props.sidebarVisibilityFunction('addPerson', false);
         props.sidebarVisibilityFunction('addSession', false);
         props.sidebarVisibilityFunction('addMember', false);
@@ -27,8 +27,8 @@ export const Tabs: React.FC<Props> = (props) => {
             props.sidebarVisibilityFunction('addPerson', true);
             props.sidebarVisibilityFunction('addMember', true);
         }
-    }
-
+    }, [props, selectedTab,]
+    )
     const getCurrentTab = () => {
 
         var filter = AttendanceHelper.createFilter();
@@ -60,7 +60,9 @@ export const Tabs: React.FC<Props> = (props) => {
         return tabs;
     }
 
-    React.useEffect(setVisibilityState, [selectedTab]);
+    React.useEffect(()=>{setVisibilityState()
+      
+    }, [selectedTab, setVisibilityState,]);
 
 
 

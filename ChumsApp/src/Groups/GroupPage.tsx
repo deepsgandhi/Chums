@@ -31,8 +31,8 @@ export const GroupPage = ({ match }: RouteComponentProps<TParams>) => {
     const getSidebarModules = () => {
         const result = [] as JSX.Element[];
         if (addSessionVisible) result.push(<SessionAdd group={group} updatedFunction={handleSessionAdd} />);
-        if (addPersonVisible) result.push(<DisplayBox id="personAddBox" headerIcon="fas fa-user" headerText="Add Person"><PersonAdd addFunction={addPerson} /></DisplayBox>);
-        if (addMemberVisible) result.push(<MembersAdd group={group} addFunction={addPerson} />);
+        if (addPersonVisible) result.push(<DisplayBox key={result.length-1} id="personAddBox" headerIcon="fas fa-user" headerText="Add Person"><PersonAdd addFunction={addPerson} /></DisplayBox>);
+        if (addMemberVisible) result.push(<MembersAdd key={result.length-1}group={group} addFunction={addPerson} />);
         return result;
     }
 
