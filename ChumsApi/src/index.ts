@@ -1,5 +1,5 @@
 import { init } from './app';
-import { Pool } from './pool';
+import { Pool } from './Pool';
 const port = process.env.SERVER_PORT;
 
 Pool.initPool();

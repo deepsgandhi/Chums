@@ -1,4 +1,4 @@
-import { Pool } from "./pool";
+import { Pool } from "./Pool";
 import { PoolConnection, MysqlError } from "mysql";
 import { StaticLogger } from './helpers/StaticLogger'
 import { logger } from "express-winston";
