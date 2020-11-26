@@ -4,6 +4,7 @@ import {
   AnswerRepository,
   AttendanceRepository,
   CampusRepository,
+  ChurchSettingRepository,
   DonationRepository,
   DonationBatchRepository,
   FormRepository,
@@ -30,6 +31,7 @@ export class Repositories {
   public answer: AnswerRepository;
   public attendance: AttendanceRepository;
   public campus: CampusRepository;
+  public churchSetting: ChurchSettingRepository;
   public donationBatch: DonationBatchRepository;
   public donation: DonationRepository;
   public form: FormRepository;
@@ -55,6 +57,7 @@ export class Repositories {
     @inject(TYPES.AnswerRepository) answerRepository: AnswerRepository,
     @inject(TYPES.AttendanceRepository) attendanceRepository: AttendanceRepository,
     @inject(TYPES.CampusRepository) campusRepository: CampusRepository,
+    @inject(TYPES.ChurchSettingRepository) churchSettingRepository: ChurchSettingRepository,
     @inject(TYPES.DonationBatchRepository) donationBatchRepository: DonationBatchRepository,
     @inject(TYPES.DonationRepository) donationRepository: DonationRepository,
     @inject(TYPES.FormRepository) formRepository: FormRepository,
@@ -78,6 +81,7 @@ export class Repositories {
     this.answer = answerRepository;
     this.attendance = attendanceRepository;
     this.campus = campusRepository;
+    this.churchSetting = churchSettingRepository;
     this.donationBatch = donationBatchRepository;
     this.donation = donationRepository;
     this.form = formRepository;

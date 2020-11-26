@@ -3,6 +3,7 @@ import {
   AnswerRepository,
   AttendanceRepository,
   CampusRepository,
+  ChurchSettingRepository,
   DonationBatchRepository,
   DonationRepository,
   FormRepository,
@@ -33,6 +34,7 @@ export const bindings = new AsyncContainerModule(async (bind) => {
   bind<AnswerRepository>(TYPES.AnswerRepository).to(AnswerRepository).inSingletonScope();
   bind<AttendanceRepository>(TYPES.AttendanceRepository).to(AttendanceRepository).inSingletonScope();
   bind<CampusRepository>(TYPES.CampusRepository).to(CampusRepository).inSingletonScope();
+  bind<ChurchSettingRepository>(TYPES.ChurchSettingRepository).to(ChurchSettingRepository).inSingletonScope();
   bind<DonationBatchRepository>(TYPES.DonationBatchRepository).to(DonationBatchRepository).inSingletonScope();
   bind<DonationRepository>(TYPES.DonationRepository).to(DonationRepository).inSingletonScope();
   bind<FormRepository>(TYPES.FormRepository).to(FormRepository).inSingletonScope();

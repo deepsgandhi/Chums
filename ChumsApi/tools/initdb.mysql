@@ -312,7 +312,13 @@ CREATE TABLE `answers` (
   CONSTRAINT `fk_answers_questions` FOREIGN KEY (`QuestionId`) REFERENCES `questions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
-
+CREATE TABLE `churchSettings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `churchId` int(11) DEFAULT NULL,
+  `keyName` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 

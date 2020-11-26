@@ -9,3 +9,4 @@ export { ArrayHelper } from "./ArrayHelper"
 export { ReportHelper } from "./ReportHelper"
 export * from "./ApiHelper"
 export type { AttendanceFilterInterface } from "./AttendanceHelper"
+export { RoleContentType, RoleAction } from './RolesEnum'

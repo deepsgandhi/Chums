@@ -27,3 +27,4 @@ export { ServiceTime } from './ServiceTime';
 export { Session } from './Session';
 export { Visit } from './Visit';
 export { VisitSession } from './VisitSession';
+export { ChurchSetting } from './ChurchSetting'
