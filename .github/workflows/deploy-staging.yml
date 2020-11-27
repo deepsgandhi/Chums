@@ -43,7 +43,6 @@ jobs:
           cd ChumsWeb
           npm install
           npm run deploy-staging
-          cd ..
 
       - name: Deploy API
         run: |
