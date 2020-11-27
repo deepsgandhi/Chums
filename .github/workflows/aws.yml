@@ -15,7 +15,6 @@ jobs:
     
     - name: Run React Tests
       run: |
-        npm install cypress
         cd CypressTests
         npm install
         npm run cy:run
