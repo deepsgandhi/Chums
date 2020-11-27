@@ -20,14 +20,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Start React App
+      - name: Install Dependencies
         run: |
           cd ChumsWeb
           npm install
-          npm test
 
-      - name: Run React Tests
+      - name: Test
         run: |
           cd CypressTests
           npm install
-          npm run cy:run
+          npm test
