@@ -15,7 +15,7 @@ jobs:
     
     - name: Run React Tests
       run: |
-        sudo npm install -g cypress
+        npm install cypress
         cd CypressTests
         npm install
         npm run cy:run
