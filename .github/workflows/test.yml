@@ -1,0 +1,35 @@
+on:
+  pull_request:
+    branches: [master]
+    # not set to master so it doesn't fire when pull request is approved
+
+name: Run Tests
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Start React App
+        run: |
+          cd ChumsWeb
+          npm install
+          nohup npm start> nohup.out 2> nohup.err < /dev/null &
+          cd ..
+
+      - name: Run React Tests
+        run: |
+          cd CypressTests
+          npm install
+          npm run cy:run

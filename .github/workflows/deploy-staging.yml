@@ -1,0 +1,52 @@
+on:
+  push:
+    branches: [branch]
+    # not set to master so it doesn't fire when pull request is approved
+
+name: Deploy Staging
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: us-east-2
+  SERVERLESS_ACCESS_KEY: ${{ secrets.STAGING_SERVERLESS_ACCESS_KEY }}
+
+jobs:
+  deploy:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          aws-region: $AWS_REGION
+
+      - name: Setup Serverless
+        run: |
+          export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
+
+      - name: Deploy Frontend
+        run: |
+          cd ChumsWeb
+          npm install
+          npm run deploy-staging
+          cd ..
+
+      - name: Deploy API
+        run: |
+          cd ChumsApi
+          npm install
+          npm run deploy-staging

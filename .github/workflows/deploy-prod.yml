@@ -1,0 +1,51 @@
+on:
+  release:
+    types: [created]
+
+name: Deploy Prod
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: us-east-2
+  SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+
+jobs:
+  deploy:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          aws-region: $AWS_REGION
+
+      - name: Setup Serverless
+        run: |
+          export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
+
+      - name: Deploy Frontend
+        run: |
+          cd ChumsWeb
+          npm install
+          npm run deploy-prod
+          cd ..
+
+      - name: Deploy API
+        run: |
+          cd ChumsApi
+          npm install
+          npm run deploy-prod
