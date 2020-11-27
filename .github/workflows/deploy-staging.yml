@@ -1,6 +1,7 @@
 on:
   push:
     branches: [branch]
+    # not set to master so it doesn't fire when pull request is approved
 
 name: Deploy Staging
 
