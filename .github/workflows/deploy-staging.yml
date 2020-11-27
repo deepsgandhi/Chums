@@ -35,7 +35,6 @@ jobs:
 
       - name: Setup Serverless
         run: |
-          sudo npm install -g serverless
           export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
 
       - name: Deploy Frontend
