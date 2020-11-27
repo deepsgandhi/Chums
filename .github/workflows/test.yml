@@ -1,6 +1,6 @@
 on:
   push:
-    branches: master
+    branches: [master]
 
 name: Run Tests
 
@@ -10,16 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    
-    - name: Run React Tests
-      run: |
-        cd ChumsWeb
-        npm install 
-        npm start
-        cd ..
-        cd CypressTests
-        npm install
-        npm run cy:run
-        
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Start React App
+        run: |
+          cd ChumsWeb
+          npm install
+          nohup npm start> nohup.out 2> nohup.err < /dev/null &
+          cd..
+
+      - name: Run React Tests
+        run: |
+          cd CypressTests
+          npm install
+          npm run cy:run
