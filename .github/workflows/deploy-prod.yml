@@ -9,7 +9,7 @@ env:
 
 jobs:
   deploy:
-    name: Run Tests
+    name: Deploy Prod
     runs-on: ubuntu-latest
 
     steps:
