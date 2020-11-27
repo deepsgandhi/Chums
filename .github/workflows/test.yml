@@ -18,7 +18,7 @@ jobs:
           cd ChumsWeb
           npm install
           nohup npm start> nohup.out 2> nohup.err < /dev/null &
-          cd..
+          cd ..
 
       - name: Run React Tests
         run: |
