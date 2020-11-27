@@ -1,0 +1,22 @@
+on:
+  push:
+    branches: master
+
+name: Run Tests
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Run React Tests
+      run: |
+        npm install -g cypress
+        cd CypressTests
+        npm install
+        npm run cy:run
+        
