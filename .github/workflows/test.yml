@@ -1,6 +1,6 @@
 on:
   pull_request:
-    branches: [branch]
+    branches: [master]
     # not set to master so it doesn't fire when pull request is approved
 
 name: Run Tests
