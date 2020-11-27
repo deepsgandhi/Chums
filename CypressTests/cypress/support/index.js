@@ -19,6 +19,6 @@ import './commands'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 Cypress.Cookies.defaults({
-    whitelist: ['ASP.NET_SessionId', '.ASPXAUTH']
+    preserve: ['ASP.NET_SessionId', '.ASPXAUTH']
 })
 

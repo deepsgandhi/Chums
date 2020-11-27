@@ -42,7 +42,6 @@ jobs:
           cd ChumsWeb
           npm install
           npm run deploy-prod
-          cd ..
 
       - name: Deploy API
         run: |
