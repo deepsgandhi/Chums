@@ -38,17 +38,17 @@ jobs:
         run: |
           cd ChumsWeb
           npm install
-          npm run deploy-staging
+          npm run deploy-prod
       
       - name: Deploy App
         run: |
           cd ChumsApp
           npm install
-          npm run deploy-staging
+          npm run deploy-prod
 
       - name: Deploy API
         run: |
           cd ChumsApi
           npm install
-          npm run deploy-staging
+          npm run deploy-prod
 
