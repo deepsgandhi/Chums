@@ -35,9 +35,15 @@ jobs:
         run: |
           export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
 
-      - name: Deploy Frontend
+      - name: Deploy Web
         run: |
           cd ChumsWeb
+          npm install
+          npm run deploy-staging
+      
+      - name: Deploy App
+        run: |
+          cd ChumsApp
           npm install
           npm run deploy-staging
 
