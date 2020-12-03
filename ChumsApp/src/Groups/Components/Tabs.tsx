@@ -27,7 +27,7 @@ export const Tabs: React.FC<Props> = (props) => {
             props.sidebarVisibilityFunction('addPerson', true);
             props.sidebarVisibilityFunction('addMember', true);
         }
-    }, [props, selectedTab,]
+    }, [props.sidebarVisibilityFunction !== null, selectedTab,]
     )
     const getCurrentTab = () => {
 
@@ -60,8 +60,9 @@ export const Tabs: React.FC<Props> = (props) => {
         return tabs;
     }
 
-    React.useEffect(()=>{setVisibilityState()
-      
+    React.useEffect(() => {
+        setVisibilityState()
+
     }, [selectedTab, setVisibilityState,]);
 
 
