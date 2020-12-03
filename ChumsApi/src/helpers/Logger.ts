@@ -18,6 +18,7 @@ export class WinstonLogger {
     public error(msg: string | object) {
         if (this._logger === null) this.init("API");
         this.pendingMessages = true;
+        if (process.env.API_ENV === "dev") console.log(msg);
         this._logger.error(msg);
     }
 
