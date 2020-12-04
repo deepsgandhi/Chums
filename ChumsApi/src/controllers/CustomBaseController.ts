@@ -19,6 +19,14 @@ export class CustomBaseController extends BaseHttpController {
         this.logger = logger;
     }
 
+    public error(errors: string[]) {
+        return this.json({ errors }, 500);
+    }
+
+    public denyAccess(errors: string[]) {
+        return this.json({ errors }, 401);
+    }
+
     public authUser(): AuthenticatedUser {
         return new AuthenticatedUser(this.httpContext.user);
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApiHelper, RegisterInterface, RoleInterface, LoginResponseInterface, RolePermissionInterface, RoleMemberInterface, ErrorMessages, EnvironmentHelper, ChurchInterface, CampusInterface, UserInterface, PersonInterface, HouseholdInterface, GroupInterface, GroupServiceTimeInterface, ServiceInterface, ServiceTimeInterface, FundInterface } from './';
+import { ApiHelper, RegisterInterface, LoginResponseInterface, ErrorMessages, EnvironmentHelper } from './';
 import { Row, Col, Container, Button } from 'react-bootstrap'
 
 export const HomeRegister: React.FC = () => {
@@ -35,36 +35,12 @@ export const HomeRegister: React.FC = () => {
             setProcessing(true);
             btn.innerHTML = "Registering. Please wait...";
             const loginResp = await createAccess();
-            const userId = loginResp.user.id;
-
-
-            btn.innerHTML = "Configuring...";
-
-            var promises: Promise<any>[] = [];
-            var campus: CampusInterface = { name: register.churchName };
-            promises.push(ApiHelper.apiPost("/campuses", [campus]).then(c => campus = c));
-            var household: HouseholdInterface = { name: lastName };
-            promises.push(ApiHelper.apiPost("/households", [household]).then(h => household = h));
-            var fund: FundInterface = { name: "General Fund" };
-            promises.push(ApiHelper.apiPost("/funds", [fund]).then(f => fund = f));
-            var group: GroupInterface = { name: "Worship Service", categoryName: "Worship Service", trackAttendance: true, parentPickup: false };
-            promises.push(ApiHelper.apiPost("/groups", [group]).then(f => fund = f));
-            await Promise.all(promises);
-
-            promises = [];
-            var person: PersonInterface = { contactInfo: { email: register.email }, name: { first: firstName, last: lastName }, householdId: household.id, householdRole: "Head", userId: userId };
-            promises.push(ApiHelper.apiPost("/people", [person]).then(p => person = p));
-            var service: ServiceInterface = { campusId: campus.id, name: "Sunday Morning" };
-            promises.push(ApiHelper.apiPost("/services", [service]).then(s => service = s));
-            await Promise.all(promises);
-
-            var serviceTime: ServiceTimeInterface = { name: "9:00", serviceId: service.id };
-            await ApiHelper.apiPost("/servicetimes", [serviceTime]).then(st => serviceTime = st)
-
-            var groupServiceTime: GroupServiceTimeInterface = { groupId: group.id, serviceTimeId: serviceTime.id };
-            await ApiHelper.apiPost("/groupservicetimes", [groupServiceTime]).then(gst => groupServiceTime = gst)
-
-            setRedirectUrl(EnvironmentHelper.AppUrl);
+            if (loginResp != null) {
+                btn.innerHTML = "Configuring...";
+                var resp: LoginResponseInterface = await ApiHelper.apiPost(EnvironmentHelper.ChumsApiUrl + '/churches/init', { user: loginResp.user, church: loginResp.churches[0] });
+                if (resp.errors !== undefined) { setErrors(resp.errors); return 0; }
+                else setErrors(["Success"]); //setRedirectUrl(EnvironmentHelper.AppUrl);
+            }
         }
 
         btn.innerHTML = "Register"
@@ -78,55 +54,20 @@ export const HomeRegister: React.FC = () => {
         register.displayName = firstName + " " + lastName;
 
         var resp: LoginResponseInterface = await ApiHelper.apiPostAnonymous(EnvironmentHelper.AccessManagementApiUrl + '/churches/register', register);
-        const church = resp.churches[0];
-        ApiHelper.jwt = resp.token;
+        if (resp.errors !== undefined) { setErrors(resp.errors); return null; }
+        else {
+            const church = resp.churches[0];
+            ApiHelper.jwt = resp.token;
 
-        await addAdminRole(church, resp.user)
-
-        resp = await ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/users/switchApp', { churchId: church.id, appName: "CHUMS" });
-        ApiHelper.jwt = resp.token;
-
-        return resp;
+            resp = await ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/churchApps/register', { appName: "CHUMS" });
+            if (resp.errors !== undefined) { setErrors(resp.errors); return null; }
+            else {
+                resp = await ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/users/switchApp', { churchId: church.id, appName: "CHUMS" });
+                ApiHelper.jwt = resp.token;
+                return resp;
+            }
+        }
     }
-
-    const addAdminRole = async (church: ChurchInterface, user: UserInterface) => {
-        var role: RoleInterface = { appName: "CHUMS", churchId: church.id, name: "Admins" };
-        role.id = (await ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/roles', [role]))[0].id;
-
-        const member: RoleMemberInterface = { churchId: church.id, roleId: role.id, userId: user.id };
-        member.id = (await ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/rolemembers', [member]))[0].id;
-
-        const permissions: RolePermissionInterface[] = [];
-        permissions.push({ churchId: church.id, contentType: "Attendance", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Attendance", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Attendance", action: "View Summary", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Donations", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Donations", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Donations", action: "View Summary", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Forms", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Forms", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Group Members", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Group Members", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Groups", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Groups", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Households", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "People", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "People", action: "Edit Notes", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "People", action: "View Notes", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Groups", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Groups", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Roles", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Roles", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "RoleMembers", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "RoleMembers", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "RolePermissions", action: "View", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "RolePermissions", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Services", action: "Edit", roleId: role.id });
-        permissions.push({ churchId: church.id, contentType: "Admin", action: "Import", roleId: role.id })
-        permissions.push({ churchId: church.id, contentType: "Admin", action: "Edit Settings", roleId: role.id });
-        await ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + '/rolepermissions', permissions);
-    }
-
 
     const getProcessing = () => {
         if (!processing) return null;

@@ -1,5 +1,6 @@
 export { AttendanceRecordController } from "./AttendanceRecordController";
 export { CampusController } from "./CampusController";
+export { ChurchController } from "./ChurchController";
 export { DonationBatchController } from "./DonationBatchController";
 export { DonationController } from "./DonationController";
 export { ErrorController } from "./ErrorController";
