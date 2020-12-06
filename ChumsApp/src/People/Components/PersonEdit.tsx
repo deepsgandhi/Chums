@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { PersonHelper, Helper, StateOptions, InputBox, ApiHelper, PersonInterface, ContactInfoInterface, UpdateHouseHold} from './'
 import { Redirect } from 'react-router-dom';
-import { Row, Col, FormControl, FormGroup, FormLabel } from 'react-bootstrap';
+import { Row, Col, FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap';
 
 interface Props {
     id?: string,
@@ -9,6 +9,7 @@ interface Props {
     togglePhotoEditor: (show: boolean) => void,
     person: PersonInterface,
     photoUrl: string,
+    showMergeSearch: () => void
 }
 
 export const PersonEdit: React.FC<Props> = (props) => {
@@ -143,6 +144,10 @@ export const PersonEdit: React.FC<Props> = (props) => {
         }
     }
 
+    const handleMerge = () => {
+        props.showMergeSearch();
+    }
+
     React.useEffect(personChanged, [props.person]);
     React.useEffect(photoUrlChanged, [props.photoUrl]);
     React.useEffect(fetchMembers, [props.person])
@@ -152,7 +157,7 @@ export const PersonEdit: React.FC<Props> = (props) => {
         return (
             <>
             <UpdateHouseHold show={showUpdateAddressModal} text={text} onHide={() => setShowUpdateAddressModal(false)} handleNo={handleNo} handleYes={handleYes} />
-            <InputBox id={props.id} headerIcon="fas fa-user" headerText="Personal Details" cancelFunction={handleCancel} deleteFunction={handleDelete} saveFunction={handleSave} >
+            <InputBox id={props.id} headerIcon="fas fa-user" headerText="Personal Details" cancelFunction={handleCancel} deleteFunction={handleDelete} saveFunction={handleSave} headerActionContent={<Button variant="primary" size="sm" onClick={handleMerge}>Merge</Button>} >
                 <Row>
                     <Col xs={3}>{getPhoto()}</Col>
                     <Col xs={9}>

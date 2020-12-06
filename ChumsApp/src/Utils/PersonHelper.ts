@@ -22,8 +22,8 @@ export class PersonHelper {
     }
 
     public static compareAddress(address1: ContactInfoInterface, address2: ContactInfoInterface): boolean {
-        const displayAddress1: string = this.addressToString(address1);
-        const displayAddress2: string = this.addressToString(address2);
+        const displayAddress1: string = this.addressToString(address1).trim();
+        const displayAddress2: string = this.addressToString(address2).trim();
         
         if (displayAddress1 !== displayAddress2) {
             return true

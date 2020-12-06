@@ -18,8 +18,8 @@ export class FormSubmissionRepository {
 
     public async update(formSubmission: FormSubmission) {
         return DB.query(
-            "UPDATE formSubmissions SET revisionDate=NOW(), revisedBy=? WHERE id=? and churchId=?",
-            [formSubmission.revisedBy, formSubmission.id, formSubmission.churchId]
+            "UPDATE formSubmissions SET revisionDate=NOW(), contentId=?, revisedBy=? WHERE id=? and churchId=?",
+            [formSubmission.contentId, formSubmission.revisedBy, formSubmission.id, formSubmission.churchId]
         ).then(() => { return formSubmission });
     }
 

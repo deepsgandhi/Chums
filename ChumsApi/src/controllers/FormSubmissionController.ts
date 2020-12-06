@@ -22,7 +22,12 @@ export class FormSubmissionController extends CustomBaseController {
     public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {
             if (!au.checkAccess("Forms", "View")) return this.json({}, 401);
-            else return this.repositories.formSubmission.convertAllToModel(au.churchId, await this.repositories.formSubmission.loadAll(au.churchId));
+            else {
+                let result = null;
+                if (req.query.personId !== undefined) result = await this.repositories.formSubmission.loadForContent(au.churchId, "person", parseInt(req.query.personId.toString(), 0));
+                else result = await this.repositories.formSubmission.loadAll(au.churchId);
+                return this.repositories.formSubmission.convertAllToModel(au.churchId, result);
+            }
         });
     }
 
