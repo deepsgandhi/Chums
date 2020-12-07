@@ -25,11 +25,31 @@ export default class GuestAdd extends React.Component<Props, State>{
                 lastName: ''
             }
     }
+
+addGuest(){
+
+    // if(this.state.firstName===''){
+    //     Utility.snackBar("Please enter first name")
+    // }
+    // else if(this.state.lastName===''){
+    //     Utility.snackBar("Please enter last name")
+    // }
+    // else{
+        Utility.getApi('people/search?term=',this.state.firstName+" "+this.state.lastName).then((res)=>{
+            console.log("res"+res.length)
+
+        })
+    // }
+}
+
+cancelGuest(){
+
+}
     render() {
         return (
             <Container>
                 <Content>
-                    <View style={{ height: constant.deviceHeight, backgroundColor: constant.ghostWhite }}>
+                    <View style={{ height: constant.deviceHeight*97.8/100, backgroundColor: constant.ghostWhite }}>
                         <Header />
                         <Text style={styles.guestAddText}>First Name</Text>
                         <TextInput
@@ -44,10 +64,16 @@ export default class GuestAdd extends React.Component<Props, State>{
                             style={styles.guestAddinput}
                         />
                         <View style={styles.guestAddButtonView}>
-                            <TouchableOpacity style={[styles.guestAddButton, { backgroundColor: constant.yellowColor }]}>
+                            <TouchableOpacity 
+                            style={[styles.guestAddButton, { backgroundColor: constant.yellowColor }]}
+                            onPress={()=>{this.cancelGuest()}}
+                            >
                                 <Text style={styles.guestAddButtonText}>CANCEL</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.guestAddButton, { backgroundColor: constant.greenColor }]}>
+                            <TouchableOpacity 
+                            style={[styles.guestAddButton, { backgroundColor: constant.greenColor }]}
+                            onPress={()=>{this.addGuest()}}
+                            >
                                 <Text style={styles.guestAddButtonText}>ADD</Text>
                             </TouchableOpacity>
                         </View>

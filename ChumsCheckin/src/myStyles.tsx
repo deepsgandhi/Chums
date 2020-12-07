@@ -17,14 +17,14 @@ const styles = StyleSheet.create({
     },
 
     loginImage: {
-        width: constant.deviceWidth * 80 / 100,
-        height: constant.deviceWidth * 50 / 100,
+        width: constant.deviceWidth * 70 / 100,
+        height: constant.deviceHeight * 30 / 100,
         alignSelf: 'center'
     },
     loginHeading: {
         fontSize: 1.55 * constant.fontSize,
         alignSelf: 'center',
-        marginVertical: '8%',
+        marginVertical: '6%',
     },
     loginImageView: {
         height: constant.deviceHeight * 33 / 100,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         backgroundColor: constant.baseColor,
         marginHorizontal: '7%',
         marginVertical: '8%',
-        height: constant.deviceWidth * 15 / 100,
+        height: constant.deviceHeight * 8 / 100,
         justifyContent: 'center',
         flexDirection: 'row',
 
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     loginButtonText: {
         alignSelf: 'center',
         color: constant.whiteColor,
+        fontSize: constant.smallFont1
     },
 
     //Detail Search
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
         backgroundColor: constant.whiteColor,
         flex: 1,
         paddingHorizontal: '3%',
+        fontSize:constant.fontSize1,
     },
     searchButton: {
         backgroundColor: constant.baseColor,
@@ -90,13 +92,15 @@ const styles = StyleSheet.create({
     searchButtonText: {
 
         color: constant.whiteColor,
+        fontSize:constant.fontSize,
     },
 
 // Activity services
 servicesHeading:{
     marginVertical:'5%',
     fontSize:constant.fontSize3,
-    marginLeft:'5%'
+    marginLeft:'5%',
+    
 },
 serviceButton:{
     
@@ -114,7 +118,8 @@ serviceContentStyle:{
 },
 serviceButtonText:{
     color:constant.baseColor1,
-    marginLeft:'3%'
+    marginLeft:'3%',
+    fontSize:constant.fontSize1,
 },
 
 serviceImage: {
@@ -167,7 +172,8 @@ guestAddinput:{
 marginTop:'3%',
 backgroundColor:constant.whiteColor,
 marginHorizontal:'8%',
-paddingHorizontal:'3%'
+paddingHorizontal:'3%',
+fontSize:constant.fontSize,
 },
 
 guestAddButtonView:{
@@ -188,7 +194,7 @@ height:constant.deviceWidth*15/100
 
 },
 guestAddButtonText:{
-
+    fontSize:constant.fontSize,
     color:constant.whiteColor
 },
 
@@ -206,21 +212,22 @@ marginBottom:constant.deviceWidth*13/100
 },
 addGuestButton:{
  backgroundColor:constant.baseColor1,
- height:constant.deviceWidth*13/100,
+ height:constant.deviceHeight*8/100,
  justifyContent:'center',
  marginBottom:'3%'
 
 },
 addGuestButtonText:{
 alignSelf:'center',
-color:constant.whiteColor
+color:constant.whiteColor,
+fontSize:constant.smallFont1
 },
 addGuestImageView:{
 backgroundColor:constant.whiteColor
 },
 checkingButton:{
     backgroundColor:constant.baseColor1,
-    height:constant.deviceWidth*13/100,
+    height:constant.deviceHeight*8/100,
     justifyContent:'center',
     position:'absolute',
     bottom:0,
@@ -228,7 +235,8 @@ checkingButton:{
 },
 checkingButtonText:{
     alignSelf:'center',
-    color:constant.whiteColor
+    color:constant.whiteColor,
+    fontSize:constant.smallFont1
 },
 dataText2:{
 
@@ -266,7 +274,7 @@ justifyContent:'space-around'
     
 },
 guestListText:{
-
+    fontSize:constant.smallFont1
 },
 guestListButton:{
 
@@ -296,14 +304,14 @@ ActivityGroupRipple:{
 
 },
 activityText:{
-
+fontSize:constant.fontSize,
     color:constant.baseColor1,
     marginLeft:'3%',
 },
 
 noneButton:{
 backgroundColor:constant.redColor,
-height:constant.deviceWidth*13/100,
+height:constant.deviceHeight*8/100,
 justifyContent:'center'
 
 }

@@ -55,7 +55,7 @@ export default class GuestList extends React.Component<Props,State>{
                 <Header/>
        
                 <FlatList
-
+                           style={{marginTop:'3%'}}
                         data={this.state.dataList}
                         renderItem={({item,index})=>{
                             return(
