@@ -1,6 +1,7 @@
 import React from "react";
 import { PersonInterface, ContactInfoInterface, NameInterface } from "../";
 import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
+import { EnvironmentHelper } from '../../../Utils'
 
 interface Props {
   show: boolean;
@@ -178,11 +179,13 @@ export const MergeModal: React.FC<Props> = (props) => {
         </Form.Label>
         <Col sm={10}>
           {outer.options.map((name, index) => {
+            const photoUrl = EnvironmentHelper.ContentRoot + name;
+            const label = outer.value === "photo" ? (<img src={photoUrl} alt="profile" height="200px" width="200px" />) : name; 
             return (
               <Form.Check
                 key={index}
                 type="radio"
-                label={name}
+                label={label}
                 name={outer.value}
                 onChange={(e: React.FormEvent<HTMLInputElement>) =>
                   handleSelect(outer.value, e)

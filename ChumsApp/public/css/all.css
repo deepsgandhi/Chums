@@ -532,3 +532,8 @@ label .description {
   height: 45px;
   border-radius: 5px;
 }
+
+.form-check-input {
+  position: unset;
+  margin-right: 0.5rem;
+}
