@@ -146,9 +146,9 @@ onChangeText={(value)=>{this.onchange(value)}}
 data={this.state.dataList}
 renderItem={({item})=>{
     return(
-        <Ripple style={styles.flatlistMainView} onPress={()=>{this.props.navigation.navigate("GuestList",{houseHoldId:item.householdId,serviceDetail:this.state.EventDetail})}} >
-            <Image source={{uri:Utility.BaseimageUrl+item.photo}} style={styles.dataImage} resizeMode="contain" />
-    <Text style={styles.dataText}>{item.name.display}</Text>
+        <Ripple style={styles.flatlistMainView} onPress={()=>{this.props.navigation.navigate("GuestList",{houseHoldId:item.householdId,serviceDetail:this.state.EventDetail,visitSession:'',eventName:'',listIndex:-1,itemIndex:-1,id:item.id})}} >
+            <Image source={{uri:window.BaseImageUrl+item.photo}} style={styles.dataImage} resizeMode="contain" />
+    <Text style={[styles.dataText,{ marginLeft:'7%'}]}>{item.name.display}</Text>
         </Ripple>
     )
 }}

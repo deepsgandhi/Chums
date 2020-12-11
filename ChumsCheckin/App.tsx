@@ -9,23 +9,27 @@ import GuestAdd from './src/Home/GuestAdd'
 import CheckingComplete from './src/Home/CheckinComplete'
 import ActivityGroup from './src/Home/ActivityGroup'
 
-
 import GuestList from './src/Home/GuestList' 
+
+
+
+
 // const stack= createStackNavigator()
 export type RootStackParamList = {
     Login: undefined,
     Splash: undefined,
     ActivityLookup:{serviceId:number},
     ActivityServices: undefined,
-    GuestAdd:undefined,
-    GuestList:{houseHoldId:number,serviceDetail:any},
+    GuestAdd:{householdId:number,id:any},
+    GuestList:{houseHoldId:number,serviceDetail:any,visitSession:any,eventName:any,listIndex:any,itemIndex:any,id:any}
     CheckingComplete :undefined,
-    ActivityGroup:{eventGroup:any},
+    ActivityGroup:{eventGroup:any,serviceId:any,listIndex:any,itemIndex:any,id:any},
   
 }
 
 const stack = createStackNavigator<RootStackParamList>();
 const createNavigation = () => {
+  
     return (
         <NavigationContainer>
             <stack.Navigator
@@ -35,6 +39,8 @@ const createNavigation = () => {
                     }
                 }
             >
+         
+
                 <stack.Screen name='Splash' component={Splash} />
                 <stack.Screen name='Login' component={Login} />
                 <stack.Screen name='ActivityLookup' component={ActivityLookup} />

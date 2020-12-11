@@ -5,7 +5,20 @@ import * as Utility from '../Utility';
 import styles from '../myStyles';
 import * as constant from '../Constant'
 import Header from '../Component/Header'
+import {RootStackParamList} from '../../App'
+import { RouteProp } from '@react-navigation/native';
 
+
+type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'GuestAdd'>;
+
+
+  
+  interface Props {
+
+     navigation: Utility.screenNavigationProps;
+     route: ProfileScreenRouteProp;
+
+  }
 
 interface Props {
     navigation: Utility.screenNavigationProps
@@ -28,21 +41,41 @@ export default class GuestAdd extends React.Component<Props, State>{
 
 addGuest(){
 
-    // if(this.state.firstName===''){
-    //     Utility.snackBar("Please enter first name")
-    // }
-    // else if(this.state.lastName===''){
-    //     Utility.snackBar("Please enter last name")
-    // }
-    // else{
-        Utility.getApi('people/search?term=',this.state.firstName+" "+this.state.lastName).then((res)=>{
-            console.log("res"+res.length)
+    if(this.state.firstName===''){
+        Utility.snackBar("Please enter first name")
+    }
+    else if(this.state.lastName===''){
+        Utility.snackBar("Please enter last name")
+    }
+    else{
+        // Utility.getApi('people/search?term=',this.state.firstName+" "+this.state.lastName).then((res)=>{
+        //     console.log("res"+res.length)
 
-        })
-    // }
+        // })
+
+       let arrParm =[{householdId:this.props.route.params.householdId,
+       name:{display:this.state.firstName+" "+this.state.lastName,first:this.state.firstName,last:this.state.lastName}}]
+    
+       console.log(JSON.stringify(arrParm))
+    Utility.addGuestApi("people",arrParm).then((res)=>{
+        console.log("res",res)
+        this.props.navigation.navigate("GuestList",
+{
+    houseHoldId:632,
+    serviceDetail:'',
+    visitSession:'',
+    eventName:'',
+    listIndex:-1,
+    itemIndex:-1,
+    id:this.props.route.params.id,    
+})
+    })
+        }
 }
 
 cancelGuest(){
+
+    this.props.navigation.goBack()
 
 }
     render() {

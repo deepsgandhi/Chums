@@ -22,6 +22,7 @@ interface State {
     isLoading?: boolean,
     dataList:any,
     event?:number,
+    newarray:any
   
 }
 export default class GuestList extends React.Component<Props,State>{
@@ -30,22 +31,92 @@ export default class GuestList extends React.Component<Props,State>{
         this.state={
             isLoading:false,
             dataList:this.props.route.params.eventGroup,
-            event:0,
+            event:-1,
+            newarray:[]
         }
+        console.log("grouop",this.props.route.params.eventGroup)
+        console.log("grouop",this.props.route.params.listIndex)
     }
 
   
+    componentDidMount(){
+        var category=''
+        
+        var index:any=0
+      
+ this.props.route.params.eventGroup.map((item:any,i:number)=>{
+
+if(item.categoryName!=category){
+
+    category=item.categoryName
+    console.log(category)
+  
+    index=(i===0)?0:index+1
+    console.log(index)
+    this.state.newarray[index]=({key:index,name:category,SubCategory:[{subName:item.name,groupId:item.id}]})
+    this.setState({newarray:this.state.newarray})
+
+}
+else{
+   
+      this.state.newarray[index].SubCategory.push({subName:item.name,groupId:item.id})
+     this.setState({newarray:this.state.newarray})
+    
+}
+
+        })
+
+console.log(this.state.newarray)
+
+    }
 
     eventGuest(value:number){
+        console.log("itemkey",value)
         if(this.state.event == value)
         {
-            this.setState({event:0})
+            this.setState({event:-1})
         }
         else{
             this.setState({event:value})
         }
 
     }
+
+ backScreen(value:any,event:any){
+    // this.props.navigation.goBack()
+    console.log("value",value)
+    console.log(this.props.route.params.serviceId)
+    // {session:{"groupId":value,"serviceTimeId":this.props.route.params.serviceId}}
+this.props.navigation.navigate("GuestList",
+{
+    houseHoldId:632,
+    serviceDetail:this.props.route.params.eventGroup,
+    visitSession:{groupId:value,serviceTimeId:this.props.route.params.serviceId},
+    eventName:event,
+    listIndex:this.props.route.params.listIndex,
+    itemIndex:this.props.route.params.itemIndex,
+    id:this.props.route.params.id,    
+})
+ 
+
+ }
+
+ backNoneScreen(value:any,event:any){
+ 
+this.props.navigation.navigate("GuestList",
+{
+    houseHoldId:632,
+    serviceDetail:this.props.route.params.eventGroup,
+    visitSession:'',
+    eventName:event,
+    listIndex:this.props.route.params.listIndex,
+    itemIndex:this.props.route.params.itemIndex,
+    id:this.props.route.params.id,    
+})
+ 
+
+ }
+
     render() {
     
         return (
@@ -56,29 +127,33 @@ export default class GuestList extends React.Component<Props,State>{
        
                 <FlatList
                            style={{marginTop:'3%'}}
-                        data={this.state.dataList}
+                        data={this.state.newarray}
                         renderItem={({item,index})=>{
                             return(
                                 <View>
-                                <Ripple style={styles.ActivityGroupRipple} onPress={(index)=>{this.eventGuest(item.id)}}  >
-                                    <Icon name={(this.state.event===item.id)?'up':'down'} type="AntDesign" style={styles.flatlistDropIcon} />
+                                <Ripple style={styles.ActivityGroupRipple} onPress={(index)=>{this.eventGuest(item.key)}}  >
+                                    <Icon name={(this.state.event===item.key)?'up':'down'} type="AntDesign" style={styles.flatlistDropIcon} />
                                   
-                                    <Text style={[styles.activityText]}>{item.categoryName}</Text>
+                                    <Text style={[styles.activityText]}>{item.name}</Text>
                                  
-                        
-                                   
-                                   
                                 </Ripple>
                             {
-                                (this.state.event== item.id )?
-                            <View>
-                                <Ripple style={styles.ActivityGroupRipple}>
+                                (this.state.event== item.key )?
+                                item.SubCategory.map((item:any)=>
+                                
+                                <View>
+                                    {
+                                        console.log(item)
+                                    }
+                                <Ripple style={styles.ActivityGroupRipple} onPress={()=>this.backScreen(item.groupId,item.subName)}>
                                    
-                            <Text style={[styles.activityText,{marginLeft:'10%'}]}>{item.name}</Text>
+                                <Text style={[styles.activityText,{marginLeft:'10%'}]}>{item.subName}</Text>
                          
                            </Ripple>
                                   
                                     </View>
+                                )
+                            
                                     
                                     :
                                    null   
@@ -89,7 +164,7 @@ export default class GuestList extends React.Component<Props,State>{
                          />
 
 
-        <Ripple style={styles.noneButton} rippleColor={darkColor} onPress={()=>{this.props.navigation.goBack()}}>
+        <Ripple style={styles.noneButton} rippleColor={darkColor} onPress={()=>this.backNoneScreen(234,"NONE")}>
             <Text style={styles.checkingButtonText}>
               NONE
             </Text>

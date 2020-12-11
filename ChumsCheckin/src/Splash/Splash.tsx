@@ -10,7 +10,11 @@ import * as Utility from '../Utility';
 
 
 declare global{
-    var  userKey:""
+    var  userKey:any
+    var ApiRoot:any
+    var AccessApiRoot:any
+    var BaseImageUrl:any
+  
 }
 
 type Props = {
@@ -49,6 +53,7 @@ export default class Splash extends React.Component<Props> {
         return (
             <Container>
                 <View style={styles.splashMaincontainer}>
+                   
                     <Image source={require('../Images/logo1.png')} style={styles.loginImage} resizeMode="contain" />
 
                 </View>

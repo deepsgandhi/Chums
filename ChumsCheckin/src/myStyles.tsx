@@ -157,7 +157,7 @@ dataImage:{
 },
 dataText:{
     color:constant.baseColor1,
-    marginLeft:'7%',
+    
     fontSize:constant.fontSize1
 },
 
@@ -206,6 +206,7 @@ guestListMainContainer:{
   flex:1,
     
 },
+
 
 guestListStyle:{
 marginBottom:constant.deviceWidth*13/100
@@ -279,7 +280,7 @@ guestListText:{
 guestListButton:{
 
     backgroundColor:constant.baseColor1,
-    width:constant.deviceWidth*40/100,
+    width:constant.deviceWidth*45/100,
     justifyContent:'center',
     alignItems:'center',
     height:constant.deviceWidth*10/100,
