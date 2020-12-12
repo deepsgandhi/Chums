@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { Person } from "../models";
-import { PersonHelper } from "../helpers";
+import { PersonHelper, DateTimeHelper } from "../helpers";
 
 @injectable()
 export class PersonRepository {
@@ -12,27 +12,33 @@ export class PersonRepository {
     }
 
     public async create(person: Person) {
+        const birthDate = DateTimeHelper.toMysqlDate(person.birthDate);
+        const anniversary = DateTimeHelper.toMysqlDate(person.anniversary);
+        const photoUpdated = DateTimeHelper.toMysqlDate(person.photoUpdated);
         return DB.query(
             "INSERT INTO people (churchId, userId, displayName, firstName, middleName, lastName, nickName, prefix, suffix, birthDate, gender, maritalStatus, anniversary, membershipStatus, homePhone, mobilePhone, workPhone, email, address1, address2, city, state, zip, photoUpdated, householdId, householdRole, removed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0);",
             [
                 person.churchId, person.userId,
                 person.name.display, person.name.first, person.name.middle, person.name.last, person.name.nick, person.name.prefix, person.name.suffix,
-                person.birthDate, person.gender, person.maritalStatus, person.anniversary, person.membershipStatus,
+                birthDate, person.gender, person.maritalStatus, anniversary, person.membershipStatus,
                 person.contactInfo.homePhone, person.contactInfo.mobilePhone, person.contactInfo.workPhone, person.contactInfo.email, person.contactInfo.address1, person.contactInfo.address2, person.contactInfo.city, person.contactInfo.state, person.contactInfo.zip,
-                person.photoUpdated, person.householdId, person.householdRole
+                photoUpdated, person.householdId, person.householdRole
             ]
         ).then((row: any) => { person.id = row.insertId; return person; });
     }
 
     public async update(person: Person) {
+        const birthDate = DateTimeHelper.toMysqlDate(person.birthDate);
+        const anniversary = DateTimeHelper.toMysqlDate(person.anniversary);
+        const photoUpdated = DateTimeHelper.toMysqlDate(person.photoUpdated);
         return DB.query(
             "UPDATE people SET userId=?, displayName=?, firstName=?, middleName=?, lastName=?, nickName=?, prefix=?, suffix=?, birthDate=?, gender=?, maritalStatus=?, anniversary=?, membershipStatus=?, homePhone=?, mobilePhone=?, workPhone=?, email=?, address1=?, address2=?, city=?, state=?, zip=?, photoUpdated=?, householdId=?, householdRole=? WHERE id=? and churchId=?",
             [
                 person.userId,
                 person.name.display, person.name.first, person.name.middle, person.name.last, person.name.nick, person.name.prefix, person.name.suffix,
-                person.birthDate, person.gender, person.maritalStatus, person.anniversary, person.membershipStatus,
+                birthDate, person.gender, person.maritalStatus, anniversary, person.membershipStatus,
                 person.contactInfo.homePhone, person.contactInfo.mobilePhone, person.contactInfo.workPhone, person.contactInfo.email, person.contactInfo.address1, person.contactInfo.address2, person.contactInfo.city, person.contactInfo.state, person.contactInfo.zip,
-                person.photoUpdated, person.householdId, person.householdRole, person.id, person.churchId
+                photoUpdated, person.householdId, person.householdRole, person.id, person.churchId
             ]
         ).then(() => { return person });
     }

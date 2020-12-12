@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { Visit } from "../models";
+import { DateTimeHelper } from '../helpers'
 
 @injectable()
 export class VisitRepository {
@@ -10,16 +11,20 @@ export class VisitRepository {
     }
 
     public async create(visit: Visit) {
+        const visitDate = DateTimeHelper.toMysqlDate(visit.visitDate);
+        const checkinTime = DateTimeHelper.toMysqlDate(visit.checkinTime);
         return DB.query(
             "INSERT INTO visits (churchId, personId, serviceId, groupId, visitDate, checkinTime, addedBy) VALUES (?, ?, ?, ?, ?, ?, ?);",
-            [visit.churchId, visit.personId, visit.serviceId, visit.groupId, visit.visitDate, visit.checkinTime, visit.addedBy]
+            [visit.churchId, visit.personId, visit.serviceId, visit.groupId, visitDate, checkinTime, visit.addedBy]
         ).then((row: any) => { visit.id = row.insertId; return visit; });
     }
 
     public async update(visit: Visit) {
+        const visitDate = DateTimeHelper.toMysqlDate(visit.visitDate);
+        const checkinTime = DateTimeHelper.toMysqlDate(visit.checkinTime);
         return DB.query(
             "UPDATE visits SET personId=?, serviceId=?, groupId=?, visitDate=?, checkinTime=?, addedBy=? WHERE id=? and churchId=?",
-            [visit.personId, visit.serviceId, visit.groupId, visit.visitDate, visit.checkinTime, visit.addedBy, visit.id, visit.churchId]
+            [visit.personId, visit.serviceId, visit.groupId, visitDate, checkinTime, visit.addedBy, visit.id, visit.churchId]
         ).then(() => { return visit });
     }
 
@@ -45,8 +50,9 @@ export class VisitRepository {
     }
 
     public async loadByHouseholdServiceDate(churchId: number, householdId: number, serviceId: number, visitDate: Date) {
+        const vsDate = DateTimeHelper.toMysqlDate(visitDate);
         const sql = "SELECT * FROM visits WHERE churchId=? AND serviceId = ? AND visitDate = ? AND personId IN (SELECT id FROM people WHERE householdId = ?)";
-        return DB.query(sql, [churchId, serviceId, visitDate, householdId]);
+        return DB.query(sql, [churchId, serviceId, vsDate, householdId]);
     }
 
     public async loadForPerson(churchId: number, personId: number) {
