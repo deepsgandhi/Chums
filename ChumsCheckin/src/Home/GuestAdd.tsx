@@ -64,9 +64,8 @@ addGuest(){
     houseHoldId:632,
     serviceDetail:'',
     visitSession:'',
-    eventName:'',
-    listIndex:-1,
-    itemIndex:-1,
+    eventName:'update',
+    
     id:this.props.route.params.id,    
 })
     })

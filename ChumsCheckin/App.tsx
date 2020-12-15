@@ -21,9 +21,9 @@ export type RootStackParamList = {
     ActivityLookup:{serviceId:number},
     ActivityServices: undefined,
     GuestAdd:{householdId:number,id:any},
-    GuestList:{houseHoldId:number,serviceDetail:any,visitSession:any,eventName:any,listIndex:any,itemIndex:any,id:any}
+    GuestList:{houseHoldId:number,serviceDetail:any,visitSession:any,eventName:any,id:any}
     CheckingComplete :undefined,
-    ActivityGroup:{eventGroup:any,serviceId:any,listIndex:any,itemIndex:any,id:any},
+    ActivityGroup:{eventGroup:any,serviceId:any,id:any},
   
 }
 

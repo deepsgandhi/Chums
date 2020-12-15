@@ -34,8 +34,6 @@ export default class GuestList extends React.Component<Props,State>{
             event:-1,
             newarray:[]
         }
-        console.log("grouop",this.props.route.params.eventGroup)
-        console.log("grouop",this.props.route.params.listIndex)
     }
 
   
@@ -93,8 +91,7 @@ this.props.navigation.navigate("GuestList",
     serviceDetail:this.props.route.params.eventGroup,
     visitSession:{groupId:value,serviceTimeId:this.props.route.params.serviceId},
     eventName:event,
-    listIndex:this.props.route.params.listIndex,
-    itemIndex:this.props.route.params.itemIndex,
+    
     id:this.props.route.params.id,    
 })
  
@@ -107,10 +104,9 @@ this.props.navigation.navigate("GuestList",
 {
     houseHoldId:632,
     serviceDetail:this.props.route.params.eventGroup,
-    visitSession:'',
-    eventName:event,
-    listIndex:this.props.route.params.listIndex,
-    itemIndex:this.props.route.params.itemIndex,
+    visitSession:{groupId:0,serviceTimeId:this.props.route.params.serviceId},
+    eventName:'NONE',
+    
     id:this.props.route.params.id,    
 })
  
@@ -142,9 +138,7 @@ this.props.navigation.navigate("GuestList",
                                 item.SubCategory.map((item:any)=>
                                 
                                 <View>
-                                    {
-                                        console.log(item)
-                                    }
+                                 
                                 <Ripple style={styles.ActivityGroupRipple} onPress={()=>this.backScreen(item.groupId,item.subName)}>
                                    
                                 <Text style={[styles.activityText,{marginLeft:'10%'}]}>{item.subName}</Text>

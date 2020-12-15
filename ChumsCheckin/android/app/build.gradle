@@ -132,8 +132,10 @@ android {
         applicationId "com.chums"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
+
+//        multidexEnabled true
     }
     splits {
         abi {
@@ -150,6 +152,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+//        release {
+//            keyAlias 'delaine'
+//            keyPassword 'delaine'
+//            storeFile file('F:\\Delaine\\chumscheckin\\ChumsCheckin.jks')
+//            storePassword 'delaine'
+//        }
     }
     buildTypes {
         debug {
