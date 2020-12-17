@@ -6,6 +6,17 @@
 #manual additions
 appsettings.json
 
+
+#android
+*.properties
+*.jar
+.gradle/
+build/
+.idea/
+package-lock.json
+gradlew
+
+
 # dependencies
 /node_modules
 /.pnp
