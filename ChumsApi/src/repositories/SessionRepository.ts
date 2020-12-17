@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { Session } from "../models";
+import { DateTimeHelper } from '../helpers'
 
 @injectable()
 export class SessionRepository {
@@ -10,16 +11,18 @@ export class SessionRepository {
     }
 
     public async create(session: Session) {
+        const sessionDate = DateTimeHelper.toMysqlDate(session.sessionDate);
         return DB.query(
             "INSERT INTO sessions (churchId, groupId, serviceTimeId, sessionDate) VALUES (?, ?, ?, ?);",
-            [session.churchId, session.groupId, session.serviceTimeId, session.sessionDate]
+            [session.churchId, session.groupId, session.serviceTimeId, sessionDate]
         ).then((row: any) => { session.id = row.insertId; return session; });
     }
 
     public async update(session: Session) {
+        const sessionDate = DateTimeHelper.toMysqlDate(session.sessionDate);
         return DB.query(
             "UPDATE sessions SET groupId=?, serviceTimeId=?, sessionDate=? WHERE id=? and churchId=?",
-            [session.groupId, session.serviceTimeId, session.sessionDate, session.id, session.churchId]
+            [session.groupId, session.serviceTimeId, sessionDate, session.id, session.churchId]
         ).then(() => { return session });
     }
 
@@ -40,7 +43,8 @@ export class SessionRepository {
     }
 
     public async loadByGroupServiceTimeDate(churchId: number, groupId: number, serviceTimeId: number, sessionDate: Date) {
-        return DB.queryOne("SELECT * FROM sessions WHERE churchId=? AND groupId = ? AND serviceTimeId = ? AND sessionDate = ?;", [churchId, groupId, serviceTimeId, sessionDate]);
+        const sessDate = DateTimeHelper.toMysqlDate(sessionDate);
+        return DB.queryOne("SELECT * FROM sessions WHERE churchId=? AND groupId = ? AND serviceTimeId = ? AND sessionDate = ?;", [churchId, groupId, serviceTimeId, sessDate]);
     }
 
     public async loadByGroupIdWithNames(churchId: number, groupId: number) {
