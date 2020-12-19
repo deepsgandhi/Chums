@@ -315,7 +315,28 @@ backgroundColor:constant.redColor,
 height:constant.deviceHeight*8/100,
 justifyContent:'center'
 
-}
+},
+
+printButton:{
+    borderWidth: 1,
+    height: constant.deviceWidth * 15 / 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    marginHorizontal: '8%',
+    borderRadius: 15,
+    backgroundColor: constant.baseColor,
+    borderColor: constant.baseColor,
+
+},
+printView:{ 
+    flexDirection: 'row',
+     marginVertical: '18%',
+     },
+     buttonPrintText:{
+        color: constant.whiteColor,
+        fontSize: constant.fontSize1
+    }
 
 })
 export default styles

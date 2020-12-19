@@ -100,7 +100,6 @@ export default class GuestList extends React.Component<Props, State>{
                     }
                     else {
 
-                        // alert( this.props.route.params.visitSession.serviceTimeId)
                         let addValue = this.state.newarray[addevent].visitSessions.findIndex((item: any) => {
 
                             return (item.session.serviceTimeId == this.props.route.params.visitSession.serviceTimeId)
@@ -118,12 +117,12 @@ export default class GuestList extends React.Component<Props, State>{
 
                 }
             }
-        
-            if(this.props.route.params.eventName=='update'){
-            this.GuestList()
+
+            if (this.props.route.params.eventName == 'update') {
+                this.GuestList()
             }
         });
-      
+
         this.GuestList()
 
     }
@@ -145,11 +144,10 @@ export default class GuestList extends React.Component<Props, State>{
     }
 
     eventList() {
-        // this.setState({isLoading:false})
+     
         Utility.getApi('visits/checkin?serviceId=' + this.state.serviceId + '&householdId=' + this.state.houseHoldId + '&include=visitSessions', this.state.houseHoldId).then((response) => {
             if (response !== 'error') {
 
-                // console.log("eventList",response)
                 this.setState({ eventList: response })
                 this.sendArray()
 
@@ -168,12 +166,11 @@ export default class GuestList extends React.Component<Props, State>{
         this.state.dataList.map((item: any, index: any) => {
 
             let newValue = this.state.eventList.findIndex((value: any) => {
-                // console.log("itemid",item.id)
-                // console.log("value",value)
+            
                 return (item.id == value.personId)
 
             })
-            // console.log("newvalue",newValue)
+          
             if (newValue != -1) {
                 let visitArray: any = []
                 this.state.eventList[newValue].visitSessions.map((item: any, indx: any) => {
@@ -210,13 +207,13 @@ export default class GuestList extends React.Component<Props, State>{
         })
 
 
-        // console.log("newarrayvalue",newarray)
+   
         this.setState({ newarray: newarray, isLoading: true })
     }
 
 
     eventGuest(value: any) {
-        //    console.log("id",value)
+       
         if (this.state.event == value) {
             this.setState({ event: 0 })
         }
@@ -228,10 +225,6 @@ export default class GuestList extends React.Component<Props, State>{
 
     checkin() {
 
-
-        // let data = [{personId:this.props.route.params.id,serviceId:this.state.serviceId,visitSessions:this.state.visitSession}]
-        console.log("senddata", JSON.stringify(this.state.newarray))
-        //    console.log("household",this.state.houseHoldId)
         fetch(window.ApiRoot + "visits/checkin?serviceId=" + this.state.serviceId + "&householdId=" + this.state.houseHoldId, {
             method: 'POST',
             headers: {
@@ -249,7 +242,7 @@ export default class GuestList extends React.Component<Props, State>{
                 else {
                     Utility.snackBar("Somethings went wrong")
                 }
-                // console.log("res",resjson)
+                
             })
             .catch((error) => {
                 // console.error(error);
@@ -288,11 +281,11 @@ export default class GuestList extends React.Component<Props, State>{
             return (value.personId == id)
 
         })
-        // console.log("newVlaue",newValue)
+        
         if (this.state.newarray[newValue].visitSessions.length == 0) {
             return ('NONE')
 
-            // return (<Text style={{ color: constant.whiteColor }}>NONE</Text>)
+            
         }
         else {
 
@@ -301,13 +294,13 @@ export default class GuestList extends React.Component<Props, State>{
             this.state.newarray[newValue].visitSessions.map((item: any, index: any) => {
 
                 let eventid = item.session.groupId
-                // console.log("eventid",eventid)
+             
                 let newevent = value.findIndex((value: any) => {
                     return (value.id == eventid)
                 })
-                // console.log("not",newevent)
+             
                 if (newevent != -1) {
-                    // console.log("if")
+                   
                     count = count + 1
                     eventname = value[newevent].name
 
@@ -317,14 +310,10 @@ export default class GuestList extends React.Component<Props, State>{
                         eventname = 'NONE'
                     }
                 }
-                //   console.log("valueindex",newvalue)
-
-
-
+   
             })
             return (eventname)
 
-            // return (<Text style={{ color: constant.whiteColor }}>{eventname}</Text>)
 
         }
 
@@ -332,32 +321,32 @@ export default class GuestList extends React.Component<Props, State>{
     }
 
 
-    showEvent(key:any){
+    showEvent(key: any) {
 
-let neweventName:any=[]
-let newobject = this.state.newarray.findIndex((item:any)=>{
-    return(item.personId==key)
-})
-if(this.state.newarray[newobject].visitSessions.length==0){
-    return(neweventName)
-}
-else{
+        let neweventName: any = []
+        let newobject = this.state.newarray.findIndex((item: any) => {
+            return (item.personId == key)
+        })
+        if (this.state.newarray[newobject].visitSessions.length == 0) {
+            return (neweventName)
+        }
+        else {
 
-this.state.newarray[newobject].visitSessions.map((val:any)=>{
+            this.state.newarray[newobject].visitSessions.map((val: any) => {
 
-let newEvent=this.state.eventDetail.findIndex((value:any)=>{
-    return(val.session.serviceTimeId==value.id)
-})
-let newgroupname = this.state.eventDetail[newEvent].groups.find((groupvalue: any) => {
+                let newEvent = this.state.eventDetail.findIndex((value: any) => {
+                    return (val.session.serviceTimeId == value.id)
+                })
+                let newgroupname = this.state.eventDetail[newEvent].groups.find((groupvalue: any) => {
 
                     return (val.session.groupId == groupvalue.id)
                 })
-            
-                neweventName.push(this.state.eventDetail[newEvent].name+"-" +newgroupname.name)
 
-})
-return(neweventName)
-}
+                neweventName.push(this.state.eventDetail[newEvent].name + "-" + newgroupname.name)
+
+            })
+            return (neweventName)
+        }
 
 
     }
@@ -390,16 +379,16 @@ return(neweventName)
 
                                                     {
 
-                                                        (this.state.event != item.id) ? 
-                                                        (this.showEvent(item.id).length==0)?
-                                                        <Text>none</Text>
-                                                        :
-                                                    this.showEvent(item.id).map((values:any)=>{
-                                                        return(
-                                                            <Text style={{color:constant.greenColor}}>{values}</Text>
-                                                        )
-                                                    })
-                                       
+                                                        (this.state.event != item.id) ?
+                                                            (this.showEvent(item.id).length == 0) ?
+                                                                <Text>none</Text>
+                                                                :
+                                                                this.showEvent(item.id).map((values: any) => {
+                                                                    return (
+                                                                        <Text style={{ color: constant.greenColor }}>{values}</Text>
+                                                                    )
+                                                                })
+
                                                             :
                                                             null
                                                     }
@@ -423,11 +412,11 @@ return(neweventName)
                                                                 <View style={styles.hideView}>
 
                                                                     <Text style={styles.guestListText}>{value.name}</Text>
-                                                                    <Ripple style={[styles.guestListButton, {  backgroundColor:this.selectEvent(value.groups, item.id)=='NONE'?constant.blueColor:constant.greenColor }]} onPress={() => { this.props.navigation.navigate("ActivityGroup", { eventGroup: value.groups, serviceId: value.id, id: item.id }) }} >
-                                                                     
+                                                                    <Ripple style={[styles.guestListButton, { backgroundColor: this.selectEvent(value.groups, item.id) == 'NONE' ? constant.blueColor : constant.greenColor }]} onPress={() => { this.props.navigation.navigate("ActivityGroup", { eventGroup: value.groups, serviceId: value.id, id: item.id }) }} >
+
 
                                                                         {
-                                                                          <Text style={{color:constant.whiteColor}}>{this.selectEvent(value.groups, item.id)}</Text>
+                                                                            <Text style={{ color: constant.whiteColor }}>{this.selectEvent(value.groups, item.id)}</Text>
                                                                         }
                                                                     </Ripple>
 
