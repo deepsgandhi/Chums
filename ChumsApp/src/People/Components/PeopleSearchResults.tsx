@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { PersonHelper, ErrorMessages, ApiHelper, PersonInterface, HouseholdInterface, UserHelper } from '.';
 import { Row, Col, FormControl, Button, Table } from 'react-bootstrap';
 
@@ -10,8 +10,9 @@ interface Props {
 export const PeopleSearchResults: React.FC<Props> = (props) => {
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
-    const [redirectUrl, setRedirectUrl] = React.useState('');
     const [errors, setErrors] = React.useState<string[]>([]);
+
+    const history = useHistory()
 
     const handleAdd = (e: React.MouseEvent) => {
         if (e !== null) e.preventDefault();
@@ -23,7 +24,7 @@ export const PeopleSearchResults: React.FC<Props> = (props) => {
                 person.householdId = household.id;
                 ApiHelper.apiPost('/people', [person]).then(data => {
                     person.id = data[0].id
-                    setRedirectUrl('/people/' + person.id);
+                    history.push('/people/' + person.id);
                 });
             });
         }
@@ -58,16 +59,15 @@ export const PeopleSearchResults: React.FC<Props> = (props) => {
                 <ErrorMessages errors={errors} />
                 <b>Add a New Person</b>
                 <Row>
-                    <Col><FormControl placeholder="First Name" name="firstName" value={firstName} onChange={e => setFirstName(e.currentTarget.value)} onKeyDown={handleKeyDown} /></Col>
-                    <Col><FormControl placeholder="Last Name" name="lastName" value={lastName} onChange={e => setLastName(e.currentTarget.value)} onKeyDown={handleKeyDown} /></Col>
-                    <Col><Button variant="primary" onClick={handleAdd} >Add</Button></Col>
+                    <Col><FormControl id="firstName" placeholder="First Name" name="firstName" value={firstName} onChange={e => setFirstName(e.currentTarget.value)} onKeyDown={handleKeyDown} /></Col>
+                    <Col><FormControl id="lastName" placeholder="Last Name" name="lastName" value={lastName} onChange={e => setLastName(e.currentTarget.value)} onKeyDown={handleKeyDown} /></Col>
+                    <Col><Button id="addPersonBtn" variant="primary" onClick={handleAdd} >Add</Button></Col>
                 </Row>
             </>);
     }
 
 
-    if (redirectUrl !== '') return <Redirect to={redirectUrl}></Redirect>;
-    else if (props.people === undefined || props.people === null) return (<div className="alert alert-info">Use the search box above to search for a member or add a new one.</div>)
+    if (props.people === undefined || props.people === null) return (<div className="alert alert-info">Use the search box above to search for a member or add a new one.</div>)
     else if (props.people.length === 0) return (<>
         <p>No results found.  Please search for a different name or add a new person</p>
         {getAddPerson()}
