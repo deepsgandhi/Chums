@@ -19,7 +19,7 @@ build/
 .idea/
 package-lock.json
 gradlew
-
+*.aab
 
 # dependencies
 /node_modules
@@ -33,6 +33,7 @@ gradlew
 /build
 
 # misc
+*.bat
 .DS_Store
 .env.local
 .env.development.local
