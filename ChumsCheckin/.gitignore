@@ -3,43 +3,8 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-
 # Node artifact files
 node_modules/
-
-#manual additions
-appsettings.json
-
-
-#android
-*.properties
-*.jar
-.gradle/
-build/
-.idea/
-package-lock.json
-gradlew
-
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env
-.serverless
 dist/
 
 # Compiled Java class files
