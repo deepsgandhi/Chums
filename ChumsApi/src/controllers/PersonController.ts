@@ -3,6 +3,7 @@ import express from "express";
 import { CustomBaseController } from "./CustomBaseController"
 import { Person, Household, FormSubmission, Form } from "../models"
 import { AwsHelper } from "../helpers"
+import { RoleContentType, RoleAction } from '../constants'
 
 
 @controller("/people")
@@ -197,8 +198,6 @@ export class PersonController extends CustomBaseController {
             })
         }
     }
-
-
 
 
 }

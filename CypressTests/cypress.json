@@ -2,8 +2,9 @@
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:3000",
   "env": {
-    "email": "test@chums.org",
+    "email": "cypresstest@chums.org",
     "password": "password"
   },
-  "projectId": "16cb4g"
+  "projectId": "16cb4g",
+  "defaultCommandTimeout": 10000
 }

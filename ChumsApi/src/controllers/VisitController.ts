@@ -121,7 +121,12 @@ export class VisitController extends CustomBaseController {
     public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {
             if (!au.checkAccess("Attendance", "View")) return this.json({}, 401);
-            else return this.repositories.visit.convertAllToModel(au.churchId, await this.repositories.visit.loadAll(au.churchId));
+            else {
+                let result = null;
+                if (req.query.personId !== undefined) result = await this.repositories.visit.loadForPerson(au.churchId, parseInt(req.query.personId.toString(), 0));
+                else result = await this.repositories.visit.loadAll(au.churchId);
+                return this.repositories.visit.convertAllToModel(au.churchId, result);
+            }
         });
     }
 

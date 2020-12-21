@@ -25,14 +25,26 @@ import 'cypress-wait-until';
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-Cypress.Commands.add("login", () => {
+Cypress.Commands.add("loginWithUI", () => {
     cy.wait(250);
     cy.visit('/');
     cy.get('#email').type(Cypress.env('email'));
     cy.get('#password').type(Cypress.env('password'));
     cy.get('#signInButton').click();
-    cy.get('#searchText', { timeout: 10000 }).should('exist');
+    cy.get('#searchText').should('exist');
 });
+
+Cypress.Commands.add("login", () => {
+    cy.request({
+        method: 'POST',
+        url: `${Cypress.env('ACCESSMANAGEMENT_API_URL')}/users/login`,       
+        body: {
+            appName: Cypress.env('appName'),
+            email: Cypress.env('email'),
+            password: Cypress.env('password')
+        }
+    }).its('body.token').should('exist').then($token => cy.setCookie('jwt', $token));    
+})
 
 Cypress.Commands.add("loadTab", (tabId, verifyId) => {
     //cy.get('#userMenuLink').should('exist').click();

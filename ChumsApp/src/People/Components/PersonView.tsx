@@ -52,7 +52,7 @@ export const PersonView: React.FC<Props> = (props) => {
             contactMethods.push(<tr key="address"><td><label>{homeLabel}</label></td><td><i className="fas fa-map-marker-alt"></i></td><td>{lines}</td></tr>);
         }
         if (p.contactInfo.mobilePhone !== undefined && p.contactInfo.mobilePhone !== '') contactMethods.push(<tr key="mobilePHone"><td><label>Mobile</label></td><td><i className="fas fa-phone"></i></td><td>{p.contactInfo.mobilePhone}</td></tr>);
-        if (p.contactInfo.workPhone !== undefined && p.contactInfo.workPhone !== '') contactMethods.push(<tr key="workPhone"><td><label>Mobile</label></td><td><i className="fas fa-phone"></i></td><td>{p.contactInfo.workPhone}</td></tr>);
+        if (p.contactInfo.workPhone !== undefined && p.contactInfo.workPhone !== '') contactMethods.push(<tr key="workPhone"><td><label>Work</label></td><td><i className="fas fa-phone"></i></td><td>{p.contactInfo.workPhone}</td></tr>);
     }
 
     return (

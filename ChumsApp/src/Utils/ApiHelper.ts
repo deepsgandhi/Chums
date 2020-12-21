@@ -20,7 +20,7 @@ export interface GroupServiceTimeInterface { id?: number, groupId?: number, serv
 export interface HouseholdInterface { id?: number, name?: string }
 export interface HouseholdMemberInterface { id?: number, householdId?: number, household?: HouseholdInterface, personId?: number, person?: PersonInterface, role?: string }
 export interface NameInterface { first?: string, middle?: string, last?: string, nick?: string, display?: string }
-export interface NoteInterface { dateAdded?: string, person?: PersonInterface }
+export interface NoteInterface { id?: number, churchId?: number, contentType?: string, contentId?: number, noteType?: string, addedBy?: number, contents?: string, dateAdded?: string, person?: PersonInterface }
 /*export interface PermissionInterface { contentType?: string, action?: string }*/
 export interface ReportInterface { id?: number, keyName?: string, title?: string, query?: string, parameters?: string, reportType: string, columns?: ReportColumnInterface[], values?: ReportValueInterface[], results?: any[] }
 export interface ReportColumnInterface { field?: string, heading?: string, grouped?: boolean, formatType?: string }

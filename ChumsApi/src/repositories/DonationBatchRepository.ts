@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { DonationBatch } from "../models";
+import { DateTimeHelper } from '../helpers'
 
 @injectable()
 export class DonationBatchRepository {
@@ -10,16 +11,18 @@ export class DonationBatchRepository {
     }
 
     public async create(donationBatch: DonationBatch) {
+        const batchDate = DateTimeHelper.toMysqlDate(donationBatch.batchDate);
         return DB.query(
             "INSERT INTO donationBatches (churchId, name, batchDate) VALUES (?, ?, ?);",
-            [donationBatch.churchId, donationBatch.name, donationBatch.batchDate]
+            [donationBatch.churchId, donationBatch.name, batchDate]
         ).then((row: any) => { donationBatch.id = row.insertId; return donationBatch; });
     }
 
     public async update(donationBatch: DonationBatch) {
+        const batchDate = DateTimeHelper.toMysqlDate(donationBatch.batchDate);
         return DB.query(
             "UPDATE donationBatches SET name=?, batchDate=? WHERE id=? and churchId=?",
-            [donationBatch.name, donationBatch.batchDate, donationBatch.id, donationBatch.churchId]
+            [donationBatch.name, batchDate, donationBatch.id, donationBatch.churchId]
         ).then(() => { return donationBatch });
     }
 

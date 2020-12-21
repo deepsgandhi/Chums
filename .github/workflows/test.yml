@@ -22,10 +22,11 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd ChumsWeb
+          cd ChumsApp
           npm install
 
       - name: Test
+        timeout-minutes: 10
         run: |
           cd CypressTests
           npm install

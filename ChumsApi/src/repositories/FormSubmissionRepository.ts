@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { FormSubmission } from "../models";
+import { DateTimeHelper } from '../helpers'
 
 @injectable()
 export class FormSubmissionRepository {
@@ -10,16 +11,18 @@ export class FormSubmissionRepository {
     }
 
     public async create(formSubmission: FormSubmission) {
+        const submissionDate = DateTimeHelper.toMysqlDate(formSubmission.submissionDate);
+        const revisionDate = DateTimeHelper.toMysqlDate(formSubmission.revisionDate);
         return DB.query(
             "INSERT INTO formSubmissions (churchId, formId, contentType, contentId, submissionDate, submittedBy, revisionDate, revisedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-            [formSubmission.churchId, formSubmission.formId, formSubmission.contentType, formSubmission.contentId, formSubmission.submissionDate, formSubmission.submittedBy, formSubmission.revisionDate, formSubmission.revisedBy]
+            [formSubmission.churchId, formSubmission.formId, formSubmission.contentType, formSubmission.contentId, submissionDate, formSubmission.submittedBy, revisionDate, formSubmission.revisedBy]
         ).then((row: any) => { formSubmission.id = row.insertId; return formSubmission; });
     }
 
     public async update(formSubmission: FormSubmission) {
         return DB.query(
-            "UPDATE formSubmissions SET revisionDate=NOW(), revisedBy=? WHERE id=? and churchId=?",
-            [formSubmission.revisedBy, formSubmission.id, formSubmission.churchId]
+            "UPDATE formSubmissions SET revisionDate=NOW(), contentId=?, revisedBy=? WHERE id=? and churchId=?",
+            [formSubmission.contentId, formSubmission.revisedBy, formSubmission.id, formSubmission.churchId]
         ).then(() => { return formSubmission });
     }
 

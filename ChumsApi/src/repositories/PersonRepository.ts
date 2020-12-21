@@ -1,39 +1,44 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { Person } from "../models";
-import { PersonHelper } from "../helpers";
+import { PersonHelper, DateTimeHelper } from "../helpers";
 
 @injectable()
 export class PersonRepository {
 
     public async save(person: Person) {
-        console.log(JSON.stringify(person));
         person.name.display = PersonHelper.getDisplayName(person);
         if (person.id > 0) return this.update(person); else return this.create(person);
     }
 
     public async create(person: Person) {
+        const birthDate = DateTimeHelper.toMysqlDate(person.birthDate);
+        const anniversary = DateTimeHelper.toMysqlDate(person.anniversary);
+        const photoUpdated = DateTimeHelper.toMysqlDate(person.photoUpdated);
         return DB.query(
             "INSERT INTO people (churchId, userId, displayName, firstName, middleName, lastName, nickName, prefix, suffix, birthDate, gender, maritalStatus, anniversary, membershipStatus, homePhone, mobilePhone, workPhone, email, address1, address2, city, state, zip, photoUpdated, householdId, householdRole, removed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0);",
             [
                 person.churchId, person.userId,
                 person.name.display, person.name.first, person.name.middle, person.name.last, person.name.nick, person.name.prefix, person.name.suffix,
-                person.birthDate, person.gender, person.maritalStatus, person.anniversary, person.membershipStatus,
+                birthDate, person.gender, person.maritalStatus, anniversary, person.membershipStatus,
                 person.contactInfo.homePhone, person.contactInfo.mobilePhone, person.contactInfo.workPhone, person.contactInfo.email, person.contactInfo.address1, person.contactInfo.address2, person.contactInfo.city, person.contactInfo.state, person.contactInfo.zip,
-                person.photoUpdated, person.householdId, person.householdRole
+                photoUpdated, person.householdId, person.householdRole
             ]
         ).then((row: any) => { person.id = row.insertId; return person; });
     }
 
     public async update(person: Person) {
+        const birthDate = DateTimeHelper.toMysqlDate(person.birthDate);
+        const anniversary = DateTimeHelper.toMysqlDate(person.anniversary);
+        const photoUpdated = DateTimeHelper.toMysqlDate(person.photoUpdated);
         return DB.query(
             "UPDATE people SET userId=?, displayName=?, firstName=?, middleName=?, lastName=?, nickName=?, prefix=?, suffix=?, birthDate=?, gender=?, maritalStatus=?, anniversary=?, membershipStatus=?, homePhone=?, mobilePhone=?, workPhone=?, email=?, address1=?, address2=?, city=?, state=?, zip=?, photoUpdated=?, householdId=?, householdRole=? WHERE id=? and churchId=?",
             [
                 person.userId,
                 person.name.display, person.name.first, person.name.middle, person.name.last, person.name.nick, person.name.prefix, person.name.suffix,
-                person.birthDate, person.gender, person.maritalStatus, person.anniversary, person.membershipStatus,
+                birthDate, person.gender, person.maritalStatus, anniversary, person.membershipStatus,
                 person.contactInfo.homePhone, person.contactInfo.mobilePhone, person.contactInfo.workPhone, person.contactInfo.email, person.contactInfo.address1, person.contactInfo.address2, person.contactInfo.city, person.contactInfo.state, person.contactInfo.zip,
-                person.photoUpdated, person.householdId, person.householdRole, person.id, person.churchId
+                photoUpdated, person.householdId, person.householdRole, person.id, person.churchId
             ]
         ).then(() => { return person });
     }
@@ -115,7 +120,7 @@ export class PersonRepository {
     public convertToModel(churchId: number, data: any) {
         const result: Person = {
             name: { display: data.displayName, first: data.firstName, last: data.lastName, middle: data.middleName, nick: data.nickName, prefix: data.prefix, suffix: data.suffix },
-            contactInfo: { address1: data.address1, address2: data.address2, city: data.city, state: data.state, zip: data.zip, homePhone: data.homePhone, workPhone: data.workPhone, email: data.email },
+            contactInfo: { address1: data.address1, address2: data.address2, city: data.city, state: data.state, zip: data.zip, homePhone: data.homePhone, workPhone: data.workPhone, email: data.email, mobilePhone: data.mobilePhone },
             photo: data.photo, anniversary: data.anniversary, birthDate: data.birthDate, gender: data.gender, householdId: data.householdId, householdRole: data.householdRole, maritalStatus: data.maritalStatus,
             membershipStatus: data.membershipStatus, photoUpdated: data.photoUpdated, id: data.id, userId: data.userId, importKey: data.importKey
         }

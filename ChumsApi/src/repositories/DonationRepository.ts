@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { Donation, DonationSummary } from "../models";
-import { PersonHelper } from "../helpers"
+import { PersonHelper, DateTimeHelper } from "../helpers"
 
 @injectable()
 export class DonationRepository {
@@ -12,15 +12,17 @@ export class DonationRepository {
     }
 
     public async create(donation: Donation) {
+        const donationDate = DateTimeHelper.toMysqlDate(donation.donationDate)
         return DB.query(
             "INSERT INTO donations (churchId, batchId, personId, donationDate, amount, method, methodDetails, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-            [donation.churchId, donation.batchId, donation.personId, donation.donationDate, donation.amount, donation.method, donation.methodDetails, donation.notes]
+            [donation.churchId, donation.batchId, donation.personId, donationDate, donation.amount, donation.method, donation.methodDetails, donation.notes]
         ).then((row: any) => { donation.id = row.insertId; return donation; });
     }
 
     public async update(donation: Donation) {
+        const donationDate = DateTimeHelper.toMysqlDate(donation.donationDate)
         const sql = "UPDATE donations SET batchId=?, personId=?, donationDate=?, amount=?, method=?, methodDetails=?, notes=? WHERE id=? and churchId=?";
-        const params = [donation.batchId, donation.personId, donation.donationDate, donation.amount, donation.method, donation.methodDetails, donation.notes, donation.id, donation.churchId]
+        const params = [donation.batchId, donation.personId, donationDate, donation.amount, donation.method, donation.methodDetails, donation.notes, donation.id, donation.churchId]
         return DB.query(sql, params).then(() => { return donation });
     }
 
@@ -50,6 +52,8 @@ export class DonationRepository {
     }
 
     public async loadSummary(churchId: number, startDate: Date, endDate: Date) {
+        const sDate = DateTimeHelper.toMysqlDate(startDate);
+        const eDate = DateTimeHelper.toMysqlDate(endDate);
         const sql = "SELECT week(d.donationDate, 0) as week, SUM(fd.amount) as totalAmount, f.name as fundName"
             + " FROM donations d"
             + " INNER JOIN fundDonations fd on fd.donationId = d.id"
@@ -58,7 +62,7 @@ export class DonationRepository {
             + " AND d.donationDate BETWEEN ? AND ?"
             + " GROUP BY week(d.donationDate, 0), f.name"
             + " ORDER BY week(d.donationDate, 0), f.name";
-        return DB.query(sql, [churchId, startDate, endDate]);
+        return DB.query(sql, [churchId, sDate, eDate]);
     }
 
 

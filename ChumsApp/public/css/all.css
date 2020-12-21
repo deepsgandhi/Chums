@@ -518,3 +518,22 @@ label .description {
   font-size: 12px;
   padding-left: 10px;
 }
+
+#searchResults {
+  margin-top: 10px;
+}
+
+#searchResults td:last-child {
+  text-align: center;
+}
+
+#searchResults img {
+  width: 60px;
+  height: 45px;
+  border-radius: 5px;
+}
+
+.form-check-input {
+  position: unset;
+  margin-right: 0.5rem;
+}
