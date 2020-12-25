@@ -73,7 +73,7 @@ export const GroupDetailsEdit: React.FC<Props> = (props) => {
                 <Col>
                     <FormGroup>
                         <FormLabel>Track Attendance</FormLabel>
-                        <FormControl as="select" name="trackAttendance" id="trackAttendanceSelect" value={group.trackAttendance?.toString() || 'false'} onChange={handleChange} onKeyDown={handleKeyDown}>
+                        <FormControl as="select" name="trackAttendance" data-cy="select-attendance-type" id="trackAttendanceSelect" value={group.trackAttendance?.toString() || 'false'} onChange={handleChange} onKeyDown={handleKeyDown}>
                             <option value="false">No</option>
                             <option value="true">Yes</option>
                         </FormControl>

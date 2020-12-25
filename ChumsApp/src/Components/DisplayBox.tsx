@@ -8,6 +8,7 @@ interface Props {
     headerText: string,
     editFunction?: () => void
     editContent?: React.ReactNode;
+    'data-cy'?: string
 }
 
 export const DisplayBox: React.FC<Props> = (props) => {
@@ -15,7 +16,7 @@ export const DisplayBox: React.FC<Props> = (props) => {
     if (props.editFunction !== undefined) editContent = <a data-cy="edit-button" onClick={e => { e.preventDefault(); props.editFunction(); }} href="about:blank" ><i className="fas fa-pencil-alt"></i></a>;
     else if (props.editContent !== undefined) editContent = <div>{props.editContent}</div>;
     return (
-        <div className="inputBox" id={props.id}>
+        <div className="inputBox" id={props.id} data-cy={props['data-cy'] || ''}>
             <div className="header">
                 <Row>
                     <Col xs={8}><i className={props.headerIcon}></i> {props.headerText}</Col>

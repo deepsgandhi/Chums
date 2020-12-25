@@ -1,4 +1,6 @@
 context("Groups", () => {
+  const api_domain = Cypress.env("CHUMS_API_URL");
+
   beforeEach(() => {
     cy.login();
     cy.visit("/groups");
@@ -19,35 +21,100 @@ context("Groups", () => {
   //       .should("contain", groupName);
   //   });
 
-  it("Delete group", () => {
-    const categoryName = "To Delete";
-    const name = "Test Name";
-    const api_domain = Cypress.env("CHUMS_API_URL");
+  //   it("Delete group", () => {
+  //     const group = {
+  //       categoryName: "To Delete",
+  //       name: "Test Name",
+  //     };
+
+  //     cy.getCookie("jwt")
+  //       .should("have.a.property", "value")
+  //       .then(($token) => {
+  //         createGroup($token, group);
+  //       });
+  //     cy.get(`a:contains('${group.name}')`).should("exist").click();
+  //     cy.get("h1").should("exist").should("contain", group.name);
+  //     cy.get("[data-cy=edit-button]").should("exist").click();
+  //     cy.get("[data-cy=delete-button]").should("exist").click();
+  //     cy.get("[data-cy=content]")
+  //       .should("exist")
+  //       .should("not.contain", group.categoryName)
+  //       .should("not.contain", group.name);
+  //   });
+
+  //   it("Enable track attendance and check tabs of a group", () => {
+  //     const group = {
+  //       categoryName: "Attendance",
+  //       name: "Track",
+  //     };
+
+  //     cy.getCookie("jwt")
+  //       .should("have.a.property", "value")
+  //       .then(($token) => {
+  //         createGroup($token, group);
+  //       });
+
+  //     cy.get(`a:contains('${group.name}')`).should("exist").click();
+  //     cy.get("h1").should("exist").should("contain", group.name);
+  //     cy.get("[data-cy=edit-button]").should("exist").click();
+  //     cy.get("[data-cy=save-button]").should('exist')
+  //     cy.get("[data-cy=select-attendance-type]")
+  //       .should("exist")
+  //       .select("Yes")
+  //       .should("have.value", "true");
+  //     cy.get("[data-cy=save-button]").click()
+  //     cy.get("[data-cy=group-details-box]")
+  //       .should("exist")
+  //       .should("contain", "Yes");
+  //     cy.get("[data-cy=group-tabs]")
+  //       .should("exist")
+  //       .should("contain", "Members")
+  //       .should("contain", "Sessions")
+  //       .should("contain", "Trends");
+  //   });
+
+  it("Add person to group", () => {
+    const persons = [
+      { first: "Troye", last: "Smith" },
+      { first: "Nina", last: "Harmon" },
+    ];
+    const group = {
+      categoryName: "Test",
+      name: "add/remove person",
+    };
 
     cy.getCookie("jwt")
       .should("have.a.property", "value")
       .then(($token) => {
-        cy.request({
-          method: "POST",
-          url: `${api_domain}/groups`,
-          headers: {
-            Authorization: `Bearer ${$token}`,
-          },
-          body: [{
-            categoryName,
-            name,
-          }],
-        });
+        // cy.createPeople($token, persons);
+        // createGroup($token, group);
       });
-    cy.get(`a:contains('${name}')`).should("exist").click();
-    cy.get("h1").should("exist").should("contain", name);
-    cy.get("[data-cy=edit-button]").should("exist").click();
-    cy.get("[data-cy=delete-button]").should("exist").click();
-    cy.get("[data-cy=content]")
-      .should("exist")
-      .should("not.contain", categoryName)
-      .should("not.contain", name);
+
+    // cy.get(`a:contains('${group.name}')`).should("exist").click();
+    // cy.get("h1").should("exist").should("contain", group.name);
+    // cy.get("[data-cy=person-search-bar]")
+    //   .should("exist")
+    //   .clear()
+    //   .type(persons[0].first);
+    // cy.get("[data-cy=person-search-button]").should("exist").click();
+    // cy.get("[data-cy=add-to-list]").should('exist').click();
   });
+
+  function createGroup(token, { categoryName, name }) {
+    cy.request({
+      method: "POST",
+      url: `${api_domain}/groups`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: [
+        {
+          categoryName,
+          name,
+        },
+      ],
+    });
+  }
 
   // Cypress.Cookies.defaults({ whitelist: ['.AspNetCore.Session', '.AspNetCore.Cookies'] })
   // it('Log into app', () => { cy.loginWithUI() });

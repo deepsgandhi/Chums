@@ -32,7 +32,7 @@ export const PersonAdd: React.FC<Props> = (props) => {
                 <tr key={sr.id}>
                     <td><img src={PersonHelper.getPhotoUrl(sr)} alt="avatar" /></td>
                     <td>{sr.name.display}</td>
-                    <td><a className="text-success" data-index={i} href="about:blank" onClick={handleAdd}><i className="fas fa-user"></i> Add</a></td>
+                    <td><a className="text-success" data-cy="add-to-list" data-index={i} href="about:blank" onClick={handleAdd}><i className="fas fa-user"></i> Add</a></td>
                 </tr>
             );
         }
@@ -41,8 +41,8 @@ export const PersonAdd: React.FC<Props> = (props) => {
     return (
         <>
             <InputGroup>
-                <FormControl id="personAddText" value={searchText} onChange={handleChange} onKeyDown={handleKeyDown} />
-                <div className="input-group-append"><Button id="personAddButton" variant="primary" onClick={handleSearch} ><i className="fas fa-search"></i> Search</Button></div>
+                <FormControl id="personAddText" data-cy="person-search-bar" value={searchText} onChange={handleChange} onKeyDown={handleKeyDown} />
+                <div className="input-group-append"><Button data-cy="person-search-button" id="personAddButton" variant="primary" onClick={handleSearch} ><i className="fas fa-search"></i> Search</Button></div>
             </InputGroup>
             <Table size="sm" id="householdMemberAddTable"><tbody>{rows}</tbody></Table>
         </>
