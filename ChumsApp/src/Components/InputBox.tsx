@@ -22,7 +22,7 @@ export const InputBox: React.FC<Props> = (props) => {
 
     var buttons = [];
     if (props.cancelFunction !== undefined) buttons.push(<Col key="cancel"><Button variant="warning" block onClick={handleCancel} >Cancel</Button></Col >);
-    if (props.deleteFunction !== undefined) buttons.push(<Col key="delete"><Button id="delete" variant="danger" block onClick={handleDelete} >Delete</Button></Col>);
+    if (props.deleteFunction !== undefined) buttons.push(<Col key="delete"><Button id="delete" data-cy="delete-button" variant="danger" block onClick={handleDelete} >Delete</Button></Col>);
     if (props.saveFunction !== undefined) buttons.push(<Col key="save"><Button variant="success" data-cy="save-button" block onClick={handleSave}>{saveText}</Button></Col>);
 
     return (
