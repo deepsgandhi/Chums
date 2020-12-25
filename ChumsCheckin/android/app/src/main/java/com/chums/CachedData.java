@@ -11,6 +11,7 @@ public class CachedData {
     public static String AccessManagementApiRoot = "https://api.staging.livecs.org";
     public static String ApiRoot = "https://api.staging.chums.org";
     public static String ContentBaseUrl = "https://app.staging.chums.org";
+    
 //    public static int SelectedHouseholdId;
    public static int ServiceId;
 //    public static int ServiceTimeId;

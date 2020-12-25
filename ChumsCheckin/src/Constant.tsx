@@ -7,8 +7,8 @@ export const fontSize1 = deviceWidth * 4.5 / 100;
 export const fontSize2 = deviceWidth * 5 / 100;
 export const fontSize3 = deviceWidth * 5.5 / 100;
 export const fontSize4 = deviceWidth * 7 / 100;
-export const smallFont = deviceWidth * 3.3 / 100;
-export const smallFont1 = deviceWidth * 3.6 / 100;
+export const smallFont = deviceWidth * 3.6 / 100;
+export const smallerFont = deviceWidth * 3.0 / 100;
 
 // borderWidth
 export const borderWidth1 = 0.5;

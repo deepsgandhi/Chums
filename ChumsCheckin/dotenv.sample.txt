@@ -1,0 +1,3 @@
+BaseimageUrl=https://app.staging.chums.org
+ApiRoot=https://api.staging.chums.org
+AccessApiRoot=https://api.staging.livecs.org

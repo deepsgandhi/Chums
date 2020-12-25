@@ -75,7 +75,7 @@ public class PrinterHelper extends  ReactContextBaseJavaModule  {
         phh.attach(context);
     }
 
-    public static void configure()
+    public void configure()
     {
         try {
             phh.configurePrinter();
