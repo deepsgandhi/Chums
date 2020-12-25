@@ -1,12 +1,31 @@
 context('Groups', () => {
-    Cypress.Cookies.defaults({ whitelist: ['.AspNetCore.Session', '.AspNetCore.Cookies'] })
-    it('Log into app', () => { cy.login() });
-    it('Load groups tab', () => { cy.loadTab('mainGroupsTab', 'groupsBox'); });
-    selectGroup();
-    editGroup();
-    removeAddMember();
-    switchTabs();
-    turnOffAttendance();
+    beforeEach(() => {
+        cy.login();
+        cy.visit('/groups')
+    })
+
+    it('Create group', () => {
+        const categoryName = 'Testing';
+        const groupName = 'Cypress';
+
+        cy.get('[data-cy=add-button]').should('exist').click();
+        cy.get('[data-cy=save-button]').should('exist');
+        cy.get('[data-cy=category-name]').should('exist').type(categoryName);
+        cy.get('[data-cy=group-name]').should('exist').type(groupName);
+        cy.get('[data-cy=save-button]').click();
+        cy.get('[data-cy=content]').should('exist')
+            .should('contain', categoryName)
+            .should('contain', groupName);
+    })
+
+    // Cypress.Cookies.defaults({ whitelist: ['.AspNetCore.Session', '.AspNetCore.Cookies'] })
+    // it('Log into app', () => { cy.loginWithUI() });
+    // it('Load groups tab', () => { cy.loadTab('mainGroupsTab', 'groupsBox'); });
+    // selectGroup();
+    // editGroup();
+    // removeAddMember();
+    // switchTabs();
+    // turnOffAttendance();
 });
 
 function selectGroup() {

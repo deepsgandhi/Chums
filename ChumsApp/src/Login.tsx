@@ -55,8 +55,6 @@ export const Login: React.FC = (props: any) => {
       login({ jwt: jwt });
       setWelcomeBackName(getCookieValue("name"));
     }
-
-    console.log(document.cookie);
   };
 
   const handleLoginSuccess = (resp: LoginResponseInterface) => {

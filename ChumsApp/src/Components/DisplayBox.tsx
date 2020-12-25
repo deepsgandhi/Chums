@@ -22,7 +22,7 @@ export const DisplayBox: React.FC<Props> = (props) => {
                     <Col xs={4} style={{ textAlign: 'right' }} >{editContent}</Col>
                 </Row>
             </div>
-            <div className="content">
+            <div className="content" data-cy="content">
                 {props.children}
             </div>
         </div>
