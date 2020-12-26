@@ -73,7 +73,7 @@ context("Groups", () => {
   //       .should("contain", "Trends");
   //   });
 
-  it("Add person to group", () => {
+  it("Add/Remove person to/from group", () => {
     const persons = [
       { first: "Troye", last: "Smith" },
       { first: "Nina", last: "Harmon" },
@@ -82,23 +82,44 @@ context("Groups", () => {
       categoryName: "Test",
       name: "add/remove person",
     };
+    const MembersTab = "Members";
 
     cy.getCookie("jwt")
       .should("have.a.property", "value")
       .then(($token) => {
-        // cy.createPeople($token, persons);
-        // createGroup($token, group);
+        createGroup($token, group);
+        cy.createPeople($token, persons);
       });
 
-    // cy.get(`a:contains('${group.name}')`).should("exist").click();
-    // cy.get("h1").should("exist").should("contain", group.name);
-    // cy.get("[data-cy=person-search-bar]")
-    //   .should("exist")
-    //   .clear()
-    //   .type(persons[0].first);
-    // cy.get("[data-cy=person-search-button]").should("exist").click();
-    // cy.get("[data-cy=add-to-list]").should('exist').click();
+    cy.get(`a:contains('${group.name}')`).should("exist").click();
+    cy.get("h1").should("exist").should("contain", group.name);
+    cy.get("[data-cy=person-search-bar]")
+      .should("exist")
+      .clear()
+      .type(persons[0].first);
+    cy.get("[data-cy=person-search-button]").should("exist").click();
+    cy.get("[data-cy=add-to-list]").should("exist").click();
+    cy.get(`a:contains('${MembersTab}')`)
+      .should("exist")
+      .should("have.class", "active");
+    cy.get("[data-cy=group-members-tab] > [data-cy=content]")
+      .should("exist")
+      .should("contain", `${persons[0].first} ${persons[0].last}`);
+    cy.get("[data-cy=remove-member-0]").should("exist").click();
+    cy.get("[data-cy=group-members-tab] > [data-cy=content]")
+      .should("exist")
+      .should("not.contain", `${persons[0].first} ${persons[0].last}`);
   });
+
+  // it("Check tabs interaction with a person", () => {
+  //   const persons = [
+  //     {first: 'Benny', last: 'Beltik'}
+  //   ]
+  //   const group = {
+  //     categoryName: 'Remove',
+  //     name: 'delete person'
+  //   }
+  // })
 
   function createGroup(token, { categoryName, name }) {
     cy.request({
