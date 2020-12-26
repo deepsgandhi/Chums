@@ -8,9 +8,10 @@ interface Props {
     headerText: string,
     saveText?: string,
     headerActionContent?: React.ReactNode;
-    cancelFunction?: () => void
-    deleteFunction?: () => void
-    saveFunction: () => void
+    cancelFunction?: () => void;
+    deleteFunction?: () => void;
+    saveFunction: () => void;
+    'data-cy'?: string;
 }
 export const InputBox: React.FC<Props> = (props) => {
     var saveText = 'Save';
@@ -26,7 +27,7 @@ export const InputBox: React.FC<Props> = (props) => {
     if (props.saveFunction !== undefined) buttons.push(<Col key="save"><Button variant="success" data-cy="save-button" block onClick={handleSave}>{saveText}</Button></Col>);
 
     return (
-        <div id={props.id} className="inputBox">
+        <div id={props.id} className="inputBox" data-cy={props['data-cy']}>
             <div className="header">
                 <Row>
                     <Col xs={8}><i className={props.headerIcon}></i> {props.headerText}</Col>

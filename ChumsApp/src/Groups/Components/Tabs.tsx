@@ -12,9 +12,9 @@ interface Props {
 export const Tabs: React.FC<Props> = (props) => {
     const [selectedTab, setSelectedTab] = React.useState('');
 
-    const getTab = (keyName: string, icon: string, text: string) => {
+    const getTab = (keyName: string, icon: string, text: string, dataCy?: string) => {
         var className = (keyName === selectedTab) ? 'nav-link active' : 'nav-link';
-        return <li className="nav-item" key={keyName}><a href="about:blank" onClick={e => { e.preventDefault(); setSelectedTab(keyName) }} className={className}><i className={icon}></i> {text}</a></li>
+        return <li className="nav-item" key={keyName}><a href="about:blank" data-cy={dataCy} onClick={e => { e.preventDefault(); setSelectedTab(keyName) }} className={className}><i className={icon}></i> {text}</a></li>
     }
 
     const setVisibilityState = useCallback(() => {
@@ -54,7 +54,7 @@ export const Tabs: React.FC<Props> = (props) => {
         var defaultTab = ''
 
         if (UserHelper.checkAccess('Group Members', 'View')) { tabs.push(getTab('members', 'fas fa-users', 'Members')); defaultTab = 'members'; }
-        if (UserHelper.checkAccess('Attendance', 'View') && props.group?.trackAttendance) { tabs.push(getTab('sessions', 'far fa-calendar-alt', 'Sessions')); if (defaultTab === '') defaultTab = 'sessions'; }
+        if (UserHelper.checkAccess('Attendance', 'View') && props.group?.trackAttendance) { tabs.push(getTab('sessions', 'far fa-calendar-alt', 'Sessions', 'sessions-tab')); if (defaultTab === '') defaultTab = 'sessions'; }
         if (UserHelper.checkAccess('Attendance', 'View Summary') && props.group?.trackAttendance) { tabs.push(getTab('trends', 'far fa-chart-bar', 'Trends')); if (defaultTab === '') defaultTab = 'trends'; }
         if (selectedTab === '' && defaultTab !== '') setSelectedTab(defaultTab);
         return tabs;

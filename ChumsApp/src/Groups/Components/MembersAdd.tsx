@@ -30,7 +30,7 @@ export const MembersAdd: React.FC<Props> = (props) => {
                 <tr key={i}>
                     <td><img src={PersonHelper.getPhotoUrl(gm.person)} alt="avatar" /></td>
                     <td><Link to={"/people/" + gm.personId}>{gm.person.name.display}</Link></td>
-                    <td><a href="about:blank" className="text-success" onClick={addMember} data-index={i}><i className="fas fa-user"></i> Add</a></td>
+                    <td><a href="about:blank" className="text-success" data-cy="add-member-to-session" onClick={addMember} data-index={i}><i className="fas fa-user"></i> Add</a></td>
                 </tr>
             );
         }
@@ -40,7 +40,7 @@ export const MembersAdd: React.FC<Props> = (props) => {
     React.useEffect(() => { if (props.group !== null) loadData(); return ()=>{isSubscribed.current=false} }, [props.group, loadData]);
 
     return (
-        <DisplayBox headerIcon="fas fa-user" headerText="Available Group Members" >
+        <DisplayBox headerIcon="fas fa-user" headerText="Available Group Members" data-cy="available-group-members" >
             <Table className="personSideTable">
                 <thead><tr><th></th><th>Name</th><th>Action</th></tr></thead>
                 <tbody>{getRows()}</tbody>
