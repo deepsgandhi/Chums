@@ -25,8 +25,7 @@ export class GroupRepository {
     }
 
     public async delete(churchId: number, id: number) {
-        await DB.query("UPDATE `groups` SET removed=1 WHERE id=? AND churchId=?;", [id, churchId]);
-        return;
+        DB.query("UPDATE `groups` SET removed=1 WHERE id=? AND churchId=?;", [id, churchId]);
     }
 
     public async load(churchId: number, id: number) {

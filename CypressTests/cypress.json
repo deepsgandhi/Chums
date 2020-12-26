@@ -6,5 +6,5 @@
     "password": "password"
   },
   "projectId": "16cb4g",
-  "defaultCommandTimeout": 10000
+  "defaultCommandTimeout": 15000
 }

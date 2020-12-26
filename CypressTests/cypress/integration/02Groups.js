@@ -73,53 +73,116 @@ context("Groups", () => {
   //       .should("contain", "Trends");
   //   });
 
-  it("Add/Remove person to/from group", () => {
-    const persons = [
-      { first: "Troye", last: "Smith" },
-      { first: "Nina", last: "Harmon" },
-    ];
-    const group = {
-      categoryName: "Test",
-      name: "add/remove person",
-    };
-    const MembersTab = "Members";
+  // it("Add/Remove person to/from group", () => {
+  //   const persons = [
+  //     { first: "Troye", last: "Smith" },
+  //     { first: "Nina", last: "Harmon" },
+  //   ];
+  //   const group = {
+  //     categoryName: "Test",
+  //     name: "add/remove person",
+  //   };
+  //   const MembersTab = "Members";
 
+  //   cy.getCookie("jwt")
+  //     .should("have.a.property", "value")
+  //     .then(($token) => {
+  //       createGroup($token, group);
+  //       cy.createPeople($token, persons);
+  //     });
+
+  //   cy.get(`a:contains('${group.name}')`).should("exist").click();
+  //   cy.get("h1").should("exist").should("contain", group.name);
+  //   cy.get("[data-cy=person-search-bar]")
+  //     .should("exist")
+  //     .clear()
+  //     .type(persons[0].first);
+  //   cy.get("[data-cy=person-search-button]").should("exist").click();
+  //   cy.get("[data-cy=add-to-list]").should("exist").click();
+  //   cy.get(`a:contains('${MembersTab}')`)
+  //     .should("exist")
+  //     .should("have.class", "active");
+  //   cy.get("[data-cy=group-members-tab] > [data-cy=content]")
+  //     .should("exist")
+  //     .should("contain", `${persons[0].first} ${persons[0].last}`);
+  //   cy.get("[data-cy=remove-member-0]").should("exist").click();
+  //   cy.get("[data-cy=group-members-tab] > [data-cy=content]")
+  //     .should("exist")
+  //     .should("not.contain", `${persons[0].first} ${persons[0].last}`);
+  // });
+
+  it("Add Person to session", () => {
+    const persons = [{ first: "Benny", last: "Beltik" }];
+    const group = {
+      categoryName: "Interaction",
+      name: "Tabs",
+    };
+    // nesting is better than using async await in case of cypress as the docs suggest.
     cy.getCookie("jwt")
       .should("have.a.property", "value")
       .then(($token) => {
-        createGroup($token, group);
-        cy.createPeople($token, persons);
+        cy.createGroup($token, group)
+          .its("body")
+          .then((groups) => {
+            const groupId = groups[0].id;
+            cy.createPeople($token, persons)
+              .its("body")
+              .then((people) => {
+                const personId = people[0].id;
+                cy.getPerson($token, personId)
+                  .its("body")
+                  .then((person) => {
+                    const payload = [
+                      {
+                        groupId,
+                        personId,
+                        person: { ...person },
+                      },
+                    ];
+                    addPersonToGroup($token, payload);
+                  });
+              });
+          });
       });
-
+    cy.visit("/groups");
     cy.get(`a:contains('${group.name}')`).should("exist").click();
     cy.get("h1").should("exist").should("contain", group.name);
-    cy.get("[data-cy=person-search-bar]")
+    cy.get("[data-cy=edit-button]").should("exist").click();
+    cy.get("[data-cy=save-button]").should("exist");
+    cy.get("[data-cy=select-attendance-type]")
       .should("exist")
-      .clear()
-      .type(persons[0].first);
-    cy.get("[data-cy=person-search-button]").should("exist").click();
-    cy.get("[data-cy=add-to-list]").should("exist").click();
-    cy.get(`a:contains('${MembersTab}')`)
+      .select("Yes")
+      .should("have.value", "true");
+    cy.get("[data-cy=save-button]").click();
+    cy.get("[data-cy=group-details-box]")
       .should("exist")
-      .should("have.class", "active");
-    cy.get("[data-cy=group-members-tab] > [data-cy=content]")
+      .should("contain", "Yes");
+    cy.get("[data-cy=sessions-tab]").should("exist").click();
+    cy.get("[data-cy=no-session-msg]").should("exist");
+    cy.get("[data-cy=available-group-members]").should("exist");
+    cy.get("[data-cy=create-new-session]").should("exist").click();
+    cy.get("[data-cy=add-session-box]").should("exist");
+    cy.get("[data-cy=save-button]").should("exist").click();
+    cy.get("[data-cy=session-present-msg]").should("exist");
+    cy.get("[data-cy=available-group-members]")
       .should("exist")
       .should("contain", `${persons[0].first} ${persons[0].last}`);
-    cy.get("[data-cy=remove-member-0]").should("exist").click();
-    cy.get("[data-cy=group-members-tab] > [data-cy=content]")
+    cy.get("[data-cy=add-member-to-session]").should("exist").click();
+    cy.get("[data-cy=group-session-box] > [data-cy=content]")
       .should("exist")
-      .should("not.contain", `${persons[0].first} ${persons[0].last}`);
+      .should("contain", `${persons[0].first} ${persons[0].last}`);
   });
 
-  // it("Check tabs interaction with a person", () => {
-  //   const persons = [
-  //     {first: 'Benny', last: 'Beltik'}
-  //   ]
-  //   const group = {
-  //     categoryName: 'Remove',
-  //     name: 'delete person'
-  //   }
-  // })
+  function addPersonToGroup($token, payload) {
+    cy.request({
+      method: "POST",
+      url: `${api_domain}/groupmembers`,
+      headers: {
+        Authorization: `Bearer ${$token}`,
+      },
+      body: payload,
+    });
+  }
 
   function createGroup(token, { categoryName, name }) {
     cy.request({

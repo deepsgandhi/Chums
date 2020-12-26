@@ -25,6 +25,8 @@ import "cypress-wait-until";
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+const api_domain = Cypress.env("CHUMS_API_URL");
+
 Cypress.Commands.add("loginWithUI", () => {
   cy.wait(250);
   cy.visit("/");
@@ -99,6 +101,29 @@ Cypress.Commands.add("createPeople", (token, persons) => {
       });
     });
 });
+
+Cypress.Commands.add("createGroup", (token, group) => {
+  cy.request({
+    method: "POST",
+    url: `${api_domain}/groups`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: [group],
+  });
+})
+
+Cypress.Commands.add("getPerson", (token, personId) => {
+  const api_domain = Cypress.env("CHUMS_API_URL");
+
+  cy.request({
+    method: "GET",
+    url: `${api_domain}/people/${personId}`,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+})
 
 Cypress.on("uncaught:exception", (err, runnable) => {
   console.warn(err);
