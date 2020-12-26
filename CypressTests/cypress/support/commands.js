@@ -83,7 +83,6 @@ Cypress.Commands.add("createPeople", (token, persons) => {
   })
     .its("body")
     .then(($houseHoldIds) => {
-      console.log($houseHoldIds);
       let peoplePayload = $houseHoldIds.map((e) => {
         const person = persons.filter((f) => f.last === e.name);
         return {
