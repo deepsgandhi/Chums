@@ -5,12 +5,22 @@ import styles from '../myStyles'
 import Header from './Components/Header'
 import { screenNavigationProps, CachedData, Utilities, ApiHelper } from "../Helpers"
 import { CommonActions } from '@react-navigation/native';
+import { WebView } from "react-native-webview"
+import { LabelHelper } from '../Helpers/LabelHelper'
 
 //type ProfileScreenRouteProp = RouteProp<RootStackParamList, "CheckinComplete">;
 interface Props { navigation: screenNavigationProps; }
 
 
 export const CheckinComplete = (props: Props) => {
+
+    const [html, setHtml] = React.useState("Hello world");
+
+    const loadData = () => {
+        LabelHelper.getAllLabels().then(labels => {
+            if (labels.length > 0) setHtml(labels[0]);
+        });
+    }
 
     const print = () => {
         NativeModules.PrinterHelper.init();
@@ -27,8 +37,11 @@ export const CheckinComplete = (props: Props) => {
         }).catch((error) => {
             // console.error(error);
             // return('error')
+            setHtml("error");
         });
     }
+
+    React.useEffect(loadData, []);
 
     return (
         <Container>
@@ -41,6 +54,7 @@ export const CheckinComplete = (props: Props) => {
                         <Text style={styles.buttonPrintText}>Print</Text>
                     </TouchableOpacity>
                 </View>
+                <WebView source={{ html: html }} style={[styles.webView]} />
             </View>
 
         </Container>

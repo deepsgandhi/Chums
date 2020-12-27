@@ -5,7 +5,6 @@ import { CheckinComplete } from './src/Screens/CheckinComplete'
 import { Splash, Lookup, Services, Login, Household, SelectGroup, AddGuest } from './src/Screens'
 import { ServiceTimeInterface } from './src/Helpers'
 
-
 // const stack= createStackNavigator()
 export type RootStackParamList = {
     Login: undefined,
@@ -17,6 +16,10 @@ export type RootStackParamList = {
     CheckinComplete: undefined,
     SelectGroup: { serviceTime: ServiceTimeInterface, personId: number },
 }
+
+
+
+
 
 const stack = createStackNavigator<RootStackParamList>();
 const createNavigation = () => {

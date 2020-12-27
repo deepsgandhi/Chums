@@ -36,6 +36,9 @@ const styles = StyleSheet.create({
     expandableList: { marginBottom: constant.deviceWidth * 13 / 100 },
     expandedRow: { borderBottomWidth: constant.borderWidth3, borderBottomColor: constant.lightGrayColor, flexDirection: 'row', marginHorizontal: '6%', paddingVertical: '3%', paddingLeft: '2%', alignItems: 'center', height: constant.deviceWidth * 16 / 100, justifyContent: 'space-around' },
 
+    /*Checkin Complete*/
+    webView: { width: constant.deviceWidth, maxHeight: constant.deviceWidth / 3.5 * 1.1 },
+
 
     //GuestAdd
 

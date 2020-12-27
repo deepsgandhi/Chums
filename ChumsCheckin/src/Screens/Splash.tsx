@@ -18,6 +18,7 @@ export const Splash = (props: Props) => {
             ApiHelper.amJwt = response[1][1] === null ? [] : JSON.parse(response[1][1]);
             ApiHelper.jwt = ApiHelper.amJwt;
             const screen = (data) ? "Services" : "Login";
+            //const screen = "Login";
             props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: screen }] }));
         });
     }

@@ -9,12 +9,7 @@ export type screenNavigationProps = StackNavigationProp<RootStackParamList, "Log
 
 export class Utilities {
   public static snackBar(message: string) {
-    Snackbar.show({
-      text: message,
-      backgroundColor: constant.baseColor,
-      duration: Snackbar.LENGTH_SHORT,
-
-    });
+    Snackbar.show({ text: message, backgroundColor: constant.baseColor, duration: Snackbar.LENGTH_SHORT });
   }
 
   public static getById(list: any[], id: number): any {
