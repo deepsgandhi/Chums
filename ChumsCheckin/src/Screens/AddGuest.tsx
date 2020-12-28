@@ -1,69 +1,67 @@
 import React from 'react'
-import { TextInput, View, Text, TouchableOpacity } from 'react-native'
+import { TextInput, View, Text } from 'react-native'
 import { Container, Content } from 'native-base'
-import styles from '../myStyles';
-import * as constant from '../Constant'
-import Header from './Components/Header'
-import { ApiHelper, Utilities, screenNavigationProps, CachedData } from "../Helpers";
-
+import Ripple from 'react-native-material-ripple';
+import { Header } from './Components'
+import { ApiHelper, Utilities, screenNavigationProps, CachedData, Styles, StyleConstants, PersonInterface } from "../Helpers";
 
 interface Props { navigation: screenNavigationProps }
-
 
 export const AddGuest = (props: Props) => {
     const [firstName, setFirstName] = React.useState("");
     const [lastName, setLastName] = React.useState("");
 
-
     const addGuest = () => {
         if (firstName === '') Utilities.snackBar("Please enter first name")
         else if (lastName === '') Utilities.snackBar("Please enter last name")
-        else {
-            let arrParm = [{
+        else getOrCreatePerson(firstName, lastName).then(person => {
+            CachedData.householdMembers.push(person);
+            props.navigation.navigate("Household");
+        });
+    }
+
+    const getOrCreatePerson = async (firstName: string, lastName: string) => {
+        const fullName = firstName + " " + lastName;
+        var person: PersonInterface | null = await searchForGuest(fullName);
+        if (person === null) {
+            person = {
                 householdId: CachedData.householdId,
-                name: { display: firstName + " " + lastName, first: firstName, last: lastName }
-            }];
-
-            ApiHelper.addGuestApi("/people", arrParm).then((res) => {
-                props.navigation.navigate("Household");
-                /*
-                this.props.navigation.navigate("Household",
-                    {
-                        houseHoldId: 632,
-                        serviceDetail: '',
-                        visitSession: '',
-                        eventName: 'update',
-
-                        id: this.props.route.params.id,
-                    })*/
-            })
+                name: { display: fullName, first: firstName, last: lastName }
+            };
+            console.log(JSON.stringify(person));
+            const data = await ApiHelper.apiPost("/people", [person]);
+            console.log("POSTED GUEST")
+            console.log(JSON.stringify(data));
+            person.id = data[0].id;
         }
+        return person;
+    }
+
+    const searchForGuest = async (fullName: string) => {
+        var result: PersonInterface | null = null;
+        const url = "/people/search?term=" + escape(fullName);
+        var people: PersonInterface[] = await ApiHelper.apiGet(url);;
+        people.forEach(p => { if (p.membershipStatus !== "Member") result = p; });
+        return (result === undefined) ? null : result;
     }
 
     const cancelGuest = () => { props.navigation.goBack() }
 
-
     return (
         <Container>
-            <Content>
-                <View style={{ height: constant.deviceHeight * 97.8 / 100, backgroundColor: constant.ghostWhite }}>
-                    <Header />
-                    <Text style={styles.guestAddText}>First Name</Text>
-                    <TextInput placeholder="First" onChangeText={(value) => { setFirstName(value) }} style={styles.guestAddinput} />
-                    <Text style={styles.guestAddText}>Last Name</Text>
-                    <TextInput placeholder="Last" onChangeText={(value) => { setLastName(value) }} style={styles.guestAddinput} />
-                    <View style={styles.guestAddButtonView}>
-                        <TouchableOpacity style={[styles.guestAddButton, { backgroundColor: constant.yellowColor }]} onPress={cancelGuest} >
-                            <Text style={styles.guestAddButtonText}>CANCEL</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.guestAddButton, { backgroundColor: constant.greenColor }]} onPress={addGuest} >
-                            <Text style={styles.guestAddButtonText}>ADD</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                </View>
-            </Content>
-        </Container>
+            <Header />
+            <View style={Styles.mainContainer}>
+                <Content>
+                    <Text style={Styles.label}>First Name</Text>
+                    <TextInput placeholder="First" onChangeText={(value) => { setFirstName(value) }} style={Styles.textInput} />
+                    <Text style={Styles.label}>Last Name</Text>
+                    <TextInput placeholder="Last" onChangeText={(value) => { setLastName(value) }} style={Styles.textInput} />
+                </Content>
+            </View>
+            <View style={Styles.blockButtons}>
+                <Ripple style={[Styles.blockButton, { backgroundColor: StyleConstants.yellowColor }]} onPress={cancelGuest} ><Text style={Styles.blockButtonText}>CANCEL</Text></Ripple>
+                <Ripple style={[Styles.blockButton, { backgroundColor: StyleConstants.greenColor }]} onPress={addGuest} ><Text style={Styles.blockButtonText}>ADD</Text></Ripple>
+            </View>
+        </Container >
     )
-
 }

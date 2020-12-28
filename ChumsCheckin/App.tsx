@@ -2,31 +2,13 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { CheckinComplete } from './src/Screens/CheckinComplete'
-import { Splash, Lookup, Services, Login, Household, SelectGroup, AddGuest } from './src/Screens'
-import { ServiceTimeInterface } from './src/Helpers'
+import { Splash, Lookup, Services, Login, Household, SelectGroup, AddGuest, ScreenList } from './src/Screens'
 
-// const stack= createStackNavigator()
-export type RootStackParamList = {
-    Login: undefined,
-    Splash: undefined,
-    Lookup: undefined,
-    Services: undefined,
-    AddGuest: undefined,
-    Household: undefined, //{ houseHoldId: number, visitSession: any, eventName: any, id: any }
-    CheckinComplete: undefined,
-    SelectGroup: { serviceTime: ServiceTimeInterface, personId: number },
-}
-
-
-
-
-
-const stack = createStackNavigator<RootStackParamList>();
+const stack = createStackNavigator<ScreenList>();
 const createNavigation = () => {
-
     return (
         <NavigationContainer>
-            <stack.Navigator screenOptions={{ headerShown: false }} >
+            <stack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }} >
                 <stack.Screen name='Splash' component={Splash} />
                 <stack.Screen name='Login' component={Login} />
                 <stack.Screen name='Services' component={Services} />

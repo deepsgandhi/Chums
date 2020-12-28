@@ -1,17 +1,15 @@
 import React from 'react'
 import { View, Text, FlatList, Image } from 'react-native'
-import Ripple from 'react-native-material-ripple';
 import { Icon } from 'native-base'
-import styles from '../../myStyles'
-import { CachedData, EnvironmentHelper, PersonInterface, screenNavigationProps, ServiceTimeInterface, Utilities, VisitHelper, VisitInterface, VisitSessionInterface } from "../../Helpers";
-import * as constant from '../../Constant'
+import Ripple from 'react-native-material-ripple';
+import { CachedData, EnvironmentHelper, PersonInterface, screenNavigationProps, ServiceTimeInterface, Utilities, VisitHelper, VisitInterface, Styles, StyleConstants } from "../../Helpers";
 import { MemberServiceTimes } from './MemberServiceTimes';
 
 interface Props { navigation: screenNavigationProps, pendingVisits: VisitInterface[] }
 
 export const MemberList = (props: Props) => {
-
     const [selectedMemberId, setSelectedMemberId] = React.useState(0);
+    const handleMemberClick = (id: number) => { setSelectedMemberId((selectedMemberId === id) ? 0 : id); }
 
     const getCondensedGroupList = (person: PersonInterface) => {
         if (selectedMemberId == person.id) return null;
@@ -19,30 +17,28 @@ export const MemberList = (props: Props) => {
             const visit = VisitHelper.getByPersonId(props.pendingVisits, person.id || 0);
             if (visit?.visitSessions?.length === 0) return (null);
             else {
-                return (visit?.visitSessions?.map((vs: VisitSessionInterface) => {
-                    var name: string = vs.session?.displayName || "none";
+                const groups: JSX.Element[] = [];
+                visit?.visitSessions?.forEach(vs => {
+                    var name = vs.session?.displayName || "none";
                     const st: ServiceTimeInterface | null = Utilities.getById(CachedData.serviceTimes, vs.session?.serviceTimeId || 0);
                     if (st != null) name = (st.name || "") + " - " + name;
-                    return (<Text style={{ color: constant.greenColor }}>{name}</Text>);
-                }));
+                    if (groups.length > 0) groups.push(<Text style={{ color: StyleConstants.grayColor }}>, </Text>);
+                    groups.push(<Text style={{ color: StyleConstants.greenColor }}>{name}</Text>);
+                });
+                return (<View style={{ flexDirection: "row" }} >{groups}</View>);
             }
         }
-    }
-
-    const handleMemberClick = (id: number) => {
-        if (selectedMemberId === id) setSelectedMemberId(0);
-        else setSelectedMemberId(id);
     }
 
     const getMemberRow = (data: any) => {
         const person: PersonInterface = data.item;
         return (
             <View>
-                <Ripple style={styles.flatlistMainView} onPress={() => { handleMemberClick(person.id || 0) }}  >
-                    <Icon name={(selectedMemberId === person.id) ? 'up' : 'down'} type="AntDesign" style={styles.flatlistDropIcon} />
-                    <Image source={{ uri: EnvironmentHelper.ImageBaseUrl + person.photo }} style={styles.personPhoto} resizeMode="contain" />
+                <Ripple style={Styles.flatlistMainView} onPress={() => { handleMemberClick(person.id || 0) }}  >
+                    <Icon name={(selectedMemberId === person.id) ? 'up' : 'down'} type="AntDesign" style={Styles.flatlistDropIcon} />
+                    <Image source={{ uri: EnvironmentHelper.ImageBaseUrl + person.photo }} style={Styles.personPhoto} resizeMode="contain" />
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: '5%' }} >
-                        <Text style={[styles.personName, { alignSelf: 'center' }]}>{person.name.display}</Text>
+                        <Text style={[Styles.personName, { alignSelf: 'center' }]}>{person.name.display}</Text>
                         {getCondensedGroupList(person)}
                     </View>
                 </Ripple>
@@ -51,5 +47,5 @@ export const MemberList = (props: Props) => {
         )
     }
 
-    return (<FlatList style={styles.expandableList} data={CachedData.householdMembers} renderItem={getMemberRow} />)
+    return (<FlatList data={CachedData.householdMembers} renderItem={getMemberRow} keyExtractor={(item: PersonInterface) => item.id?.toString() || "0"} />)
 }

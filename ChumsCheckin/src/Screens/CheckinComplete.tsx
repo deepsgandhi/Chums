@@ -1,14 +1,12 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, NativeModules } from 'react-native'
+import { View, Text, NativeModules } from 'react-native'
 import { Container } from 'native-base'
-import styles from '../myStyles'
-import Header from './Components/Header'
-import { screenNavigationProps, CachedData, Utilities, ApiHelper } from "../Helpers"
 import { CommonActions } from '@react-navigation/native';
 import { WebView } from "react-native-webview"
-import { LabelHelper } from '../Helpers/LabelHelper'
+import Ripple from 'react-native-material-ripple';
+import { Header } from './Components'
+import { screenNavigationProps, CachedData, Utilities, ApiHelper, LabelHelper, Styles } from "../Helpers"
 
-//type ProfileScreenRouteProp = RouteProp<RootStackParamList, "CheckinComplete">;
 interface Props { navigation: screenNavigationProps; }
 
 
@@ -46,19 +44,14 @@ export const CheckinComplete = (props: Props) => {
     return (
         <Container>
             <Header />
-            <View style={styles.mainContainer}>
+            <View style={Styles.mainContainer}>
+                <Text style={Styles.H1}>Checkin Complete.</Text>
 
-                <Text style={styles.checkingText}>Checkin Complete.</Text>
-                <View style={styles.printView}>
-                    <TouchableOpacity style={styles.printButton} onPress={() => { print() }}>
-                        <Text style={styles.buttonPrintText}>Print</Text>
-                    </TouchableOpacity>
-                </View>
-                <WebView source={{ html: html }} style={[styles.webView]} />
+                <Ripple style={Styles.bigButton} onPress={() => { print() }}>
+                    <Text style={Styles.bigButtonText}>Print</Text>
+                </Ripple>
+                <WebView source={{ html: html }} style={[Styles.webView]} />
             </View>
-
         </Container>
     )
-
-
 }

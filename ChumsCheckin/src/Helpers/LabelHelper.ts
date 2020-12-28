@@ -29,8 +29,6 @@ export class LabelHelper {
         var result = html.replace(/\[Name\]/g, person.name.display || "");
         result = result.replace(/\[Sessions\]/g, VisitSessionHelper.getDisplaySessions(visit.visitSessions || []).replace(/ ,/g, "<br/>"));
         result = result.replace(/\[PickupCode\]/g, (isChild) ? pickupCode : "");
-        console.log(html);
-        console.log(VisitSessionHelper.getDisplaySessions(visit.visitSessions || []).replace(/ ,/g, "<br/>"));
         return result;
     }
 
@@ -43,8 +41,8 @@ export class LabelHelper {
         });
         var childBullets = "";
         childList.forEach(child => { childBullets += "<li>" + child + "</li>" });
-        var result = html.replace(/[Children]/g, childBullets);
-        result = result.replace(/[PickupCode]/g, pickupCode);
+        var result = html.replace(/\[Children\]/g, childBullets);
+        result = result.replace(/\[PickupCode\]/g, pickupCode);
         return result;
     }
 

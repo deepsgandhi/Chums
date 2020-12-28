@@ -1,10 +1,9 @@
 import React from 'react'
 import { Image, View } from 'react-native'
-import styles from '../myStyles'
 import { Container } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CommonActions } from '@react-navigation/native';
-import { screenNavigationProps, ApiHelper } from "../Helpers";
+import { screenNavigationProps, ApiHelper, Styles } from "../Helpers";
 
 type Props = { navigation: screenNavigationProps; };
 
@@ -27,8 +26,8 @@ export const Splash = (props: Props) => {
 
     return (
         <Container>
-            <View style={styles.splashMaincontainer}>
-                <Image source={require('../Images/logo1.png')} style={styles.headerImage} resizeMode="contain" />
+            <View style={Styles.splashMaincontainer}>
+                <Image source={require('../Images/logo1.png')} style={Styles.headerImage} resizeMode="contain" />
             </View>
         </Container>
     )
