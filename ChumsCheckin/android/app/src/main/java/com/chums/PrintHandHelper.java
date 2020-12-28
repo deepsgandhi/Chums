@@ -27,10 +27,6 @@ import com.dynamixsoftware.intentapi.Result;
 import com.dynamixsoftware.printingsdk.ISetupPrinterListener;
 import com.dynamixsoftware.printingsdk.PrintingSdk;
 import com.dynamixsoftware.printingsdk.ResultType;
-
-
-import com.chums.ErrorLogs;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,7 +71,8 @@ public class PrintHandHelper extends ReactContextBaseJavaModule {
             try {
                 intentApi.print("label 1", "image/jpg", uri);
             } catch (Exception ex) {
-                ErrorLogs.error(ex);
+                //ErrorLogs.error(ex);
+                ex.printStackTrace();
             }
         }
     }
@@ -199,8 +196,8 @@ public class PrintHandHelper extends ReactContextBaseJavaModule {
             intentApi.runService(getServiceStub());
             Boolean isRunning = intentApi.isServiceRunning();
         } catch (RemoteException e) {
-            ErrorLogs.error(e);
-            //e.printStackTrace();
+            //ErrorLogs.error(e);
+            e.printStackTrace();
         }
         try {
             intentApi.setPrintCallback(getPrintStub());
@@ -349,7 +346,8 @@ public class PrintHandHelper extends ReactContextBaseJavaModule {
             intentApi.print(job, 1);
         } catch (RemoteException ex)
         {
-            ErrorLogs.error(ex);
+            //ErrorLogs.error(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -371,7 +369,8 @@ public class PrintHandHelper extends ReactContextBaseJavaModule {
             fOut.flush();
             fOut.close();
         } catch (Exception ex){
-            ErrorLogs.error(ex);
+            //ErrorLogs.error(ex);
+            ex.printStackTrace();
         }
     }
 
