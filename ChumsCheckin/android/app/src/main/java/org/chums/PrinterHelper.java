@@ -1,4 +1,4 @@
-package com.chums;
+package org.chums;
 
 import android.app.Activity;
 import android.content.Context;

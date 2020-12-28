@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.chums">
+  package="org.chums">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
