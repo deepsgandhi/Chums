@@ -25,9 +25,8 @@ export const Login = (props: Props) => {
                 if (data.errors?.length > 0) Utilities.snackBar(data.errors[0])
                 else {
                     ApiHelper.amJwt = data.token;
+                    ApiHelper.jwt = data.token;
                     CachedData.church = data.churches[0];
-                    setEmail("");
-                    setPassword("");
                     switchApp();
                 }
             });
@@ -38,7 +37,9 @@ export const Login = (props: Props) => {
         const req: SwitchAppRequestInterface = { appName: "CHUMS", churchId: CachedData.church?.id || 0 }
         ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + "/users/switchApp", req).then((data: LoginResponseInterface) => {
             ApiHelper.jwt = data.token;
-            AsyncStorage.multiSet([['@Login', 'true'], ['@UserData', JSON.stringify(data.token)]]);
+            AsyncStorage.multiSet([['@Login', 'true'], ['@Email', email], ['@Password', password]]);
+            setEmail("");
+            setPassword("");
             props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Services' }] }));
         });
     }
@@ -48,7 +49,7 @@ export const Login = (props: Props) => {
             <Header />
             <Content contentContainerStyle={Styles.mainContainer} >
                 <Text style={Styles.H1}>Welcome.  Please Log in.</Text>
-                <TextInput placeholder="Email" value={email} style={Styles.textInput} autoCompleteType="email" onChangeText={(value) => setEmail(value)} />
+                <TextInput placeholder="Email" value={email} style={Styles.textInput} autoCompleteType="email" keyboardType="email-address" onChangeText={(value) => setEmail(value)} />
                 <View style={{ marginTop: "5%" }}>
                     <TextInput placeholder="Password" value={password} secureTextEntry={true} autoCompleteType="password" style={Styles.textInput} onChangeText={(value) => { setPassword(value) }} />
                 </View>

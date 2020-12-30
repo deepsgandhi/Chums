@@ -13,7 +13,7 @@ export const MemberServiceTimes = (props: Props) => {
         const stSessions = VisitSessionHelper.getByServiceTimeId(visitSessions, serviceTime.id || 0);
         var buttonStyle = { backgroundColor: (stSessions.length > 0) ? StyleConstants.greenColor : StyleConstants.blueColor };
         var selectedGroupName = (stSessions.length > 0) ? stSessions[0].session?.displayName || "" : "NONE";
-        return (<View style={Styles.expandedRow}>
+        return (<View key={serviceTime.id} style={Styles.expandedRow}>
             <Text style={Styles.serviceTimeText}>{serviceTime.name}</Text>
             <Ripple style={[Styles.serviceTimeButton, buttonStyle]} onPress={() => { handleServiceTimeClick(serviceTime, props.person) }} >
                 <Text style={Styles.serviceTimeButtonText}>{selectedGroupName}</Text>

@@ -56,9 +56,9 @@ export const Styles = StyleSheet.create({
     bigButtonText: { alignSelf: 'center', color: StyleConstants.whiteColor, fontSize: StyleConstants.smallFont },
     bigLinkButton: { marginHorizontal: '3%', height: StyleConstants.deviceWidth * 13 / 100, justifyContent: "center", },
     bigLinkButtonText: { color: StyleConstants.baseColor1, marginLeft: '3%', fontSize: StyleConstants.fontSize1, },
-    blockButtons: { height: 80, width: '100%', flexDirection: "row" },
+    blockButtons: { height: StyleConstants.deviceWidth * 0.13, width: '100%', flexDirection: "row" },
     blockButton: { backgroundColor: StyleConstants.baseColor1, justifyContent: "center", flex: 1, alignContent: "center", flexDirection: "row" },
-    blockButtonText: { color: StyleConstants.whiteColor, fontSize: StyleConstants.smallFont, marginTop: 20 },
+    blockButtonText: { color: StyleConstants.whiteColor, fontSize: StyleConstants.smallFont, marginTop: (StyleConstants.deviceWidth * 0.13 - StyleConstants.smallFont) * 0.5 },
 
     //Splash
     splashMaincontainer: { alignItems: 'center', justifyContent: 'center', flex: 1, },
