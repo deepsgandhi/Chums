@@ -28,10 +28,7 @@ export const AddGuest = (props: Props) => {
                 householdId: CachedData.householdId,
                 name: { display: fullName, first: firstName, last: lastName }
             };
-            console.log(JSON.stringify(person));
             const data = await ApiHelper.apiPost("/people", [person]);
-            console.log("POSTED GUEST")
-            console.log(JSON.stringify(data));
             person.id = data[0].id;
         }
         return person;

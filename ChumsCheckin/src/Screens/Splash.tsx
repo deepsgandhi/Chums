@@ -27,8 +27,6 @@ export const Splash = (props: Props) => {
     const redirectToServices = () => { props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Services" }] })); }
 
     const attemptLogin = (email: string, password: string) => {
-        console.log(email);
-        console.log(password)
         ApiHelper.apiPostAnonymous(EnvironmentHelper.AccessManagementApiUrl + "/users/login", { email: email, password: password }).then((data: LoginResponseInterface) => {
             if (data.errors?.length > 0) redirectToLogin();
             else {
@@ -42,10 +40,8 @@ export const Splash = (props: Props) => {
 
 
     const switchApp = () => {
-        console.log(JSON.stringify(CachedData.church));
         const req: SwitchAppRequestInterface = { appName: "CHUMS", churchId: CachedData.church?.id || 0 }
         ApiHelper.apiPost(EnvironmentHelper.AccessManagementApiUrl + "/users/switchApp", req).then((data: LoginResponseInterface) => {
-            console.log(JSON.stringify(data));
             ApiHelper.jwt = data.token;
             redirectToServices();
         });

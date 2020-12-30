@@ -13,12 +13,7 @@ export const Services = (props: Props) => {
 
     const loadData = () => {
         setIsLoading(true);
-        ApiHelper.apiGet("/services").then(data => {
-            console.log(ApiHelper.jwt)
-            console.log("***data***")
-            console.log(JSON.stringify(data));
-            setServices(data); setIsLoading(false);
-        });
+        ApiHelper.apiGet("/services").then(data => { setServices(data); setIsLoading(false); });
     }
 
     const selectService = (serviceId: number) => {
