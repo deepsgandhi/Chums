@@ -157,7 +157,7 @@ context("Groups", () => {
       .should("not.contain", `${persons[0].first} ${persons[0].last}`);
   });
 
-  it("Add Person to session", () => {
+  it("Add Person to session & check trends", () => {
     const persons = [{ first: "Benny", last: "Beltik" }];
     const group = {
       categoryName: "Interaction",
@@ -217,6 +217,8 @@ context("Groups", () => {
     cy.get("[data-cy=group-session-box] > [data-cy=content]")
       .should("exist")
       .should("contain", `${persons[0].first} ${persons[0].last}`);
+    cy.get("[data-cy=trends-tab]").should('exist').click();
+    cy.get("#reactgooglegraph-1").should('exist')
   });
 
   function addPersonToGroup($token, payload) {

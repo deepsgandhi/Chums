@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { DB } from "../db";
 import { AttendanceRecord } from "../models";
+import { DateTimeHelper } from '../helpers/DateTimeHelper'
 
 @injectable()
 export class AttendanceRepository {
@@ -45,8 +46,8 @@ export class AttendanceRepository {
         const field = this.getGroupByField(groupBy);
         const params = [];
         params.push(churchId);
-        params.push(startDate);
-        params.push(endDate);
+        params.push(DateTimeHelper.toMysqlDate(startDate));
+        params.push(DateTimeHelper.toMysqlDate(endDate));
 
         let sql = "SELECT ";
         if (trend) sql += "week(v.visitDate,0) as week, ";

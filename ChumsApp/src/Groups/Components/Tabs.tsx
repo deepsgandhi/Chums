@@ -55,7 +55,7 @@ export const Tabs: React.FC<Props> = (props) => {
 
         if (UserHelper.checkAccess('Group Members', 'View')) { tabs.push(getTab('members', 'fas fa-users', 'Members')); defaultTab = 'members'; }
         if (UserHelper.checkAccess('Attendance', 'View') && props.group?.trackAttendance) { tabs.push(getTab('sessions', 'far fa-calendar-alt', 'Sessions', 'sessions-tab')); if (defaultTab === '') defaultTab = 'sessions'; }
-        if (UserHelper.checkAccess('Attendance', 'View Summary') && props.group?.trackAttendance) { tabs.push(getTab('trends', 'far fa-chart-bar', 'Trends')); if (defaultTab === '') defaultTab = 'trends'; }
+        if (UserHelper.checkAccess('Attendance', 'View Summary') && props.group?.trackAttendance) { tabs.push(getTab('trends', 'far fa-chart-bar', 'Trends', 'trends-tab')); if (defaultTab === '') defaultTab = 'trends'; }
         if (selectedTab === '' && defaultTab !== '') setSelectedTab(defaultTab);
         return tabs;
     }
