@@ -1,4 +1,6 @@
-import { VisitSessionInterface } from "./ApiHelper";
+import { GroupInterface, ServiceTimeInterface, VisitSessionInterface } from "./ApiHelper";
+import { CachedData } from "./CachedData";
+import { Utilities } from "./Utilities";
 
 export class VisitSessionHelper {
 
@@ -13,6 +15,34 @@ export class VisitSessionHelper {
             if (visitSessions[i].session?.serviceTimeId === serviceTimeId) visitSessions.splice(i, 1);
         }
         if (groupId > 0) visitSessions.push({ session: { serviceTimeId: serviceTimeId, groupId: groupId, displayName: displayName } });
+    }
+
+    public static getDisplayText = (visitSession: VisitSessionInterface) => {
+        const st: ServiceTimeInterface = Utilities.getById(CachedData.serviceTimes, visitSession.session?.serviceTimeId || 0);
+        const group: GroupInterface = Utilities.getById(st?.groups || [], visitSession.session?.groupId || 0);
+        return st.name + " - " + group.name;
+    }
+
+    public static getDisplaySessions = (visitSessions: VisitSessionInterface[]) => {
+        const items: string[] = [];
+        visitSessions.forEach(vs => { items.push(VisitSessionHelper.getDisplayText(vs)) });
+        return items.join();
+    }
+
+    public static getPickupText = (visitSession: VisitSessionInterface) => {
+        const st: ServiceTimeInterface = Utilities.getById(CachedData.serviceTimes, visitSession.session?.serviceTimeId || 0);
+        const group: GroupInterface = Utilities.getById(st?.groups || [], visitSession.session?.groupId || 0);
+        if (group.parentPickup) return group.name;
+        else return "";
+    }
+
+    public static getPickupSessions = (visitSessions: VisitSessionInterface[]) => {
+        const items: string[] = [];
+        visitSessions.forEach(vs => {
+            const name = VisitSessionHelper.getDisplayText(vs)
+            if (name !== "") items.push(name);
+        });
+        return items.join();
     }
 
 }

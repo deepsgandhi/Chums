@@ -1,53 +1,44 @@
 import React from 'react'
-import { TextInput, View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
-import { Container, Content } from 'native-base'
-import styles from '../myStyles'
-import Header from './Components/Header'
+import { TextInput, View, Text, Image, FlatList, ActivityIndicator, Keyboard } from 'react-native'
+import { Container } from 'native-base'
 import Ripple from 'react-native-material-ripple'
-import { RootStackParamList } from '../../App'
 import { RouteProp } from '@react-navigation/native';
-import { EnvironmentHelper, ApiHelper, Utilities, screenNavigationProps, PersonInterface, CachedData } from "../Helpers";
+import { ScreenList } from './ScreenList';
+import { Header } from './Components'
+import { EnvironmentHelper, ApiHelper, Utilities, screenNavigationProps, PersonInterface, CachedData, Styles, StyleConstants } from "../Helpers";
 
-type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Lookup'>;
+type ProfileScreenRouteProp = RouteProp<ScreenList, 'Lookup'>;
 interface Props { navigation: screenNavigationProps; route: ProfileScreenRouteProp; }
 
 export const Lookup = (props: Props) => {
-    const [isLoading, setIsLoading] = React.useState<boolean>(true);
+    const [hasSearched, setHasSearched] = React.useState<boolean>(false);
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [people, setPeople] = React.useState([]);
     const [phone, setPhone] = React.useState("");
+
+    const loadHouseholdMembers = async () => { return ApiHelper.apiGet('/people/household/' + CachedData.householdId).then(data => { CachedData.householdMembers = data }); }
+
+    const loadExistingVisits = async () => {
+        const url = '/visits/checkin?serviceId=' + CachedData.serviceId + '&householdId=' + CachedData.householdId + '&include=visitSessions';
+        ApiHelper.apiGet(url).then(data => { CachedData.existingVisits = [...data]; CachedData.pendingVisits = [...data]; });
+    }
 
     const selectPerson = (person: PersonInterface) => {
         setIsLoading(true);
         CachedData.householdId = person.householdId || 0;
-        let promises: Promise<any>[] = [];
-        promises.push(loadHouseholdMembers());
-        promises.push(loadExistingVisits());
-        Promise.all(promises).then(() => {
-            setIsLoading(false);
-            props.navigation.navigate("Household")
-        });
+        Promise.all([loadHouseholdMembers(), loadExistingVisits()]).then(() => { setIsLoading(false); props.navigation.navigate("Household") });
     }
-
-    const loadHouseholdMembers = async () => {
-        return ApiHelper.apiGet('/people/household/' + CachedData.householdId).then(data => { CachedData.householdMembers = data });
-    }
-
-    const loadExistingVisits = async () => {
-        ApiHelper.apiGet('/visits/checkin?serviceId=' + CachedData.serviceId + '&householdId=' + CachedData.householdId + '&include=visitSessions').then(data => {
-            CachedData.existingVisits = [...data];
-            CachedData.pendingVisits = [...data];
-        });
-    }
-
 
     const handleSearch = () => {
         if (phone === '') Utilities.snackBar("Please enter phone number")
         else {
+            Keyboard.dismiss();
+            setHasSearched(true);
+            setIsLoading(true);
             ApiHelper.apiGet('/people/search/phone?number=' + phone).then(data => {
                 setIsLoading(false);
-                if (data.length == 0) Utilities.snackBar("Record not found")
-                else if (data !== 'error') setPeople(data)
-                else Utilities.snackBar("Something went wrong")
+                setPeople(data);
+                if (data.length == 0) Utilities.snackBar("No matches found");
             });
         }
     }
@@ -55,31 +46,29 @@ export const Lookup = (props: Props) => {
     const getRow = (data: any) => {
         const person: PersonInterface = data.item;
         return (
-            <Ripple style={styles.flatlistMainView} onPress={() => { selectPerson(person) }} >
-                <Image source={{ uri: EnvironmentHelper.ImageBaseUrl + person.photo }} style={styles.personPhoto} resizeMode="contain" />
-                <Text style={[styles.personName, { marginLeft: '7%' }]}>{person.name.display}</Text>
+            <Ripple style={Styles.flatlistMainView} onPress={() => { selectPerson(person) }} >
+                <Image source={{ uri: EnvironmentHelper.ImageBaseUrl + person.photo }} style={Styles.personPhoto} resizeMode="contain" />
+                <Text style={[Styles.personName, { marginLeft: '7%' }]}>{person.name.display}</Text>
             </Ripple>
         )
     }
 
     const getResults = () => {
-        return (<Content contentContainerStyle={{ flex: (!isLoading) ? 1 : 0 }}>
-            <View style={{ marginTop: '3%' }}>
-                <FlatList data={people} renderItem={getRow} />
-            </View>
-        </Content>);
+        if (!hasSearched) return null;
+        else if (isLoading) return (<ActivityIndicator size="large" color={StyleConstants.baseColor1} animating={isLoading} style={{ marginTop: '25%' }} />)
+        else return (<FlatList data={people} renderItem={getRow} keyExtractor={(item: PersonInterface) => item.id?.toString() || "0"} />);
     }
 
     return (
         <Container>
             <Header />
-            <View style={styles.mainContainer}>
-                <Text style={styles.H1}>Search by phone number:</Text>
-                <View style={styles.searchView} >
-                    <TextInput placeholder='Enter mobile no' onChangeText={(value) => { setPhone(value) }} keyboardType="numeric" style={styles.searchTextInput} />
-                    <TouchableOpacity style={styles.searchButton} onPress={handleSearch} >
-                        <Text style={styles.searchButtonText}>Search</Text>
-                    </TouchableOpacity>
+            <View style={Styles.mainContainer}>
+                <Text style={Styles.H1}>Search by phone number:</Text>
+                <View style={Styles.searchView} >
+                    <TextInput placeholder='Enter mobile no' onChangeText={(value) => { setPhone(value) }} keyboardType="numeric" style={Styles.searchTextInput} />
+                    <Ripple style={Styles.searchButton} onPress={handleSearch} >
+                        <Text style={Styles.searchButtonText}>Search</Text>
+                    </Ripple>
                 </View>
                 {getResults()}
             </View>

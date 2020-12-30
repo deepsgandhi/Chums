@@ -1,9 +1,12 @@
-package com.chums;
+package org.chums;
 
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.NativeModule;
@@ -12,6 +15,8 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class PrinterHelper extends  ReactContextBaseJavaModule  {
     public static String Status = "Pending init";
@@ -19,13 +24,28 @@ public class PrinterHelper extends  ReactContextBaseJavaModule  {
     static Context context = null;
     static Runnable statusChangeRunnable;
     public static boolean readyToPrint=false;
+    static ReactContext reactContext = null;
 
-    public PrinterHelper(ReactContext reactContext) {
-
+    public PrinterHelper(ReactContext _reactContext) {
+        reactContext = _reactContext;
     }
 
+    @ReactMethod
+    public void getStatus(Callback cb)
+    {
+        cb.invoke(PrinterHelper.Status);
+    }
+
+    private void sendStatusUpdate() {
+        WritableMap params = Arguments.createMap();
+        params.putString("status", PrinterHelper.Status);
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("StatusUpdated", params);
+    }
+
+
+
 @ReactMethod
-    public static void init()
+    public void init()
     {
         System.out.println("Print Method call");
         Runnable r = new Runnable() { @Override public void run() {
@@ -42,7 +62,7 @@ public class PrinterHelper extends  ReactContextBaseJavaModule  {
         phh = new PrintHandHelper(r);
     }
 
-    public static void setStatus(String status)
+    public void setStatus(String status)
     {
         Status = status;
         if (statusChangeRunnable!=null){
@@ -54,27 +74,34 @@ public class PrinterHelper extends  ReactContextBaseJavaModule  {
         checkPrinterStatus();
     }
 
-    public static void bind(Context _context, Runnable runnable)
+    @ReactMethod
+    public void bind(Callback statusChangeCallback)
     {
+        // Runnable runnable
+        Activity activity = reactContext.getCurrentActivity();
+        context = (activity==null) ? reactContext : activity;
         if (phh==null) init();
-        context = _context;
-        statusChangeRunnable = runnable;
+
+        statusChangeRunnable = new Runnable() { @Override public void run() {  sendStatusUpdate();  } };
+        getStatus(statusChangeCallback);
         checkPrinterStatus();
     }
 
-    public static void checkPrinterStatus()
+
+    public void checkPrinterStatus()
     {
         if (Status=="Pending init") { setStatus("Initializing print service."); phh.initSdk(context); }
         else if (phh.Status == "PrintHand not installed.") setStatus("PrintHand required to enable printing.  You may still checkin.");
         else if (Status=="Initialized") { attachToPrinter(); }
     }
 
-    private static void attachToPrinter()
+    private void attachToPrinter()
     {
         setStatus("Detecting printer.");
         phh.attach(context);
     }
 
+    @ReactMethod
     public void configure()
     {
         try {

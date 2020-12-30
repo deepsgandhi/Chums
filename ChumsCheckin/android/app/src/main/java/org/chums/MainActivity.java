@@ -1,4 +1,4 @@
-package com.chums;
+package org.chums;
 
 import com.facebook.react.ReactActivity;
 

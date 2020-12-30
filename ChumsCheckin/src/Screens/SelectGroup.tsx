@@ -1,47 +1,35 @@
 import React from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { Container, Icon } from 'native-base'
-import styles from '../myStyles'
 import Ripple from 'react-native-material-ripple';
-import { darkColor } from '../Constant';
-import { RootStackParamList } from '../../App'
 import { RouteProp } from '@react-navigation/native';
-import Header from './Components/Header'
-import { screenNavigationProps, VisitHelper, VisitSessionHelper, CachedData } from "../Helpers"
+import { ScreenList } from './ScreenList'
+import { Header } from './Components'
+import { screenNavigationProps, VisitHelper, VisitSessionHelper, CachedData, Styles, StyleConstants, GroupInterface } from "../Helpers"
 
-
-type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'SelectGroup'>;
-
+type ProfileScreenRouteProp = RouteProp<ScreenList, 'SelectGroup'>;
 interface Props { navigation: screenNavigationProps; route: ProfileScreenRouteProp; }
+interface GroupCategoryInterface { key: number, name: string, items: GroupInterface[] }
 
 export const SelectGroup = (props: Props) => {
-    const [event, setEvent] = React.useState(-1);
-    const [groupTree, setGroupTree] = React.useState<any[]>([]);
+    const [selectedCategory, setSelectedCategory] = React.useState(-1);
+    const [groupTree, setGroupTree] = React.useState<GroupCategoryInterface[]>([]);
 
-    const loadData = () => {
-        var category = ''
-        var gt = [...groupTree];
-
-        props.route.params.serviceTime?.groups?.map((item: any, i: number) => {
-            if (item.categoryName != category) {
-                category = item.categoryName
-                gt.push({ key: gt.length, name: category, SubCategory: [{ subName: item.name, groupId: item.id }] })
-            }
-            else gt[gt.length - 1].SubCategory.push({ subName: item.name, groupId: item.id })
-        });
-        console.log(gt.length);
+    const buildTree = () => {
+        var category = "";
+        var gt: GroupCategoryInterface[] = [];
+        props.route.params.serviceTime?.groups?.forEach(g => {
+            if (g.categoryName !== category) gt.push({ key: gt.length, name: g.categoryName || "", items: [] })
+            gt[gt.length - 1].items.push(g);
+            category = g.categoryName || "";
+        })
         setGroupTree(gt);
     }
 
-    React.useEffect(loadData, []);
+    const handleCategoryClick = (value: number) => { setSelectedCategory((selectedCategory == value) ? -1 : value); }
+    const handleNone = () => { selectGroup(0, "NONE"); }
 
-    const eventGuest = (value: number) => {
-        if (event == value) setEvent(-1);
-        else setEvent(value);
-    }
-
-
-    const backScreen = (id: number, name: string) => {
+    const selectGroup = (id: number, name: string) => {
         const personId = props.route.params.personId;
         var visit = VisitHelper.getByPersonId(CachedData.pendingVisits, personId);
         if (visit === null) {
@@ -59,40 +47,42 @@ export const SelectGroup = (props: Props) => {
         const item: any = data.item;
         return (
             <View>
-                <Ripple style={styles.ActivityGroupRipple} onPress={(index) => { eventGuest(item.key) }}  >
-                    <Icon name={(event === item.key) ? 'up' : 'down'} type="AntDesign" style={styles.flatlistDropIcon} />
-                    <Text style={[styles.activityText]}>{item.name}</Text>
+                <Ripple style={Styles.flatlistMainView} onPress={() => { handleCategoryClick(item.key) }}  >
+                    <Icon name={(selectedCategory === item.key) ? 'up' : 'down'} type="AntDesign" style={Styles.flatlistDropIcon} />
+                    <Text style={[Styles.bigLinkButtonText]}>{item.name}</Text>
                 </Ripple>
-                { getExpanded(event, item)}
+                { getExpanded(selectedCategory, item)}
             </View>
         )
     }
 
-    const getExpanded = (event: any, item: any) => {
-        if (event !== item.key) return null;
+    const getExpanded = (selectedCategory: number, category: GroupCategoryInterface) => {
+        if (selectedCategory !== category.key) return null;
         else {
-            return (
-                item.SubCategory.map((item: any) =>
-                    <View>
-                        <Ripple style={styles.ActivityGroupRipple} onPress={() => backScreen(item.groupId, item.subName)}>
-                            <Text style={[styles.activityText, { marginLeft: '10%' }]}>{item.subName}</Text>
-                        </Ripple>
-                    </View>
-                ));
+            const result: JSX.Element[] = [];
+            category.items.forEach(g => {
+                result.push(<Ripple style={[Styles.expandedRow, { justifyContent: "flex-start" }]} onPress={() => selectGroup(g.id || 0, g.name || "")}>
+                    <Text style={[Styles.bigLinkButtonText, { marginLeft: '10%' }]}>{g.name}</Text>
+                </Ripple>);
+            })
+            return result;
         }
     }
 
+    React.useEffect(buildTree, []);
 
     return (
         <Container>
-            <View style={styles.guestListMainContainer}>
-                <Header />
-                <FlatList style={{ marginTop: '3%' }} data={groupTree} renderItem={getRow} />
-                <Ripple style={styles.noneButton} rippleColor={darkColor} onPress={() => backScreen(0, "NONE")}>
-                    <Text style={styles.checkingButtonText}>NONE</Text>
-                </Ripple>
+            <Header />
+            <View style={Styles.fullWidthContainer}>
+                <FlatList data={groupTree} renderItem={getRow} keyExtractor={(item: any) => item.key} />
+                <View style={Styles.blockButtons}>
+                    <Ripple style={[Styles.blockButton, { backgroundColor: StyleConstants.redColor }]} onPress={handleNone}>
+                        <Text style={Styles.blockButtonText}>NONE</Text>
+                    </Ripple>
+                </View>
             </View>
         </Container>
-    )
+    );
 
 }

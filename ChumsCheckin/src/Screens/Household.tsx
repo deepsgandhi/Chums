@@ -1,45 +1,35 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text } from 'react-native'
 import { Container } from 'native-base'
-import styles from '../myStyles'
 import Ripple from 'react-native-material-ripple';
-import { lightGrayColor } from '../Constant';
-import { RootStackParamList } from '../../App'
 import { RouteProp } from '@react-navigation/native';
-import Header from './Components/Header'
-import { screenNavigationProps, CachedData, VisitInterface } from "../Helpers"
-import { MemberList } from './Components/MemberList';
+import { ScreenList } from './ScreenList'
+import { Header, MemberList } from './Components'
+import { screenNavigationProps, CachedData, VisitInterface, Styles } from "../Helpers"
 
-type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Household'>;
+type ProfileScreenRouteProp = RouteProp<ScreenList, 'Household'>;
 interface Props { navigation: screenNavigationProps; route: ProfileScreenRouteProp; }
 
 export const Household = (props: Props) => {
-
     const [pendingVisits, setPendingVisits] = React.useState<VisitInterface[]>([]);
-
-    const init = () => {
-        props.navigation.addListener('focus', () => { setPendingVisits([...CachedData.pendingVisits]); });
-    }
-
-    const checkin = () => {
-        props.navigation.navigate("CheckinComplete");
-    }
+    const init = () => { props.navigation.addListener('focus', () => { setPendingVisits([...CachedData.pendingVisits]); }); }
+    const checkin = () => { props.navigation.navigate("CheckinComplete"); }
+    const handleAddGuest = () => { props.navigation.navigate("AddGuest"); }
 
     React.useEffect(init, []);
 
     return (
         <Container>
-            <View style={styles.guestListMainContainer}>
+            <View style={Styles.fullWidthContainer}>
                 <Header />
-                <TouchableOpacity style={styles.addGuestButton} onPress={() => { props.navigation.navigate("AddGuest") }}>
-                    <Text style={styles.addGuestButtonText}>ADD GUEST</Text>
-                </TouchableOpacity>
+                <View style={[Styles.blockButtons, { marginBottom: "3%" }]}>
+                    <Ripple style={Styles.blockButton} onPress={handleAddGuest}><Text style={Styles.blockButtonText}>ADD GUEST</Text></Ripple>
+                </View>
                 <MemberList navigation={props.navigation} pendingVisits={pendingVisits} />
-                <Ripple style={[styles.checkingButton]} rippleColor={lightGrayColor} onPress={() => checkin()}>
-                    <Text style={styles.checkingButtonText}>CHECKIN</Text>
-                </Ripple>
+                <View style={[Styles.blockButtons]}>
+                    <Ripple style={[Styles.blockButton]} onPress={checkin}><Text style={Styles.blockButtonText}>CHECKIN</Text></Ripple>
+                </View>
             </View>
         </Container>
     )
-
 }

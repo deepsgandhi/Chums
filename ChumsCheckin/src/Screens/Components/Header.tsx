@@ -1,23 +1,30 @@
 import React from 'react'
-import { View, Image, StatusBar, Text, NativeModules, TouchableOpacity } from 'react-native'
-import styles from '../../myStyles'
+import { View, Image, StatusBar, Text, NativeModules, NativeEventEmitter } from 'react-native'
+import Ripple from 'react-native-material-ripple';
+import { Styles } from '../../Helpers'
 
-const Header = () => {
+export const Header = () => {
+    const [status, setStatus] = React.useState("");
+    var eventEmitter: NativeEventEmitter;
 
-    const status = NativeModules.PrinterHelper.Status;
+    const handleClick = () => { NativeModules.PrinterHelper.configure(); }
+    const receiveNativeStatus = (receivedStatus: string) => { setStatus(receivedStatus); }
 
-    const handleClick = () => {
-        NativeModules.PrinterHelper.configure();
+    const init = () => {
+        NativeModules.PrinterHelper.bind(receiveNativeStatus);
+        eventEmitter = new NativeEventEmitter(NativeModules.PrinterHelper);
+        eventEmitter.addListener('StatusUpdated', (event) => { setStatus(event.status); });
     }
 
+    React.useEffect(init, []);
+
     return (
-        <View style={styles.headerImageView}>
+        <View style={Styles.headerImageView}>
             <StatusBar backgroundColor="#08A1CD"></StatusBar>
-            <TouchableOpacity style={styles.printerStatus} onPress={() => { handleClick() }} >
+            <Ripple style={Styles.printerStatus} onPress={() => { handleClick() }} >
                 <Text style={{ backgroundColor: "#09A1CD", color: "#FFF" }} >{status} - Configure Printer</Text>
-            </TouchableOpacity>
-            <Image source={require('../../Images/logo1.png')} style={styles.headerImage} resizeMode="contain" />
+            </Ripple>
+            <Image source={require('../../Images/logo1.png')} style={Styles.headerImage} resizeMode="contain" />
         </View>
     )
 }
-export default Header
