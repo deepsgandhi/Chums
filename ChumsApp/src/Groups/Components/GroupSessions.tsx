@@ -64,7 +64,7 @@ export const GroupSessions: React.FC<Props> = (props) => {
         else return (
             <InputGroup>
                 <FormControl as="select" value={session?.id} onChange={selectSession} >{getSessionOptions()}</FormControl>
-                <InputGroup.Append><Button variant="primary" onClick={handleAdd} ><i className="far fa-calendar-alt"></i> New</Button></InputGroup.Append>
+                <InputGroup.Append><Button variant="primary" onClick={handleAdd} data-cy="create-new-session" ><i className="far fa-calendar-alt"></i> New</Button></InputGroup.Append>
             </InputGroup>
         );
     }
@@ -94,16 +94,16 @@ export const GroupSessions: React.FC<Props> = (props) => {
     React.useEffect(() => { handleSessionSelected(); }, [session, handleSessionSelected]);
 
     var content = <></>;
-    if (sessions.length === 0) content = <div className="alert alert-warning" role="alert"><b>There are no sessions.</b>  Please add a new session to continue.</div>
+    if (sessions.length === 0) content = <div className="alert alert-warning" role="alert" data-cy="no-session-msg"><b>There are no sessions.</b>  Please add a new session to continue.</div>
     else content = (<>
         <span className="float-right"><ExportLink data={visitSessions} spaceAfter={true} filename="visits.csv" /></span>
-        <b>Attendance for {props.group.name}</b>
+        <b data-cy="session-present-msg">Attendance for {props.group.name}</b>
         <Table id="groupMemberTable">
             <thead><tr><th></th><th>Name</th><th></th></tr></thead>
             <tbody>{getRows()}</tbody>
         </Table>
     </>);
 
-    return (<DisplayBox id="groupSessionsBox" headerText="Sessions" headerIcon="far fa-calendar-alt" editContent={getHeaderSection()} >{content}</DisplayBox>);
+    return (<DisplayBox id="groupSessionsBox" data-cy="group-session-box" headerText="Sessions" headerIcon="far fa-calendar-alt" editContent={getHeaderSection()} >{content}</DisplayBox>);
 }
 

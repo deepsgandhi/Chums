@@ -72,7 +72,7 @@ export const Attendance: React.FC<Props> = (props) => {
             row.push('');
             rows.push(row);
         }
-        console.log(rows);
+
         return rows;
     }
 
@@ -105,6 +105,7 @@ export const Attendance: React.FC<Props> = (props) => {
                 </Col>
             </Row>
             <Chart
+                graphID="column-chart-cy"
                 chartType="ColumnChart"
                 data={getChartRows()}
                 width="100%"

@@ -49,7 +49,7 @@ export const GroupMembers: React.FC<Props> = (props) => {
         var rows = [];
         for (let i = 0; i < groupMembers.length; i++) {
             var gm = groupMembers[i];
-            var editLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} className="text-danger" ><i className="fas fa-user-times"></i> Remove</a> : <></>
+            var editLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} data-cy={`remove-member-${i}`} className="text-danger" ><i className="fas fa-user-times"></i> Remove</a> : <></>
             rows.push(
                 <tr key={i}>
                     <td><img src={PersonHelper.getPhotoUrl(gm.person)} alt="avatar" /></td>
@@ -70,7 +70,7 @@ export const GroupMembers: React.FC<Props> = (props) => {
     }, [props.addedPerson, handleAdd]);
 
     return (
-        <DisplayBox id="groupMembersBox" headerText="Group Members" headerIcon="fas fa-users" editContent={getEditContent()} >
+        <DisplayBox id="groupMembersBox" data-cy="group-members-tab" headerText="Group Members" headerIcon="fas fa-users" editContent={getEditContent()} >
             <Table id="groupMemberTable">
                 <thead><tr><th></th><th>Name</th><th>Action</th></tr></thead>
                 <tbody>{getRows()}</tbody>

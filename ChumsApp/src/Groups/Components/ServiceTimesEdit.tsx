@@ -59,9 +59,9 @@ export const ServiceTimesEdit: React.FC<Props> = (props) => {
             <label>Service Times (optional)</label>
             <Table><tbody>{getRows()}</tbody></Table>
             <InputGroup>
-                <FormControl as="select" value={addServiceTimeId} onChange={handleChange} >{getOptions()}</FormControl>
+                <FormControl as="select" data-cy="choose-service-time" value={addServiceTimeId} onChange={handleChange} >{getOptions()}</FormControl>
                 <InputGroup.Append>
-                    <Button variant="primary" onClick={handleAdd}><i className="fas fa-plus"></i> Add</Button>
+                    <Button variant="primary" data-cy="add-service-time" onClick={handleAdd}><i className="fas fa-plus"></i> Add</Button>
                 </InputGroup.Append>
             </InputGroup>
         </div>

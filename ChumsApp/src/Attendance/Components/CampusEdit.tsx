@@ -8,7 +8,7 @@ export const CampusEdit: React.FC<Props> = (props) => {
     const [errors, setErrors] = React.useState([]);
 
     const handleSave = () => { if (validate()) ApiHelper.apiPost('/campuses', [campus]).then(props.updatedFunction); }
-    const handleDelete = () => { if (window.confirm('Are you sure you wish to permanently delete this campus?')) ApiHelper.apiDelete('/campus/' + campus.id).then(props.updatedFunction); }
+    const handleDelete = () => { if (window.confirm('Are you sure you wish to permanently delete this campus?')) ApiHelper.apiDelete('/campuses/' + campus.id).then(props.updatedFunction); }
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
     const validate = () => {
         var errors = [];

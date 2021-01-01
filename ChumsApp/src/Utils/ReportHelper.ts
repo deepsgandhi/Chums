@@ -36,7 +36,7 @@ export class ReportHelper {
     }
 
     static getPrettyValue(col: ReportColumnInterface, value: any): string {
-        var result = value.toString();
+        var result = value && value.toString();
         switch (col.formatType) {
             case "date":
                 try {

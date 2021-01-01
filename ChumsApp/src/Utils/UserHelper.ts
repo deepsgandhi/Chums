@@ -20,7 +20,6 @@ export class UserHelper {
             UserHelper.currentChurch.apps.forEach(app => {
                 if (app.name === "CHUMS") {
                     UserHelper.currentPermissions = app.permissions;
-                    console.log(UserHelper.currentPermissions);
                 }
             })
 

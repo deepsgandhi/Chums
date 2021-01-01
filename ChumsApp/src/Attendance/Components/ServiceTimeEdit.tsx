@@ -10,22 +10,23 @@ export const ServiceTimeEdit: React.FC<Props> = (props) => {
     const [serviceTime, setServiceTime] = React.useState({} as ServiceTimeInterface);
     const [services, setServices] = React.useState([] as ServiceInterface[]);
     const [errors, setErrors] = React.useState([]);
-    const isSubscribed =useRef(true);
 
-    const handleSave = () => { 
-        if (validate()) ApiHelper.apiPost('/servicetimes', [serviceTime]).then(props.updatedFunction); }
+    const handleSave = () => {
+        if (validate()) {
+            ApiHelper.apiPost('/servicetimes', [serviceTime]).then(props.updatedFunction);
+        } 
+    }
     const handleDelete = () => { if (window.confirm('Are you sure you wish to permanently delete this service time?')) ApiHelper.apiDelete('/servicetimes/' + serviceTime.id).then(props.updatedFunction); }
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
   
     const loadData = React.useCallback(() => {
-        ApiHelper.apiGet('/services').then(data => {
-            if(isSubscribed.current){
+        ApiHelper.apiGet('/services').then(data => {            
             setServices(data);
             if (data.length > 0) {
                 var st = { ...props.serviceTime };
                 st.serviceId = data[0].id;
                 setServiceTime(st);
-            }}
+            }
         });
     }, [props.serviceTime]);
 
@@ -55,8 +56,10 @@ export const ServiceTimeEdit: React.FC<Props> = (props) => {
     }
 
 
-    React.useEffect(() => { setServiceTime(props.serviceTime); loadData(); 
-return ()=>{isSubscribed.current = false}}, [props.serviceTime, loadData]);
+    React.useEffect(() => { 
+        setServiceTime(props.serviceTime); 
+        loadData();
+    }, [props.serviceTime, loadData]);
 
     if (serviceTime === null || serviceTime.id === undefined) return null;
 

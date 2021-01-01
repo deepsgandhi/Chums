@@ -26,8 +26,7 @@ export const ServiceEdit: React.FC<Props> = (props) => {
             if (data.length > 0) {
                 if (service?.campusId === undefined || service?.campusId === null || service?.campusId === 0) {
                     var s = { ...props.service };
-                    s.campusId = data[0].id;
-                    console.log(s.campusId);
+                    s.campusId = data[0].id;                    
                     setService(s);
                 }
             }}
