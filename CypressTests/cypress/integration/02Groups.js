@@ -37,15 +37,53 @@ context("Groups", () => {
         })
           .its("body")
           .then((groups) => {
-            groups.map(group => {
+            groups.map((group) => {
               cy.request({
                 method: "DELETE",
                 url: `${api_domain}/groups/${group.id}`,
                 headers: {
-                  Authorization: `Bearer ${$token}`
-                }
-              })
-            })
+                  Authorization: `Bearer ${$token}`,
+                },
+              });
+            });
+          });
+        cy.request({
+          method: "GET",
+          url: `${api_domain}/campuses`,
+          headers: {
+            Authorization: `Bearer ${$token}`,
+          },
+        })
+          .its("body")
+          .then((campuses) => {
+            campuses.map((campus) => {
+              cy.request({
+                method: "DELETE",
+                url: `${api_domain}/campuses/${campus.id}`,
+                headers: {
+                  Authorization: `Bearer ${$token}`,
+                },
+              });
+            });
+          });
+        cy.request({
+          method: "GET",
+          url: `${api_domain}/servicetimes`,
+          headers: {
+            Authorization: `Bearer ${$token}`,
+          },
+        })
+          .its("body")
+          .then((serviceTimes) => {
+            serviceTimes.map((serviceTime) => {
+              cy.request({
+                method: "DELETE",
+                url: `${api_domain}/servicetimes/${serviceTime.id}`,
+                headers: {
+                  Authorization: `Bearer ${$token}`,
+                },
+              });
+            });
           });
       });
   });
@@ -157,12 +195,15 @@ context("Groups", () => {
       .should("not.contain", `${persons[0].first} ${persons[0].last}`);
   });
 
-  it("Add Person to session & check trends", () => {
+  it("Add Person to session and Check Trends", () => {
     const persons = [{ first: "Benny", last: "Beltik" }];
     const group = {
       categoryName: "Interaction",
       name: "Tabs",
     };
+    const CAMPUS_NAME = "Trinity";
+    const SERVICE_NAME = "Study";
+    const SERVICE_TIME = "7:00";
     // nesting is better than using async await in case of cypress as the docs suggest.
     cy.getCookie("jwt")
       .should("have.a.property", "value")
@@ -189,6 +230,49 @@ context("Groups", () => {
                   });
               });
           });
+        cy.request({
+          method: "POST",
+          url: `${api_domain}/campuses`,
+          headers: {
+            Authorization: `Bearer ${$token}`,
+          },
+          body: [
+            {
+              id: 0,
+              name: CAMPUS_NAME,
+            },
+          ],
+        })
+          .its("body")
+          .then((res) => {
+            const campus = res[0];
+            const servicesPayload = [
+              { id: 0, campusId: campus.id, name: SERVICE_NAME },
+            ];
+            cy.request({
+              method: "POST",
+              url: `${api_domain}/services`,
+              headers: {
+                Authorization: `Bearer ${$token}`,
+              },
+              body: servicesPayload,
+            })
+              .its("body")
+              .then((services) => {
+                const service = services[0];
+                const serviceTimePayload = [
+                  { id: 0, serviceId: service.id, name: SERVICE_TIME },
+                ];
+                cy.request({
+                  method: "POST",
+                  url: `${api_domain}/servicetimes`,
+                  headers: {
+                    Authorization: `Bearer ${$token}`,
+                  },
+                  body: serviceTimePayload,
+                }).its("body");
+              });
+          });
       });
     cy.visit("/groups");
     cy.get(`a:contains('${group.name}')`).should("exist").click();
@@ -199,15 +283,22 @@ context("Groups", () => {
       .should("exist")
       .select("Yes")
       .should("have.value", "true");
+    cy.get("[data-cy=choose-service-time]")
+      .should("exist")
+      .select(`${CAMPUS_NAME} - ${SERVICE_NAME} - ${SERVICE_TIME}`);
+    cy.get("[data-cy=add-service-time]").should("exist").click();
     cy.get("[data-cy=save-button]").click();
     cy.get("[data-cy=group-details-box]")
       .should("exist")
-      .should("contain", "Yes");
+      .should("contain", "Yes")
+      .and("contain", `${CAMPUS_NAME} - ${SERVICE_NAME} - ${SERVICE_TIME}`);
     cy.get("[data-cy=sessions-tab]").should("exist").click();
     cy.get("[data-cy=no-session-msg]").should("exist");
     cy.get("[data-cy=available-group-members]").should("exist");
     cy.get("[data-cy=create-new-session]").should("exist").click();
-    cy.get("[data-cy=add-session-box]").should("exist");
+    cy.get("[data-cy=add-session-box]")
+      .should("exist")
+      .should("contain", `${CAMPUS_NAME} - ${SERVICE_NAME} - ${SERVICE_TIME}`);
     cy.get("[data-cy=save-button]").should("exist").click();
     cy.get("[data-cy=session-present-msg]").should("exist");
     cy.get("[data-cy=available-group-members]")
@@ -217,8 +308,8 @@ context("Groups", () => {
     cy.get("[data-cy=group-session-box] > [data-cy=content]")
       .should("exist")
       .should("contain", `${persons[0].first} ${persons[0].last}`);
-    cy.get("[data-cy=trends-tab]").should('exist').click();
-    cy.get("#reactgooglegraph-1").should('exist')
+    cy.get("[data-cy=trends-tab]").should("exist").click();
+    cy.get("#column-chart-cy").should("exist");
   });
 
   function addPersonToGroup($token, payload) {

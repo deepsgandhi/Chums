@@ -33,8 +33,8 @@ export const Tabs: React.FC<Props> = (props) => {
 
         var filter = AttendanceHelper.createFilter();
         filter.groupId = props.group.id;
-        filter.startDate = Helper.getWeekSunday(new Date().getFullYear(), 1);
-        filter.endDate = new Date();
+        // filter.startDate = Helper.getWeekSunday(new Date().getFullYear(), 1);
+        // filter.endDate = new Date();
         filter.trend = true;
 
         var currentTab = null;
