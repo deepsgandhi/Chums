@@ -105,9 +105,9 @@ export class PersonController extends CustomBaseController {
     public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {
             let data = null;
-            const email: string = req.query.email.toString();
+            const email: string = req.query.email?.toString();
             console.log(email);
-            if (email !== null) data = await this.repositories.person.searchEmail(au.churchId, email);
+            if (email) data = await this.repositories.person.searchEmail(au.churchId, email);
             else {
                 let term: string = req.query.term.toString();
                 if (term === null) term = "";
