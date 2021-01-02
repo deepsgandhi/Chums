@@ -91,6 +91,11 @@ export class PersonRepository {
         );
     }
 
+
+    public async searchEmail(churchId: number, email: string) {
+        return DB.query("SELECT * FROM people WHERE churchId=? AND email like ? AND removed=0 LIMIT 100;", [churchId, "%" + email + "%"]);
+    }
+
     public async loadAttendees(churchId: number, campusId: number, serviceId: number, serviceTimeId: number, categoryName: string, groupId: number, startDate: Date, endDate: Date) {
         const params = [];
         params.push(churchId);

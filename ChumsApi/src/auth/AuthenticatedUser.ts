@@ -6,6 +6,7 @@ export class AuthenticatedUser {
     // public details: any;
     public id: number;
     public churchId: number;
+    public email: string;
     public appName: string;
     public permissions: string[];
 

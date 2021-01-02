@@ -104,9 +104,16 @@ export class PersonController extends CustomBaseController {
     @httpGet("/search")
     public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {
-            let term: string = req.query.term.toString();
-            if (term === null) term = "";
-            const data = await this.repositories.person.search(au.churchId, term);
+            let data = null;
+            const email: string = req.query.email.toString();
+            console.log(email);
+            if (email !== null) data = await this.repositories.person.searchEmail(au.churchId, email);
+            else {
+                let term: string = req.query.term.toString();
+                if (term === null) term = "";
+                data = await this.repositories.person.search(au.churchId, term);
+            }
+            console.log(JSON.stringify(data));
             return this.repositories.person.convertAllToModel(au.churchId, data);
         });
     }
@@ -121,6 +128,19 @@ export class PersonController extends CustomBaseController {
         });
     }
 
+    @httpPost("/:id/claim")
+    public async claim(@requestParam("id") id: number, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+        return this.actionWrapper(req, res, async (au) => {
+            const data = await this.repositories.person.load(au.churchId, id);
+            const person = this.repositories.person.convertToModel(au.churchId, data)
+            if (person.contactInfo.email === au.email) {
+                person.userId = au.id;
+                await this.repositories.person.save(person);
+                return person;
+            } else return this.json({}, 401);
+        });
+    }
+
     @httpGet("/userid/:userId")
     public async getByUserId(@requestParam("userId") userId: number, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {
@@ -128,9 +148,6 @@ export class PersonController extends CustomBaseController {
             return this.repositories.person.convertToModel(au.churchId, data);
         });
     }
-
-
-
 
 
     @httpGet("/")
