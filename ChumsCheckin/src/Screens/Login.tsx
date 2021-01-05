@@ -14,7 +14,11 @@ export const Login = (props: Props) => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
+    
+
     const login = () => {
+
+      
         if (email === '') Utilities.snackBar("Please enter your email address");
         else if (!Utilities.validateEmail(email)) Utilities.snackBar("Please enter valid email");
         else if (password === '') Utilities.snackBar("Please enter your password");
