@@ -135,7 +135,6 @@ android {
         versionCode 2
         versionName "1.1"
 
-//        multidexEnabled true
     }
     splits {
         abi {
@@ -191,6 +190,9 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
+
+
+
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.dynamixsoftware.printingsdk:printingSDK:12'
     implementation 'com.google.code.gson:gson:2.8.6'

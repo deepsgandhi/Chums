@@ -18,6 +18,7 @@ export const Splash = (props: Props) => {
             if (login) {
                 const email = response[1][1];
                 const password = response[2][1];
+            
                 attemptLogin(email || "", password || "");
             } else redirectToLogin();
         });
@@ -27,6 +28,7 @@ export const Splash = (props: Props) => {
     const redirectToServices = () => { props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Services" }] })); }
 
     const attemptLogin = (email: string, password: string) => {
+     
         ApiHelper.apiPostAnonymous(EnvironmentHelper.AccessManagementApiUrl + "/users/login", { email: email, password: password }).then((data: LoginResponseInterface) => {
             if (data.errors?.length > 0) redirectToLogin();
             else {

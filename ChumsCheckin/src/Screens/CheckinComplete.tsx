@@ -1,17 +1,21 @@
 import React from 'react'
-import { View, Text, NativeModules } from 'react-native'
-import { Container } from 'native-base'
+import { View, Text, NativeModules, Modal, Image } from 'react-native'
+import { Container, Icon } from 'native-base'
 import { CommonActions } from '@react-navigation/native';
 import { WebView } from "react-native-webview"
 import Ripple from 'react-native-material-ripple';
 import { Header } from './Components'
+import ViewShot from "react-native-view-shot";
 import { screenNavigationProps, CachedData, Utilities, ApiHelper, LabelHelper, Styles } from "../Helpers"
 
 interface Props { navigation: screenNavigationProps; }
 
 
+
 export const CheckinComplete = (props: Props) => {
 
+    var [printImageUri, setPrintImageUri] = React.useState('')
+    const [modelVisible, setModelVisible] = React.useState(false)
     const [html, setHtml] = React.useState("Hello world");
 
     const loadData = () => {
@@ -24,7 +28,9 @@ export const CheckinComplete = (props: Props) => {
         NativeModules.PrinterHelper.init();
         //NativeModules.PrinterHelper.configure();
         checkin();
-        props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Lookup" }] }));
+        setModelVisible(true)
+        console.log(printImageUri)
+        // props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Lookup" }] }));
     }
 
 
@@ -39,6 +45,11 @@ export const CheckinComplete = (props: Props) => {
         });
     }
 
+    const goBack = () => {
+        props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Lookup" }] }));
+        setModelVisible(false)
+    }
+    const onCapture = (uri: any) => {setPrintImageUri(uri) }
     React.useEffect(loadData, []);
 
     return (
@@ -50,7 +61,20 @@ export const CheckinComplete = (props: Props) => {
                 <Ripple style={Styles.bigButton} onPress={() => { print() }}>
                     <Text style={Styles.bigButtonText}>Print</Text>
                 </Ripple>
-                <WebView source={{ html: html }} style={[Styles.webView]} />
+
+
+                <ViewShot onCapture={onCapture} style={{ flex: 1 }} captureMode="mount">
+                    <WebView source={{ html: html }} style={[Styles.webView]} />
+                </ViewShot>
+
+                <Modal visible={modelVisible}  >
+                    <View style={Styles.modelView}>
+                        <Icon name="arrowleft" type="AntDesign" onPress={goBack} style={Styles.backIcon} />
+                        {
+                            (printImageUri !== '') ? <Image source={{ uri: printImageUri }} style={Styles.printImage} resizeMode="contain" /> : null
+                        }
+                    </View>
+                </Modal>
             </View>
         </Container>
     )

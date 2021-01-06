@@ -80,4 +80,8 @@ export const Styles = StyleSheet.create({
 
     //Checkin Complete
     webView: { width: StyleConstants.deviceWidth, maxHeight: StyleConstants.deviceWidth / 3.5 * 1.1 },
+    printImage:{width: StyleConstants.deviceWidth,height:StyleConstants.deviceWidth,},
+    backIcon:{marginVertical:'5%',marginLeft:'3%'},
+    modelView:{flex:1,backgroundColor:StyleConstants.ghostWhite}
+
 })
