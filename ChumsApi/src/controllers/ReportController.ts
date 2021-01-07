@@ -2,7 +2,7 @@ import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } f
 import express from "express";
 import { ChumsBaseController } from "./ChumsBaseController"
 import { Report, ReportValue, RunReportRequest } from "../models"
-import { AuthenticatedUser } from "../auth";
+import { AuthenticatedUser } from "../apiBase/auth"
 
 @controller("/reports")
 export class ReportController extends ChumsBaseController {
