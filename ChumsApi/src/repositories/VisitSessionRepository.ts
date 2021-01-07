@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { DB } from "../db";
+import { DB } from "../apiBase/db";
 import { VisitSession } from "../models";
 import { PersonHelper } from "../helpers";
 

@@ -1,7 +1,6 @@
 import { injectable } from "inversify";
-import { DB } from "../db";
-import { FundDonation, Donation } from "../models";
-import { PersonHelper } from "../helpers";
+import { DB } from "../apiBase/db";
+import { FundDonation } from "../models";
 
 @injectable()
 export class FundDonationRepository {

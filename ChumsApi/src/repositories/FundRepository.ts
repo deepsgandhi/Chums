@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import { DB } from "../db";
+import { DB } from "../apiBase/db";
 import { Fund } from "../models";
-import { stringify } from "uuid";
+
 
 @injectable()
 export class FundRepository {
