@@ -1,10 +1,10 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete, results } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController"
 import { Donation, DonationSummary } from "../models"
 
 @controller("/donations")
-export class DonationController extends CustomBaseController {
+export class DonationController extends ChumsBaseController {
 
 
     @httpGet("/summary")

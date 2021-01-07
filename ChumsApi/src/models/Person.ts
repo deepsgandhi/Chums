@@ -1,6 +1,6 @@
 import { ContactInfo } from './'
 import { Name } from './'
-import { FormSubmission } from './FormSubmission';
+import { FormSubmission } from '../apiBase/models';
 
 export class Person {
     public id?: number;

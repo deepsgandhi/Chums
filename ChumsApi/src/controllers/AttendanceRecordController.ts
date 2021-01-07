@@ -1,9 +1,9 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController";
 
 @controller("/attendancerecords")
-export class AttendanceRecordController extends CustomBaseController {
+export class AttendanceRecordController extends ChumsBaseController {
     @httpGet("/groups")
     public async groups(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
         return this.actionWrapper(req, res, async (au) => {

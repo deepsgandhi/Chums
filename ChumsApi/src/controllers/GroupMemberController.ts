@@ -1,11 +1,11 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController"
 import { GroupMember, Person } from "../models"
 import { PersonHelper } from "../helpers";
 
 @controller("/groupmembers")
-export class GroupMemberController extends CustomBaseController {
+export class GroupMemberController extends ChumsBaseController {
 
     @httpGet("/:id")
     public async get(@requestParam("id") id: number, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {

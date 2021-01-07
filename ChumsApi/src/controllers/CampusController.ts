@@ -1,10 +1,10 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController"
 import { Campus } from "../models"
 
 @controller("/campuses")
-export class CampusController extends CustomBaseController {
+export class CampusController extends ChumsBaseController {
 
   @httpGet("/:id")
   public async get(@requestParam("id") id: number, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {

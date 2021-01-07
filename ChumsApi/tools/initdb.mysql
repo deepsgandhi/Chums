@@ -1,29 +1,22 @@
 #CREATE DATABASE IF NOT EXISTS `chums`;
 USE `chums`;
 SET FOREIGN_KEY_CHECKS=0;
-DROP TABLE IF EXISTS `answers`;
 DROP TABLE IF EXISTS `campuses`;
 DROP TABLE IF EXISTS `donationBatches`;
 DROP TABLE IF EXISTS `donations`;
-DROP TABLE IF EXISTS `forms`;
-DROP TABLE IF EXISTS `formSubmissions`;
 DROP TABLE IF EXISTS `fundDonations`;
 DROP TABLE IF EXISTS `funds`;
 DROP TABLE IF EXISTS `groupMembers`;
 DROP TABLE IF EXISTS `groups`;
 DROP TABLE IF EXISTS `groupServiceTimes`;
 DROP TABLE IF EXISTS `households`;
-DROP TABLE IF EXISTS `notes`;
 DROP TABLE IF EXISTS `people`;
-DROP TABLE IF EXISTS `questions`;
 DROP TABLE IF EXISTS `reports`;
 DROP TABLE IF EXISTS `services`;
 DROP TABLE IF EXISTS `serviceTimes`;
 DROP TABLE IF EXISTS `sessions`;
 DROP TABLE IF EXISTS `visits`;
 DROP TABLE IF EXISTS `visitSessions`;
-
-SET FOREIGN_KEY_CHECKS=1;
 
 # Round 1
 
@@ -47,18 +40,6 @@ CREATE TABLE `donationBatches` (
   `batchDate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1;
-
-
-CREATE TABLE `forms` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `churchId` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `contentType` varchar(50) DEFAULT NULL,
-  `createdTime` datetime DEFAULT NULL,
-  `modifiedTime` datetime DEFAULT NULL,
-  `removed` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `funds` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -85,19 +66,6 @@ CREATE TABLE `households` (
   `name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=613 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `notes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `churchId` int(11) DEFAULT NULL,
-  `contentType` varchar(50) DEFAULT NULL,
-  `contentId` int(11) DEFAULT NULL,
-  `noteType` varchar(50) DEFAULT NULL,
-  `addedBy` int(11) DEFAULT NULL,
-  `dateAdded` datetime DEFAULT NULL,
-  `contents` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
-
 
 #Round2
 
@@ -132,24 +100,6 @@ CREATE TABLE `people` (
   `removed` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=latin1;
-
-
-CREATE TABLE `questions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `churchId` int(11) DEFAULT NULL,
-  `formId` int(11) DEFAULT NULL,
-  `parentId` int(11) DEFAULT NULL,
-  `title` varchar(50) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `fieldType` varchar(50) DEFAULT NULL,
-  `placeholder` varchar(50) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `choices` text,
-  `removed` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_questions_forms_idx` (`formId`),
-  CONSTRAINT `fk_questions_forms` FOREIGN KEY (`formId`) REFERENCES `forms` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -244,23 +194,6 @@ CREATE TABLE `donations` (
   CONSTRAINT `fk_donations_people` FOREIGN KEY (`personId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=255 DEFAULT CHARSET=latin1;
 
-CREATE TABLE `formSubmissions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `churchId` int(11) DEFAULT NULL,
-  `formId` int(11) DEFAULT NULL,
-  `contentType` varchar(50) DEFAULT NULL,
-  `contentId` int(11) DEFAULT NULL,
-  `submissionDate` datetime DEFAULT NULL,
-  `submittedBy` int(11) DEFAULT NULL,
-  `revisionDate` datetime DEFAULT NULL,
-  `revisedBy` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_submissions_forms_idx` (`FormId`),
-  KEY `fk_submissions_people_idx` (`SubmittedBy`),
-  CONSTRAINT `fk_submissions_forms` FOREIGN KEY (`formId`) REFERENCES `forms` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_submissions_people` FOREIGN KEY (`submittedBy`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
-
 CREATE TABLE `fundDonations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `churchId` int(11) DEFAULT NULL,
@@ -299,19 +232,6 @@ CREATE TABLE `groupServiceTimes` (
   CONSTRAINT `fk_groupServiceTimes_serviceTime` FOREIGN KEY (`serviceTimeId`) REFERENCES `serviceTimes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=454 DEFAULT CHARSET=latin1;
 
-CREATE TABLE `answers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `churchId` int(11) DEFAULT NULL,
-  `formSubmissionId` int(11) DEFAULT NULL,
-  `questionId` int(11) DEFAULT NULL,
-  `value` varchar(5000) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_answers_formSubmissions_idx` (`formSubmissionId`),
-  KEY `fk_answers_questions_idx` (`questionId`),
-  CONSTRAINT `fk_answers_formSubmissions` FOREIGN KEY (`formSubmissionId`) REFERENCES `formSubmissions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_answers_questions` FOREIGN KEY (`QuestionId`) REFERENCES `questions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
-
 CREATE TABLE `churchSettings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `churchId` int(11) DEFAULT NULL,
@@ -320,22 +240,4 @@ CREATE TABLE `churchSettings` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SET FOREIGN_KEY_CHECKS=1;

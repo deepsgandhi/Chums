@@ -2,10 +2,10 @@ import { controller, httpPost } from "inversify-express-utils";
 import { Campus, Household, Fund, Group, Service, Person, ServiceTime, GroupServiceTime } from "../models";
 import { UserInterface, ChurchInterface } from "../helpers";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController";
+import { ChumsBaseController } from "./ChumsBaseController";
 
 @controller("/churches")
-export class ChurchController extends CustomBaseController {
+export class ChurchController extends ChumsBaseController {
 
     async validateInit(churchId: number) {
         const errors = [];

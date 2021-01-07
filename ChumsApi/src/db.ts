@@ -1,7 +1,6 @@
 import { Pool } from "./pool";
 import { PoolConnection, MysqlError } from "mysql";
-import { StaticLogger } from './helpers/StaticLogger'
-import { logger } from "express-winston";
+import { LoggingHelper } from "./apiBase";
 
 export class DB {
 
@@ -12,7 +11,7 @@ export class DB {
     try {
       return await actionAsync(connection);
     } catch (ex) {
-      StaticLogger.current.error(ex);
+      LoggingHelper.getCurrent().error(ex);
     } finally {
       connection.release();
     }
@@ -29,11 +28,11 @@ export class DB {
       const result: any[] = await new Promise((resolve, reject) => {
         connection.query(sql, params, async (ex, rows) => {
           if (ex) {
-            StaticLogger.current.error(ex);
+            LoggingHelper.getCurrent().error(ex);
             reject(ex);
           }
           else {
-            StaticLogger.current.info(rows);
+            LoggingHelper.getCurrent().info(rows);
             resolve(rows);
           }
         });

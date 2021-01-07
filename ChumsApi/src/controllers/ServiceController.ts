@@ -1,10 +1,10 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController"
 import { Service } from "../models"
 
 @controller("/services")
-export class ServiceController extends CustomBaseController {
+export class ServiceController extends ChumsBaseController {
 
     @httpGet("/search")
     public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {

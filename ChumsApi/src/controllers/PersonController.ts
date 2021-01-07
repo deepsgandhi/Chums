@@ -1,13 +1,14 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
-import { Person, Household, FormSubmission, Form } from "../models"
+import { ChumsBaseController } from "./ChumsBaseController"
+import { Person, Household } from "../models"
+import { FormSubmission, Form } from "../apiBase/models"
 import { AwsHelper } from "../helpers"
 import { RoleContentType, RoleAction } from '../constants'
 
 
 @controller("/people")
-export class PersonController extends CustomBaseController {
+export class PersonController extends ChumsBaseController {
 
     @httpGet("/recent")
     public async getRecent(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
@@ -120,6 +121,7 @@ export class PersonController extends CustomBaseController {
 
     @httpGet("/:id")
     public async get(@requestParam("id") id: number, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+        this.logger.error("TEST ERROR");
         return this.actionWrapper(req, res, async (au) => {
             const data = await this.repositories.person.load(au.churchId, id);
             const result = this.repositories.person.convertToModel(au.churchId, data)
@@ -202,11 +204,11 @@ export class PersonController extends CustomBaseController {
     }
 
     private async appendFormSubmissions(churchId: number, person: Person) {
-        const submissions: FormSubmission[] = this.repositories.formSubmission.convertAllToModel(churchId, await this.repositories.formSubmission.loadForContent(churchId, "person", person.id));
+        const submissions: FormSubmission[] = this.baseRepositories.formSubmission.convertAllToModel(churchId, await this.baseRepositories.formSubmission.loadForContent(churchId, "person", person.id));
         if (submissions.length > 0) {
             const formIds: number[] = [];
             submissions.forEach(s => { if (formIds.indexOf(s.formId) === -1) formIds.push(s.formId) });
-            const forms: Form[] = this.repositories.form.convertAllToModel(churchId, await this.repositories.form.loadByIds(churchId, formIds));
+            const forms: Form[] = this.baseRepositories.form.convertAllToModel(churchId, await this.baseRepositories.form.loadByIds(churchId, formIds));
 
             person.formSubmissions = [];
             submissions.forEach(s => {

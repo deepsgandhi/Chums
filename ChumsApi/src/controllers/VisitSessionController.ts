@@ -1,10 +1,10 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController"
 import { VisitSession, Visit, Session, ServiceTime } from "../models"
 
 @controller("/visitsessions")
-export class VisitSessionController extends CustomBaseController {
+export class VisitSessionController extends ChumsBaseController {
 
     @httpPost("/log")
     public async log(req: express.Request<{}, {}, Visit>, res: express.Response): Promise<interfaces.IHttpActionResult> {

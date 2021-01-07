@@ -1,11 +1,11 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController"
 import { Report, ReportValue, RunReportRequest } from "../models"
 import { AuthenticatedUser } from "../auth";
 
 @controller("/reports")
-export class ReportController extends CustomBaseController {
+export class ReportController extends ChumsBaseController {
 
     @httpPost("/run")
     public async run(req: express.Request<{}, {}, RunReportRequest[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {

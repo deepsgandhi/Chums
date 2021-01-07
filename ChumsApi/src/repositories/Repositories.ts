@@ -1,23 +1,16 @@
-import { inject, injectable } from "inversify";
-import { TYPES } from "../constants";
 import {
-  AnswerRepository,
   AttendanceRepository,
   CampusRepository,
   ChurchSettingRepository,
   DonationRepository,
   DonationBatchRepository,
-  FormRepository,
-  FormSubmissionRepository,
   FundDonationRepository,
   FundRepository,
   GroupMemberRepository,
   GroupRepository,
   GroupServiceTimeRepository,
   HouseholdRepository,
-  NoteRepository,
   PersonRepository,
-  QuestionRepository,
   ReportRepository,
   ServiceRepository,
   ServiceTimeRepository,
@@ -26,25 +19,19 @@ import {
   VisitSessionRepository
 } from ".";
 
-@injectable()
 export class Repositories {
-  public answer: AnswerRepository;
   public attendance: AttendanceRepository;
   public campus: CampusRepository;
   public churchSetting: ChurchSettingRepository;
   public donationBatch: DonationBatchRepository;
   public donation: DonationRepository;
-  public form: FormRepository;
-  public formSubmission: FormSubmissionRepository;
   public fundDonation: FundDonationRepository;
   public fund: FundRepository;
   public groupMember: GroupMemberRepository;
   public group: GroupRepository;
   public groupServiceTime: GroupServiceTimeRepository;
   public household: HouseholdRepository;
-  public note: NoteRepository;
   public person: PersonRepository;
-  public question: QuestionRepository;
   public report: ReportRepository;
   public service: ServiceRepository;
   public serviceTime: ServiceTimeRepository;
@@ -53,53 +40,31 @@ export class Repositories {
   public visitSession: VisitSessionRepository;
 
 
-  constructor(
-    @inject(TYPES.AnswerRepository) answerRepository: AnswerRepository,
-    @inject(TYPES.AttendanceRepository) attendanceRepository: AttendanceRepository,
-    @inject(TYPES.CampusRepository) campusRepository: CampusRepository,
-    @inject(TYPES.ChurchSettingRepository) churchSettingRepository: ChurchSettingRepository,
-    @inject(TYPES.DonationBatchRepository) donationBatchRepository: DonationBatchRepository,
-    @inject(TYPES.DonationRepository) donationRepository: DonationRepository,
-    @inject(TYPES.FormRepository) formRepository: FormRepository,
-    @inject(TYPES.FormSubmissionRepository) formSubmissionRepository: FormSubmissionRepository,
-    @inject(TYPES.FundDonationRepository) fundDonationRepository: FundDonationRepository,
-    @inject(TYPES.FundRepository) fundRepository: FundRepository,
-    @inject(TYPES.GroupMemberRepository) groupMemberRepository: GroupMemberRepository,
-    @inject(TYPES.GroupRepository) groupRepository: GroupRepository,
-    @inject(TYPES.GroupServiceTimeRepository) groupServiceTimeRepository: GroupServiceTimeRepository,
-    @inject(TYPES.HouseholdRepository) householdRepository: HouseholdRepository,
-    @inject(TYPES.NoteRepository) noteRepository: NoteRepository,
-    @inject(TYPES.PersonRepository) personRepository: PersonRepository,
-    @inject(TYPES.QuestionRepository) questionRepository: QuestionRepository,
-    @inject(TYPES.ReportRepository) reportRepository: ReportRepository,
-    @inject(TYPES.ServiceRepository) serviceRepository: ServiceRepository,
-    @inject(TYPES.ServiceTimeRepository) serviceTimeRepository: ServiceTimeRepository,
-    @inject(TYPES.SessionRepository) sessionRepository: SessionRepository,
-    @inject(TYPES.VisitRepository) visitRepository: VisitRepository,
-    @inject(TYPES.VisitSessionRepository) visitSessionRepository: VisitSessionRepository,
-  ) {
-    this.answer = answerRepository;
-    this.attendance = attendanceRepository;
-    this.campus = campusRepository;
-    this.churchSetting = churchSettingRepository;
-    this.donationBatch = donationBatchRepository;
-    this.donation = donationRepository;
-    this.form = formRepository;
-    this.formSubmission = formSubmissionRepository;
-    this.fundDonation = fundDonationRepository;
-    this.fund = fundRepository;
-    this.groupMember = groupMemberRepository;
-    this.group = groupRepository;
-    this.groupServiceTime = groupServiceTimeRepository;
-    this.household = householdRepository;
-    this.note = noteRepository;
-    this.person = personRepository;
-    this.question = questionRepository;
-    this.report = reportRepository;
-    this.service = serviceRepository;
-    this.serviceTime = serviceTimeRepository;
-    this.session = sessionRepository;
-    this.visit = visitRepository;
-    this.visitSession = visitSessionRepository;
+  private static _current: Repositories = null;
+  public static getCurrent = () => {
+    if (Repositories._current === null) Repositories._current = new Repositories();
+    return Repositories._current;
+  }
+
+
+  constructor() {
+    this.attendance = new AttendanceRepository();
+    this.campus = new CampusRepository();
+    this.churchSetting = new ChurchSettingRepository();
+    this.donationBatch = new DonationBatchRepository();
+    this.donation = new DonationRepository();
+    this.fundDonation = new FundDonationRepository();
+    this.fund = new FundRepository();
+    this.groupMember = new GroupMemberRepository();
+    this.group = new GroupRepository();
+    this.groupServiceTime = new GroupServiceTimeRepository();
+    this.household = new HouseholdRepository();
+    this.person = new PersonRepository();
+    this.report = new ReportRepository();
+    this.service = new ServiceRepository();
+    this.serviceTime = new ServiceTimeRepository();
+    this.session = new SessionRepository();
+    this.visit = new VisitRepository();
+    this.visitSession = new VisitSessionRepository();
   }
 }

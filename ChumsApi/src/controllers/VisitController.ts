@@ -1,6 +1,6 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { CustomBaseController } from "./CustomBaseController"
+import { ChumsBaseController } from "./ChumsBaseController"
 import { Visit, VisitSession, Session } from "../models"
 
 interface IdCache {
@@ -8,7 +8,7 @@ interface IdCache {
 }
 
 @controller("/visits")
-export class VisitController extends CustomBaseController {
+export class VisitController extends ChumsBaseController {
 
 
     static cachedSessionIds: IdCache = {};

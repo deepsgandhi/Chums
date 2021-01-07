@@ -1,0 +1,3 @@
+[submodule "ChumsApi/src/apiBase"]
+	path = ChumsApi/src/apiBase
+	url = https://github.com/LiveChurchSolutions/ApiBase

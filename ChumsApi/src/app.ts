@@ -7,9 +7,6 @@ import { bindings } from "./inversify.config";
 import express from "express";
 import { CustomAuthProvider } from "./auth";
 import cors from "cors"
-import AWS from "aws-sdk"
-import winston from "winston"
-import WinstonCloudWatch from "winston-cloudwatch"
 
 export const init = async () => {
     /*
@@ -24,6 +21,7 @@ export const init = async () => {
     const container = new Container();
     await container.loadAsync(bindings);
     const app = new InversifyExpressServer(container, null, null, null, CustomAuthProvider);
+
 
     const configFunction = (expApp: express.Application) => {
         // expApp.use(bodyParser({ limit: "50mb" }));

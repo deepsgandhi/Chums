@@ -1,11 +1,11 @@
 import { controller, httpPost, httpGet, interfaces } from 'inversify-express-utils'
 import express from 'express'
-import { CustomBaseController } from './CustomBaseController'
+import { ChumsBaseController } from './ChumsBaseController'
 import { RoleContentType, RoleAction } from '../constants'
 import { ChurchSetting } from '../models'
 
 @controller("/churchsettings")
-export class ChurchSettingController extends CustomBaseController {
+export class ChurchSettingController extends ChumsBaseController {
 
     @httpGet("/")
     public async get(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
