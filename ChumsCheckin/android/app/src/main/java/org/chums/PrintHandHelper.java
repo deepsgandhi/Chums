@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -68,6 +69,7 @@ public class PrintHandHelper extends ReactContextBaseJavaModule {
     {
         if (imageQueue.size()>0) {
             Uri uri = imageQueue.pop();
+
             try {
                 intentApi.print("label 1", "image/jpg", uri);
             } catch (Exception ex) {
