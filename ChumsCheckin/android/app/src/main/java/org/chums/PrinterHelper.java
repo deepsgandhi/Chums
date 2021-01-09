@@ -2,6 +2,10 @@ package org.chums;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +21,10 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrinterHelper extends  ReactContextBaseJavaModule  {
     public static String Status = "Pending init";
@@ -87,6 +95,25 @@ public class PrinterHelper extends  ReactContextBaseJavaModule  {
         checkPrinterStatus();
     }
 
+    @ReactMethod
+    public void printUri(String uriString)
+    {
+        Uri uri = Uri.parse(uriString);
+        try {
+            Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+            //phh.printUri(uri);
+            List<Bitmap> bmps = new ArrayList<Bitmap>();
+            bmps.add(mBitmap);
+
+            phh.print(bmps, context);
+        } catch (Exception ex)
+        {
+            int a=0;
+
+        }
+
+
+    }
 
     public void checkPrinterStatus()
     {

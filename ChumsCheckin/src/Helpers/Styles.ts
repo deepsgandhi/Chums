@@ -79,9 +79,10 @@ export const Styles = StyleSheet.create({
     expandedRow: { borderBottomWidth: 1, borderBottomColor: StyleConstants.lightGrayColor, flexDirection: 'row', marginHorizontal: '6%', paddingVertical: '3%', paddingLeft: '2%', alignItems: 'center', justifyContent: 'space-around' },
 
     //Checkin Complete
-    webView: { width: StyleConstants.deviceWidth, maxHeight: StyleConstants.deviceWidth / 3.5 * 1.1 },
-    printImage:{width: StyleConstants.deviceWidth,height:StyleConstants.deviceWidth,},
-    backIcon:{marginVertical:'5%',marginLeft:'3%'},
-    modelView:{flex:1,backgroundColor:StyleConstants.ghostWhite}
+    viewShot: { width: StyleConstants.deviceWidth * 0.9, height: StyleConstants.deviceWidth * 0.9 / 3.5 * 1.1 },
+    webView: { width: StyleConstants.deviceWidth * 0.9, height: StyleConstants.deviceWidth * 0.9 / 3.5 * 1.1 },
+    printImage: { width: StyleConstants.deviceWidth * 0.9, height: StyleConstants.deviceWidth * 0.9 / 3.5 * 1.1, },
+    backIcon: { marginVertical: '5%', marginLeft: '3%' },
+    modelView: { flex: 1, backgroundColor: StyleConstants.ghostWhite }
 
 })
