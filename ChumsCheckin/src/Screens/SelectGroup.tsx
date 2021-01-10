@@ -44,7 +44,7 @@ export const SelectGroup = (props: Props) => {
 
 
     const getRow = (data: any) => {
-        const item: any = data.item;
+        const item: GroupCategoryInterface = data.item;
         return (
             <View>
                 <Ripple style={Styles.flatlistMainView} onPress={() => { handleCategoryClick(item.key) }}  >
@@ -61,7 +61,7 @@ export const SelectGroup = (props: Props) => {
         else {
             const result: JSX.Element[] = [];
             category.items.forEach(g => {
-                result.push(<Ripple style={[Styles.expandedRow, { justifyContent: "flex-start" }]} onPress={() => selectGroup(g.id || 0, g.name || "")}>
+                result.push(<Ripple key={g.id?.toString()} style={[Styles.expandedRow, { justifyContent: "flex-start" }]} onPress={() => selectGroup(g.id || 0, g.name || "")}>
                     <Text style={[Styles.bigLinkButtonText, { marginLeft: '10%' }]}>{g.name}</Text>
                 </Ripple>);
             })
@@ -75,7 +75,7 @@ export const SelectGroup = (props: Props) => {
         <Container>
             <Header />
             <View style={Styles.fullWidthContainer}>
-                <FlatList data={groupTree} renderItem={getRow} keyExtractor={(item: any) => item.key} />
+                <FlatList data={groupTree} renderItem={getRow} keyExtractor={(item: GroupCategoryInterface) => item.name} />
                 <View style={Styles.blockButtons}>
                     <Ripple style={[Styles.blockButton, { backgroundColor: StyleConstants.redColor }]} onPress={handleNone}>
                         <Text style={Styles.blockButtonText}>NONE</Text>

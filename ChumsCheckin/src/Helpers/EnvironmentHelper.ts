@@ -1,9 +1,9 @@
 export class EnvironmentHelper {
-    static AccessManagementApiUrl = "";
-    static ChumsApiUrl = "";
-    static ImageBaseUrl = "";
+    static AccessManagementApiUrl = "https://api.staging.livecs.org";
+    static ChumsApiUrl = "https://api.staging.chums.org";
+    static ImageBaseUrl = "https://app.staging.chums.org";
 
-    
+
     // static init = () => {
     //     switch (process.env.REACT_APP_STAGE) {
     //         case "staging": EnvironmentHelper.initStaging(); break;
@@ -34,7 +34,7 @@ export class EnvironmentHelper {
     //     EnvironmentHelper.ContentRoot = "";
     //     EnvironmentHelper.GoogleAnalyticsTag = "UA-164774603-4";
     // }
-    
+
 
 }
 

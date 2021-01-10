@@ -20,7 +20,10 @@ export const Lookup = (props: Props) => {
 
     const loadExistingVisits = async () => {
         const url = '/visits/checkin?serviceId=' + CachedData.serviceId + '&householdId=' + CachedData.householdId + '&include=visitSessions';
-        ApiHelper.apiGet(url).then(data => { CachedData.existingVisits = [...data]; CachedData.pendingVisits = [...data]; });
+        ApiHelper.apiGet(url).then(data => {
+            CachedData.existingVisits = [...data]; CachedData.pendingVisits = [...data];
+            console.log(JSON.stringify(data));
+        });
     }
 
     const selectPerson = (person: PersonInterface) => {

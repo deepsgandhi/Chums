@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Image, StatusBar, Text, NativeModules, NativeEventEmitter } from 'react-native'
 import Ripple from 'react-native-material-ripple';
-import { Styles } from '../../Helpers'
+import { CachedData, Styles } from '../../Helpers'
 
 export const Header = () => {
     const [status, setStatus] = React.useState("");
@@ -13,7 +13,10 @@ export const Header = () => {
     const init = () => {
         NativeModules.PrinterHelper.bind(receiveNativeStatus);
         eventEmitter = new NativeEventEmitter(NativeModules.PrinterHelper);
-        eventEmitter.addListener('StatusUpdated', (event) => { setStatus(event.status); });
+        eventEmitter.addListener('StatusUpdated', (event) => {
+            if (event.status.indexOf("ready") > -1) CachedData.printerReady = true;
+            setStatus(event.status);
+        });
     }
 
     React.useEffect(init, []);

@@ -103,7 +103,7 @@ export class VisitController extends ChumsBaseController {
             deleteVisitSessionIds.forEach(visitSessionId => { promises.push(this.repositories.visitSession.delete(au.churchId, visitSessionId)); });
 
             await Promise.all(promises);
-
+            return [];
         });
     }
 

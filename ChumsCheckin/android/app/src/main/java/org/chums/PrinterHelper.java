@@ -96,23 +96,20 @@ public class PrinterHelper extends  ReactContextBaseJavaModule  {
     }
 
     @ReactMethod
-    public void printUri(String uriString)
+    public void printUris(String uriList) //comma separated
     {
-        Uri uri = Uri.parse(uriString);
-        try {
-            Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-            //phh.printUri(uri);
-            List<Bitmap> bmps = new ArrayList<Bitmap>();
-            bmps.add(mBitmap);
-
-            phh.print(bmps, context);
-        } catch (Exception ex)
+        String[] uris = uriList.split(",");
+        List<Bitmap> bmps = new ArrayList<Bitmap>();
+        for (String uriString : uris)
         {
-            int a=0;
-
+            Uri uri = Uri.parse(uriString);
+            try {
+                Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                bmps.add(mBitmap);
+            } catch (Exception ex)
+            {  int a=0; }
         }
-
-
+        phh.print(bmps, context);
     }
 
     public void checkPrinterStatus()

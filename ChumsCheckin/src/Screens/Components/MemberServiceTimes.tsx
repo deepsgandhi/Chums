@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import Ripple from 'react-native-material-ripple';
-import { CachedData, PersonInterface, screenNavigationProps, ServiceTimeInterface, VisitHelper, VisitSessionHelper, VisitSessionInterface, VisitInterface, Styles, StyleConstants } from "../../Helpers";
+import { CachedData, PersonInterface, screenNavigationProps, ServiceTimeInterface, VisitHelper, VisitSessionHelper, VisitSessionInterface, VisitInterface, Styles, StyleConstants, Utilities, GroupInterface } from "../../Helpers";
 
 interface Props { person: PersonInterface, selectedMemberId: number, navigation: screenNavigationProps, pendingVisits: VisitInterface[] }
 
@@ -12,7 +12,13 @@ export const MemberServiceTimes = (props: Props) => {
     const getExpandedRow = (serviceTime: ServiceTimeInterface, visitSessions: VisitSessionInterface[]) => {
         const stSessions = VisitSessionHelper.getByServiceTimeId(visitSessions, serviceTime.id || 0);
         var buttonStyle = { backgroundColor: (stSessions.length > 0) ? StyleConstants.greenColor : StyleConstants.blueColor };
-        var selectedGroupName = (stSessions.length > 0) ? stSessions[0].session?.displayName || "" : "NONE";
+        var selectedGroupName = "NONE";
+        console.log(JSON.stringify(stSessions[0]));
+        if (stSessions.length > 0) {
+            const groupId = stSessions[0].session?.groupId || 0;
+            const group: GroupInterface = Utilities.getById(serviceTime.groups || [], groupId);
+            selectedGroupName = group?.name || "Error";
+        }
         return (<View key={serviceTime.id} style={Styles.expandedRow}>
             <Text style={Styles.serviceTimeText}>{serviceTime.name}</Text>
             <Ripple style={[Styles.serviceTimeButton, buttonStyle]} onPress={() => { handleServiceTimeClick(serviceTime, props.person) }} >

@@ -1,5 +1,5 @@
 import fs from "react-native-fs"
-import { PersonInterface, VisitInterface } from "./ApiHelper";
+import { GroupInterface, PersonInterface, ServiceTimeInterface, VisitInterface } from "./ApiHelper";
 import { CachedData } from "./CachedData";
 import { Utilities } from "./Utilities";
 import { VisitSessionHelper } from "./VisitSessionHelper";
@@ -46,12 +46,29 @@ export class LabelHelper {
         return result;
     }
 
+
+    private static getChildVisits() {
+        const result: VisitInterface[] = [];
+        CachedData.pendingVisits.forEach(pv => {
+            var isChild = false;
+            pv.visitSessions?.forEach(vs => {
+                const serviceTime: ServiceTimeInterface = Utilities.getById(CachedData.serviceTimes, vs.session?.serviceTimeId || 0);
+                const group: GroupInterface = Utilities.getById(serviceTime.groups || [], vs.session?.groupId || 0);
+                if (group.parentPickup) isChild = true;
+            });
+            if (isChild) result.push(pv);
+        });
+        return result;
+    }
+
     public static async getAllLabels() {
         const pickupCode = LabelHelper.generatePickupCode();
-        const childVisits: VisitInterface[] = [];
+        const childVisits: VisitInterface[] = LabelHelper.getChildVisits();
         const labelTemplate = await this.readHtml("1_1x3_5.html");
         const pickupTemplate = await this.readHtml("pickup_1_1x3_5.html");
         const result: string[] = [];
+
+
 
         CachedData.pendingVisits.forEach(pv => { result.push(this.replaceValues(labelTemplate, pv, childVisits, pickupCode)); });
         if (childVisits.length > 0) result.push(this.replaceValuesPickup(pickupTemplate, childVisits, pickupCode));

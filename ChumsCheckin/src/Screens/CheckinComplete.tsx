@@ -1,103 +1,75 @@
 import React from 'react'
-import { View, Text, NativeModules, Modal, Image } from 'react-native'
-import { Container, Icon } from 'native-base'
-import { CommonActions } from '@react-navigation/native';
+import { View, Text, NativeModules } from 'react-native'
+import { Container } from 'native-base'
 import { WebView } from "react-native-webview"
-import Ripple from 'react-native-material-ripple';
 import { Header } from './Components'
 import ViewShot, { captureRef } from "react-native-view-shot";
-import { screenNavigationProps, CachedData, Utilities, ApiHelper, LabelHelper, Styles, StyleConstants } from "../Helpers"
+import { screenNavigationProps, CachedData, ApiHelper, LabelHelper, Styles } from "../Helpers"
+import { CommonActions } from '@react-navigation/native';
 
 interface Props { navigation: screenNavigationProps; }
 
-
-
 export const CheckinComplete = (props: Props) => {
-
     const shotRef = React.useRef(null);
-    var [printImageUri, setPrintImageUri] = React.useState('')
-    const [modelVisible, setModelVisible] = React.useState(false)
-    const [html, setHtml] = React.useState("Hello world,how are you");
+    const [html, setHtml] = React.useState("");
+
 
     const loadData = () => {
-        LabelHelper.getAllLabels().then(labels => {
-            if (labels.length > 0) setHtml(labels[0]);
+        const promises: Promise<any>[] = [];
+        promises.push(checkin());
+        if (CachedData.printerReady) promises.push(print());
+        const action = CommonActions.reset({ index: 0, routes: [{ name: 'Lookup' }] });
+        Promise.all(promises).then(() => { props.navigation.dispatch(action); });
+    }
+
+    const print = async () => {
+        return LabelHelper.getAllLabels().then(async (htmlLabels) => {
+            console.log(htmlLabels.length);
+            if (htmlLabels.length > 0) await printBitmaps(htmlLabels);
         });
     }
 
-    const print = () => {
-        NativeModules.PrinterHelper.init();
-        //NativeModules.PrinterHelper.configure();
-        checkin();
-        captureRef(shotRef, { format: "jpg", quality: 1 }).then(uri => {
-            console.log(uri);
-            NativeModules.PrinterHelper.printUri(uri);
+    const printBitmaps = async (htmlLabels: string[]) => {
+        for (let i = 0; i < htmlLabels.length; i++) {
+            const html = htmlLabels[i];
+            await printBitmap(html)
+        }
+    }
 
+    const printBitmap = async (html: string) => {
+        setHtml(html);
+        await timeout(1000);
+        const result = await captureRef(shotRef, { format: "jpg", quality: 1 });
+        NativeModules.PrinterHelper.printUris(result);
+    }
 
-        })
-        // props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Lookup" }] }));
+    const timeout = (ms: number) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
 
-    const checkin = () => {
-        ApiHelper.apiPost("/visits/checkin?serviceId=" + CachedData.serviceId + "&householdId=" + CachedData.householdId, CachedData.pendingVisits).then(data => {
-            if (data !== "error") props.navigation.navigate("CheckinComplete")
-            else Utilities.snackBar("Something went wrong")
-        }).catch((error) => {
-            // console.error(error);
-            // return('error')
-            setHtml("error");
+    const checkin = async () => {
+        const url = "/visits/checkin?serviceId=" + CachedData.serviceId + "&householdId=" + CachedData.householdId;
+        return ApiHelper.apiPost(url, CachedData.pendingVisits).then(data => {
+            props.navigation.navigate("CheckinComplete")
         });
     }
-
-    const goBack = () => {
-        props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Lookup" }] }));
-        setModelVisible(false)
-    }
-    /*
-    const onCapture = () => {
-        captureRef(shotRef, { format: "jpg", quality: 1 })
-            .then((uri) => { setPrintImageUri(uri); setModelVisible(true) })
-            .catch((err) => { Utilities.snackBar("Something went wrong") })
-
-    }*/
 
     React.useEffect(loadData, []);
 
     return (
         <Container>
             <Header />
-
             <View style={[Styles.mainContainer]}>
                 <Text style={Styles.H1}>Checkin Complete.</Text>
-
-                <Ripple style={Styles.bigButton} onPress={() => { print() }}>
-                    <Text style={Styles.bigButtonText}>Print</Text>
-                </Ripple>
-
-
-
+                <Text style={Styles.H1}>Printing</Text>
                 <View style={{ flex: 1, }}>
-
                     <ViewShot ref={shotRef} style={Styles.viewShot} >
-                        <WebView source={{ html: html }} style={[Styles.webView, { backgroundColor: "#00FF00" }]} />
+                        <WebView source={{ html: html }} style={Styles.webView} />
                     </ViewShot>
                 </View>
-
-
-                <Modal visible={modelVisible}  >
-
-                    <View style={Styles.modelView}>
-                        <Icon name="arrowleft" type="AntDesign" onPress={goBack} style={Styles.backIcon} />
-                        {
-                            (printImageUri !== '') ? <Image source={{ uri: printImageUri }} style={Styles.printImage} resizeMode="cover" /> : null
-                        }
-                    </View>
-
-
-                </Modal>
             </View>
-
         </Container>
     )
+
 }

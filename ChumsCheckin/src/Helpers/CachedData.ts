@@ -9,5 +9,7 @@ export class CachedData {
     static householdMembers: PersonInterface[] = [];
     static serviceId: number = 0;
     static serviceTimes: ServiceTimeInterface[] = [];
+
+    static printerReady = false;
 }
 

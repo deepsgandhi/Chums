@@ -7,8 +7,12 @@ import App from './App';
 import { name as appName } from './app.json';
 import { EnvironmentHelper } from "./src/Helpers";
 
-EnvironmentHelper.ChumsApiUrl = ApiRoot
-EnvironmentHelper.AccessManagementApiUrl = AccessApiRoot
-EnvironmentHelper.ImageBaseUrl = BaseimageUrl
+//console.log("*************" + ApiRoot);
+
+
+
+//EnvironmentHelper.ChumsApiUrl = ApiRoot
+//EnvironmentHelper.AccessManagementApiUrl = AccessApiRoot
+//EnvironmentHelper.ImageBaseUrl = BaseimageUrl
 
 AppRegistry.registerComponent(appName, () => App);

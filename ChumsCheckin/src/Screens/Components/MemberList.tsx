@@ -22,8 +22,8 @@ export const MemberList = (props: Props) => {
                     var name = vs.session?.displayName || "none";
                     const st: ServiceTimeInterface | null = Utilities.getById(CachedData.serviceTimes, vs.session?.serviceTimeId || 0);
                     if (st != null) name = (st.name || "") + " - " + name;
-                    if (groups.length > 0) groups.push(<Text style={{ color: StyleConstants.grayColor }}>, </Text>);
-                    groups.push(<Text style={{ color: StyleConstants.greenColor }}>{name}</Text>);
+                    if (groups.length > 0) groups.push(<Text key={vs.id?.toString() + "comma"} style={{ color: StyleConstants.grayColor }}>, </Text>);
+                    groups.push(<Text key={vs.id?.toString()} style={{ color: StyleConstants.greenColor }}>{name}</Text>);
                 });
                 return (<View style={{ flexDirection: "row" }} >{groups}</View>);
             }
