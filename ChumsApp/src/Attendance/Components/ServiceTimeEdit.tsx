@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef } from 'react';
+import React, { ChangeEvent } from 'react';
 import { ServiceTimeInterface, ServiceInterface, InputBox, ErrorMessages, ApiHelper } from './';
 
 interface Props {
@@ -14,13 +14,13 @@ export const ServiceTimeEdit: React.FC<Props> = (props) => {
     const handleSave = () => {
         if (validate()) {
             ApiHelper.apiPost('/servicetimes', [serviceTime]).then(props.updatedFunction);
-        } 
+        }
     }
     const handleDelete = () => { if (window.confirm('Are you sure you wish to permanently delete this service time?')) ApiHelper.apiDelete('/servicetimes/' + serviceTime.id).then(props.updatedFunction); }
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
-  
+
     const loadData = React.useCallback(() => {
-        ApiHelper.apiGet('/services').then(data => {            
+        ApiHelper.apiGet('/services').then(data => {
             setServices(data);
             if (data.length > 0) {
                 var st = { ...props.serviceTime };
@@ -56,8 +56,8 @@ export const ServiceTimeEdit: React.FC<Props> = (props) => {
     }
 
 
-    React.useEffect(() => { 
-        setServiceTime(props.serviceTime); 
+    React.useEffect(() => {
+        setServiceTime(props.serviceTime);
         loadData();
     }, [props.serviceTime, loadData]);
 

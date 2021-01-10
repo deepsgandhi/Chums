@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { AttendanceHelper, Helper, UserHelper, GroupInterface, GroupMembers, GroupSessions, SessionInterface, Attendance, PersonInterface } from './';
+import { AttendanceHelper, UserHelper, GroupInterface, GroupMembers, GroupSessions, SessionInterface, Attendance, PersonInterface } from './';
 
 interface Props {
     group: GroupInterface
@@ -27,7 +27,7 @@ export const Tabs: React.FC<Props> = (props) => {
             props.sidebarVisibilityFunction('addPerson', true);
             props.sidebarVisibilityFunction('addMember', true);
         }
-    }, [props.sidebarVisibilityFunction !== null, selectedTab,]
+    }, [props, selectedTab,]
     )
     const getCurrentTab = () => {
 
