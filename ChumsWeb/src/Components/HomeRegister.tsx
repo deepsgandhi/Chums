@@ -39,7 +39,7 @@ export const HomeRegister: React.FC = () => {
                 btn.innerHTML = "Configuring...";
                 var resp: LoginResponseInterface = await ApiHelper.apiPost(EnvironmentHelper.ChumsApiUrl + '/churches/init', { user: loginResp.user, church: loginResp.churches[0] });
                 if (resp.errors !== undefined) { setErrors(resp.errors); return 0; }
-                else setErrors(["Success"]); //setRedirectUrl(EnvironmentHelper.AppUrl);
+                else setRedirectUrl(EnvironmentHelper.AppUrl);
             }
         }
 
