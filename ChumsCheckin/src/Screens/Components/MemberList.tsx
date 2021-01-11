@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, FlatList, Image } from 'react-native'
 import { Icon } from 'native-base'
 import Ripple from 'react-native-material-ripple';
-import { CachedData, EnvironmentHelper, PersonInterface, screenNavigationProps, ServiceTimeInterface, Utilities, VisitHelper, VisitInterface, Styles, StyleConstants } from "../../Helpers";
+import { CachedData, EnvironmentHelper, PersonInterface, screenNavigationProps, ServiceTimeInterface, Utilities, VisitHelper, VisitInterface, Styles, StyleConstants, GroupInterface } from "../../Helpers";
 import { MemberServiceTimes } from './MemberServiceTimes';
 
 interface Props { navigation: screenNavigationProps, pendingVisits: VisitInterface[] }
@@ -19,8 +19,9 @@ export const MemberList = (props: Props) => {
             else {
                 const groups: JSX.Element[] = [];
                 visit?.visitSessions?.forEach(vs => {
-                    var name = vs.session?.displayName || "none";
                     const st: ServiceTimeInterface | null = Utilities.getById(CachedData.serviceTimes, vs.session?.serviceTimeId || 0);
+                    const group: GroupInterface = Utilities.getById(st?.groups || [], vs.session?.groupId || 0);
+                    var name = group.name || "none";
                     if (st != null) name = (st.name || "") + " - " + name;
                     if (groups.length > 0) groups.push(<Text key={vs.id?.toString() + "comma"} style={{ color: StyleConstants.grayColor }}>, </Text>);
                     groups.push(<Text key={vs.id?.toString()} style={{ color: StyleConstants.greenColor }}>{name}</Text>);

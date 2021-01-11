@@ -19,7 +19,11 @@ export const CheckinComplete = (props: Props) => {
         promises.push(checkin());
         if (CachedData.printerReady) promises.push(print());
         const action = CommonActions.reset({ index: 0, routes: [{ name: 'Lookup' }] });
-        Promise.all(promises).then(() => { props.navigation.dispatch(action); });
+        Promise.all(promises).then(() => {
+            CachedData.existingVisits = [];
+            CachedData.pendingVisits = [];
+            props.navigation.dispatch(action);
+        });
     }
 
     const print = async () => {
