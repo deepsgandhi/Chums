@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS `serviceTimes`;
 DROP TABLE IF EXISTS `sessions`;
 DROP TABLE IF EXISTS `visits`;
 DROP TABLE IF EXISTS `visitSessions`;
+DROP TABLE IF EXISTS `churchSettings`;
 
 # Round 1
 
