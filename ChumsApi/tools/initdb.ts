@@ -10,7 +10,7 @@ const init = async () => {
 
   try {
     await runFile(query, "./tools/initdb.mysql");
-    await runFile(query, "../apiBase/tools/initdb.mysql");
+    await runFile(query, "./src/apiBase/tools/initdb.mysql");
     await runFile(query, "./tools/reports.mysql");
   } catch (err) {
     console.log(err); throw err;
