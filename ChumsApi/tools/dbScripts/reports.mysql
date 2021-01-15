@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS `reports`;
+
+CREATE TABLE `reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `keyName` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `query` text,
+  `parameters` varchar(512) DEFAULT NULL,
+  `reportType` varchar(45) DEFAULT NULL,
+  `columns` text,
+  `groupLevels` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;

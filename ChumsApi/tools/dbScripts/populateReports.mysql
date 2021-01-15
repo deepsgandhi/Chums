@@ -1,7 +1,6 @@
-USE `chums`;
-DROP procedure IF EXISTS `report_groupAttendance`;
-DROP procedure IF EXISTS `report_donationTrend`;
-DROP procedure IF EXISTS `report_attendanceTrend`;
+DROP procedure IF EXISTS `report_groupAttendance`$$
+DROP procedure IF EXISTS `report_donationTrend`$$
+DROP procedure IF EXISTS `report_attendanceTrend`$$
 
 CREATE PROCEDURE `report_groupAttendance` (
 	IN p_churchId int,
@@ -21,9 +20,7 @@ BEGIN
 	AND (p_serviceId=0 OR ser.id=p_serviceId) 
 	AND s.sessionDate BETWEEN p_week AND DATE_ADD(p_week, INTERVAL 7 DAY)
 	ORDER by ser.name, st.name, g.name, p.lastName, p.firstName;
-END;
-
-
+END$$
 
 CREATE PROCEDURE `report_donationTrend` (
 	IN p_churchId int,
@@ -39,10 +36,7 @@ BEGIN
     AND d.donationDate BETWEEN p_startDate AND p_endDate
     GROUP BY year(d.donationDate), week(d.donationDate, 0), f.name
     ORDER BY year(d.donationDate), week(d.donationDate, 0), f.name;
-END;
-
-
-
+END$$
 
 CREATE PROCEDURE `report_attendanceTrend` (
 	IN p_churchId int,
@@ -69,8 +63,7 @@ BEGIN
     AND (p_campusId=0 OR ser.campusId=p_campusId)
 	GROUP BY year(v.visitDate), week(v.visitDate, 0)
 	ORDER BY year(v.visitDate), week(v.visitDate, 0);
-END;
-
+END$$
 
 INSERT INTO reports (keyName, title, query, parameters, reportType, columns) VALUES (
 	'groupAttendance', 
@@ -79,7 +72,7 @@ INSERT INTO reports (keyName, title, query, parameters, reportType, columns) VAL
 	'churchId,serviceId,week', 
 	'Grouped',
 	'[{"heading":"Service Time","field":"serviceTimeName","grouped":true},{"heading":"Group","field":"groupName","grouped":true},{"column":"personName","header":"Name","heading":"Person","field":"personName"}]'
-);
+)$$
 
 INSERT INTO reports (keyName, title, query, parameters, reportType, columns) VALUES (
 	'donationSummary', 
@@ -88,7 +81,7 @@ INSERT INTO reports (keyName, title, query, parameters, reportType, columns) VAL
 	'churchId,startDate,endDate', 
 	'Bar Chart',
 	'[{"heading":"Week","field":"week","grouped":true,"formatType":"date"},{"heading":"Fund","field":"fundName","grouped":true},{"heading":"Amount","field":"totalAmount"}]'
-);
+)$$
 
 INSERT INTO reports (keyName, title, query, parameters, reportType, columns) VALUES (
 	'attendanceTrend', 
@@ -97,4 +90,4 @@ INSERT INTO reports (keyName, title, query, parameters, reportType, columns) VAL
 	'churchId', 
 	'Area Chart',
 	'[{"heading":"Week","field":"week","formatType":"date"},{"heading":"Visits","field":"visits"}]'
-);
+)$$
